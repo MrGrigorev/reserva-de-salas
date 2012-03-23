@@ -1,3 +1,6 @@
+/*
+** GENERAL
+*/
 * {
 	margin:0;
 	padding:0;
@@ -11,15 +14,48 @@ body {
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 }
+input {
+	margin: 5px;
+	padding: 5px;
+}
+input[type='text'], input[type='password'] {
+	background: #dddddd;
+	border: 2px solid #aaaaaa;
+}
+input[type='submit'] {
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 1em;
+	padding: 5px;
+	background: #700000;
+	background: -webkit-linear-gradient(top, #D60000, #700000);
+	background: -moz-linear-gradient(top, #D60000, #700000);
+	border: 1px solid #5C0000;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	cursor: pointer;
+}
+input[type='submit']:hover {
+	background: #700000;
+	background: -webkit-linear-gradient(top, #FF6666, #700000);
+	background: -moz-linear-gradient(top, #FF6666, #700000);
+}
+fieldset {
+	border: none;
+	margin: 5px 0;
+}
+/*
+** HEADER
+*/
 #headerContainer {
 	width: 100%;
-	height: 60px;
+	height: 40px;
 	padding: 0;
 	margin-bottom: 20px;
-	border-bottom: 2px solid #aaaaaa;
-	background: #BDBDBD;
-	background: -webkit-linear-gradient(top, #C20000, #A80000);
-	background: -moz-linear-gradient(top, #b8b9ea, #8386db);
+	border-bottom: 2px solid #3D0000;
+	background: #700000;
+	background: -webkit-linear-gradient(top, #D60000, #700000);
+	background: -moz-linear-gradient(top, #D60000, #700000);
 }
 #header {
 	width: 1034px;
@@ -52,6 +88,9 @@ body {
 	color: #ffffff;
 	text-decoration: none;
 }
+/*
+** CONTENT
+*/
 #content {
 	width: 1000px;
 	padding: 15px;
@@ -59,9 +98,6 @@ body {
 	border: 2px solid #aaaaaa;
 	background: #ffffff;
 }
-form input {
-	background: #dddddd;
-	border: 2px solid #aaaaaa;
-	margin: 5px;
-	padding: 5px;
+.userType {
+	display: none;
 }
