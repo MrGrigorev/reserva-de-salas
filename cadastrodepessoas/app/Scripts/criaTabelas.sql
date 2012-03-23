@@ -32,6 +32,6 @@ CREATE TABLE professors (
 CREATE TABLE employees (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	occupation VARCHAR(70) NOT NULL,
-	user_id INT NOT NULL
+	user_id INT NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users(id)
 );
