@@ -9,6 +9,8 @@ CREATE TABLE users (
 	email VARCHAR(50) NOT NULL,
 	password VARCHAR(50) NOT NULL,
 	photo VARCHAR(100) DEFAULT NULL,
+    activation_status ENUM('waiting_validation', 'waiting_activation', 'active') DEFAULT 'waiting_validation' NOT NULL,
+    hash VARCHAR(40) NOT NULL,
 	created DATETIME DEFAULT NULL,
 	modified DATETIME DEFAULT NULL
 );
