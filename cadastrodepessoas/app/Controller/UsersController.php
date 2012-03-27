@@ -2,6 +2,8 @@
 class UsersController extends AppController {
 	public $name = 'Users';
 
+	public $components = array('Email');
+
 	public function beforeFilter() {
 		$this->Auth->allow(array('createAccount'));
 	}
@@ -13,8 +15,7 @@ class UsersController extends AppController {
 
 				$user = $this->User->findById($this->User->id);
 
-				// send email to admin
-				//mail($user);
+				$this->Email->sendConfirmationEmail($user);
 
 				$this->redirect(array('controller' => 'Users', 'action' => 'login'));
 			}
