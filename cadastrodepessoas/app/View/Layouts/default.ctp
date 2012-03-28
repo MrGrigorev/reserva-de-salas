@@ -18,16 +18,16 @@
 		<div id="header">
 			<div id="title">
 				<h1>
-					Cadastro de Pessoas
+					<?php echo $this->Html->link('Cadastro de Pessoas', array('controller' => 'Users', 'action' => 'index')); ?>
 				</h1>
 			</div>
 			<div id="menu">
 				<ul>
 					<li>
-						<a href="#">Criar conta</a>
+						<?php echo $this->Html->link('Criar conta', array('controller' => 'Users', 'action' => 'createAccount') ); ?>
 					</li>
 					<li>
-						<a href="#">login</a>
+						<?php echo $this->Html->link('Login', array('controller' => 'Users', 'action' => 'login') ); ?>
 					</li>
 				</ul>
 			</div>

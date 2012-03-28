@@ -35,11 +35,11 @@ class AppController extends Controller {
 	public $components = array('Session',
 			'Auth' => array(
 					'loginAction' => array('controller' => 'Users',
-							'action' => 'login'),
+							'action' => 'index'),
 					'loginRedirect' => array('controller' => 'Users',
 							'action' => 'index'),
 					'logoutRedirect' => array('controller' => 'Users',
-							'action' => 'login'),
+							'action' => 'index'),
 					'authError' => 'Você não pode acessar essa página.',
 					'authorize' => array('Controller'),
 					'authenticate' => array(

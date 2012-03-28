@@ -15,6 +15,10 @@ class UsersController extends AppController {
 		$this->Professor = ClassRegistry::init('Professor');
 		$this->Employee = ClassRegistry::init('Employee');
 	}
+	
+	public function index() {
+		
+	}
 
 	public function createAccount() {
 		if ($this->request->is('post')) {

@@ -63,9 +63,16 @@ fieldset {
 	height: 60px;
 }
 #title {
-	/* FONTS*/
 	float: left;
+	
+}
+#title a {
 	color: #ffffff;
+	text-decoration: none;
+}
+#title a:hover {
+	color: #dddddd;
+	text-decoration: none;
 }
 #menu {
 	float: right;
