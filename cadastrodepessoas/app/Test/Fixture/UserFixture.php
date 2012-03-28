@@ -33,7 +33,7 @@ class UserFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'id' => 1,
-			'nusp' => 'Lorem ip',
+			'nusp' => '54321',
 			'name' => 'Lorem ipsum dolor sit amet',
 			'email' => 'Lorem ipsum dolor sit amet',
 			'password' => 'Lorem ipsum dolor sit amet',
@@ -41,6 +41,18 @@ class UserFixture extends CakeTestFixture {
 			'hash' => 'Lorem ipsum dolor sit amet',
 			'created' => '2012-03-23 15:48:25',
 			'modified' => '2012-03-23 15:48:25'
+		),
+		array(
+				'id' => 2,
+				'nusp' => '12345',
+				'name' => 'Lorem ipsum dolor sit amet',
+				'email' => 'Lorem ipsum dolor sit amet',
+				'password' => 'Lorem ipsum dolor sit amet',
+				'photo' => 'Lorem ipsum dolor sit amet',
+				'hash' => 'MyBeautifulHash',
+				'created' => '2012-03-23 15:48:25',
+				'modified' => '2012-03-23 15:48:25',
+				'activation_status' => 'waiting_validation'
 		),
 	);
 }

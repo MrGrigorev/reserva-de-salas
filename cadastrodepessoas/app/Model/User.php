@@ -10,13 +10,13 @@ class User extends AppModel {
 					'dependent' => 'true'));
 
 	public function beforeSave() {
-		if (isset($this->data['User']['hash']) == false) {
-			$this->data['User']['hash'] = substr(
-					Security::hash($this->data['User']['nusp'] . time()), 0,
-					40);
-		}
 
 		if (isset($this->data['User']['password'])) {
+			if (isset($this->data['User']['hash']) == false) {
+				$this->data['User']['hash'] = substr(
+						Security::hash($this->data['User']['nusp'] . time()),
+						0, 40);
+			}
 			$this->data['User']['password'] = AuthComponent::password(
 					$this->data['User']['password']);
 		}
