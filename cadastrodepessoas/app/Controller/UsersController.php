@@ -19,7 +19,6 @@ class UsersController extends AppController {
 	}
 
 	public function index() {
-
 	}
 
 	public function createAccount() {
@@ -55,6 +54,9 @@ class UsersController extends AppController {
 										'action' => 'login'));
 			} else {
 				$this->Session->setFlash(__('E#1: Erro ao cadastrar conta'));
+
+				unset($this->request->data['User']['password']);
+				unset($this->request->data['User']['passwordConfirmation']);
 			}
 		}
 	}

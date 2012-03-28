@@ -54,4 +54,8 @@ class AppController extends Controller {
 	public function isAuthorized($user) {
 		return true;
 	}
+
+	public function getLoggedUser() {
+		return $this->Auth->user();
+	}
 }
