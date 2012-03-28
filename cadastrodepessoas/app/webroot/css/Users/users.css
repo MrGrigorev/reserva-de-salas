@@ -1,1 +1,12 @@
 @CHARSET "UTF-8";
+.mandatory {
+	background: #ffff00;
+}
+.text label, .password label, .file label, .radio legend {
+	display: inline-block;
+	width: 200px;
+	text-align: right;
+}
+.radio legend {
+	float: left;
+}
