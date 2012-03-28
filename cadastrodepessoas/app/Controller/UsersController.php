@@ -9,7 +9,7 @@ class UsersController extends AppController {
 	public $components = array('Email');
 
 	public function beforeFilter() {
-		$this->Auth->allow(array('createAccount'));
+		$this->Auth->allow(array('createAccount', 'confirmEmail'));
 
 		$this->Student = ClassRegistry::init('Student');
 		$this->Professor = ClassRegistry::init('Professor');
@@ -26,15 +26,15 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('Email enviado para validação'));
 
 				switch ($this->request->data['User']['userType']) {
-				case 'professor':
+				case 'Professor':
 					$this->Professor
 							->saveProfile($this->User->id, $this->request->data);
 					break;
-				case 'student':
+				case 'Student':
 					$this->Student
 							->saveProfile($this->User->id, $this->request->data);
 					break;
-				case 'employee':
+				case 'Employee':
 					$this->Professor
 							->saveProfile($this->User->id, $this->request->data);
 					break;
@@ -55,5 +55,35 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('E#1: Erro ao cadastrar conta'));
 			}
 		}
+	}
+
+	public function confirmEmail($hash) {
+		$this->User->order = 'User.id DESC';
+		$user = $this->User->findByHash($hash);
+
+		if ($user == null) {
+			$this->Session->setFlash(__('E#3: Link de confirmação inválido'));
+
+			$this
+					->redirect(
+							array('controller' => 'Users', 'action' => 'login'));
+		}
+
+		if ($user['User']['activation_status'] == 'waiting_validation') {
+			$this->User->id = $user['User']['id'];
+			if ($this->User
+					->saveField('activation_status', 'waiting_activation')) {
+				$this->Session
+						->setFlash(
+								__(
+										'E-mail confirmado. Aguarde ativação pelo administrador.'));
+			} else {
+				$this->Session->setFlash(__('E#5: Erro ao validar e-mail.'));
+			}
+		} else {
+			$this->Session->setFlash(__('E#4: E-mail já confirmado.'));
+		}
+
+		$this->redirect(array('controller' => 'Users', 'action' => 'login'));
 	}
 }

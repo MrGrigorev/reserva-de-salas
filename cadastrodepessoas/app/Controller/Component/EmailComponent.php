@@ -13,10 +13,13 @@ class EmailComponent extends Component {
 		$email->subject(__('Confirmação de E-mail'));
 		$email->template('emailConfirmation');
 
-		$link = 'http://' . $_SERVER['HTTP_HOST'] . '/cadastrodepessoas/Users/emailConfirmation/' .
-				$user['User']['hash'];
-				
-		$email->viewVars(array('name' => $user['User']['name'], 'link' => $link));
+		$link = 'http://' . $_SERVER['HTTP_HOST']
+				. '/cadastrodepessoas/Users/confirmEmail/'
+				. $user['User']['hash'];
+
+		$email
+				->viewVars(
+						array('name' => $user['User']['name'], 'link' => $link));
 
 		$email->send();
 	}
