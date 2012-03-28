@@ -63,9 +63,38 @@ class UsersController extends AppController {
 
 	public function login() {
 		if ($this->request->is('post')) {
-			if ($this->Auth->login())
-				$this->redirect($this->Auth->redirect());
-			else {
+			if ($this->Auth->login()) {
+				$user = $this->getLoggedUser();
+
+				switch ($user['activation_status']) {
+				case 'active':
+					$this->redirect($this->Auth->redirect());
+					break;
+				case 'waiting_validation':
+					$link = Router::url(
+							array('controller' => 'Users',
+									'action' => 'resendConfirmationEmail',
+									$user['id']));
+
+					$this->Session
+							->setFlash(
+									sprintf(
+											__(
+													'Seu e-mail não foi confirmado. <a href="%s">Clique aqui para reenviar o e-mail de confirmação</a>.'),
+											$link));
+
+					$this->logout();
+					break;
+				case 'waiting_activation':
+					$this->Session
+							->setFlash(
+									__(
+											'Por favor aguarde ativação pelo administrador.'));
+
+					$this->logout();
+					break;
+				}
+			} else {
 				$this->Session
 						->setFlash(__('Número USP e senha não conferem.'));
 
@@ -104,6 +133,16 @@ class UsersController extends AppController {
 		} else {
 			$this->Session->setFlash(__('E#4: E-mail já confirmado.'));
 		}
+
+		$this->redirect(array('controller' => 'Users', 'action' => 'login'));
+	}
+
+	public function resendConfirmationEmail($userId) {
+		$user = $this->User->findById($userId);
+
+		$this->Email->sendConfirmationEmail($user);
+
+		$this->Session->setFlash(__('E-mail reenviado.'));
 
 		$this->redirect(array('controller' => 'Users', 'action' => 'login'));
 	}

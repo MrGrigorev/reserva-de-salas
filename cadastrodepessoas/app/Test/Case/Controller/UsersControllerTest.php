@@ -23,6 +23,14 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->testAction('/Users/login', array('method' => 'get'));
 	}
 
+	public function testGetResendConfirmationEmail() {
+		$user = $this->User->find('first');
+
+		$this
+				->testAction(
+						'Users/resendConfirmationEmail/' . $user['User']['id']);
+	}
+
 	public function testCreateAccount() {
 		$data = array(
 				'User' => array('name' => 'User Test', 'nusp' => '1234567',
@@ -88,6 +96,40 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$data = array(
 				'User' => array('nusp' => '12345678', 'password' => $password));
+
+		$this
+				->testAction('Users/login',
+						array('method' => 'post', 'data' => $data));
+
+		$this->assertEqual($this->UsersController->getLoggedUser(), null);
+	}
+
+	public function testLoginWithUserWaitingValidation() {
+		$this->testAction('Users/logout');
+
+		$user = $this->User->findByActivation_status('waiting_validation');
+		$password = '12345';
+
+		$data = array(
+				'User' => array('nusp' => $user['User']['nusp'],
+						'password' => $password));
+
+		$this
+				->testAction('Users/login',
+						array('method' => 'post', 'data' => $data));
+
+		$this->assertEqual($this->UsersController->getLoggedUser(), null);
+	}
+
+	public function testLoginWithUserWaitingActivation() {
+		$this->testAction('Users/logout');
+
+		$user = $this->User->findByActivation_status('waiting_activation');
+		$password = '12345';
+
+		$data = array(
+				'User' => array('nusp' => $user['User']['nusp'],
+						'password' => $password));
 
 		$this
 				->testAction('Users/login',
