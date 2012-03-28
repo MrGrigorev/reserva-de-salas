@@ -35,15 +35,23 @@ class AppController extends Controller {
 	public $components = array('Session',
 			'Auth' => array(
 					'loginAction' => array('controller' => 'Users',
-							'action' => 'index'),
+							'action' => 'login'),
 					'loginRedirect' => array('controller' => 'Users',
 							'action' => 'index'),
 					'logoutRedirect' => array('controller' => 'Users',
-							'action' => 'index'),
+							'action' => 'login'),
 					'authError' => 'Você não pode acessar essa página.',
 					'authorize' => array('Controller'),
 					'authenticate' => array(
 							'Form' => array('userModel' => 'User',
 									'fields' => array('username' => 'nusp',
 											'password' => 'password')))));
+
+	public function beforeFilter() {
+		$this->set('isLogged', $this->Auth->loggedIn());
+	}
+
+	public function isAuthorized($user) {
+		return true;
+	}
 }

@@ -9,15 +9,17 @@ class UsersController extends AppController {
 	public $components = array('Email');
 
 	public function beforeFilter() {
-		$this->Auth->allow(array('createAccount', 'confirmEmail'));
+		parent::beforeFilter();
+
+		$this->Auth->allow(array('createAccount', 'confirmEmail', 'login'));
 
 		$this->Student = ClassRegistry::init('Student');
 		$this->Professor = ClassRegistry::init('Professor');
 		$this->Employee = ClassRegistry::init('Employee');
 	}
-	
+
 	public function index() {
-		
+
 	}
 
 	public function createAccount() {
@@ -55,6 +57,23 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('E#1: Erro ao cadastrar conta'));
 			}
 		}
+	}
+
+	public function login() {
+		if ($this->request->is('post')) {
+			if ($this->Auth->login())
+				$this->redirect($this->Auth->redirect());
+			else {
+				$this->Session
+						->setFlash(__('Número USP e senha não conferem.'));
+
+				unset($this->request->data['User']['password']);
+			}
+		}
+	}
+
+	public function logout() {
+		$this->redirect($this->Auth->logout());
 	}
 
 	public function confirmEmail($hash) {

@@ -23,12 +23,18 @@
 			</div>
 			<div id="menu">
 				<ul>
+					<?php if ($isLogged == false) {?>
 					<li>
 						<?php echo $this->Html->link('Criar conta', array('controller' => 'Users', 'action' => 'createAccount') ); ?>
 					</li>
 					<li>
 						<?php echo $this->Html->link('Login', array('controller' => 'Users', 'action' => 'login') ); ?>
 					</li>
+					<?php } else {?>
+					<li>
+						<?php echo $this->Html->link('Logout', array('controller' => 'Users', 'action' => 'logout') ); ?>
+					</li>
+					<?php } ?>
 				</ul>
 			</div>
 		</div>
