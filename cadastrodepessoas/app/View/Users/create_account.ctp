@@ -11,7 +11,7 @@
 	echo $this->Form->Input('password', array('label' => 'Senha'));
 	echo $this->Form->Input('passwordConfirmation', array('label' => 'Confirmação da senha', 'type' => 'password'));
 	echo $this->Form->Input('photo', array('label' => 'Foto', 'type' => 'file'));
-	echo $this->Form->Input('Tipo de usuário', array('label' => 'Tipo de usuário', 'options' => array('Empregado', 'Estudante', 'Professor') ,'type' => 'radio', 'class' => 'userTypeRadio'));
+	echo $this->Form->Input('userType', array('label' => 'Tipo de usuário', 'options' => array('employee' => 'Empregado', 'student' => 'Estudante', 'professor' => 'Professor') ,'type' => 'radio', 'class' => 'userTypeRadio'));
 
 ?>
 
