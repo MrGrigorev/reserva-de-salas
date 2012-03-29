@@ -5,7 +5,7 @@
 <h1>Criar conta</h1>
 
 <?php
-	echo $this->Form->Create('User');
+	echo $this->Form->Create('User', array('type' => 'file'));
 	echo $this->Form->Input('nusp', array('label' => 'Número USP *', 'class' => 'mandatory' ) );
 	echo $this->Form->Input('name', array('label' => 'Nome *', 'class' => 'mandatory' ) );
 	echo $this->Form->Input('email', array('label' => 'E-mail *', 'class' => 'mandatory') );
@@ -18,7 +18,7 @@
 <div id="Employee" class="userType">
 	<?php
 		echo $this->Form->Create('Employee');
-		echo $this->Form->Input('occupation', array('label' => 'Trabalho *', 'class' => 'mandatory') );
+		echo $this->Form->Input('occupation', array('label' => 'Cargo *', 'class' => 'mandatory') );
 	?>
 </div>
 
