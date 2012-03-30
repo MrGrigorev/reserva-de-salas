@@ -104,4 +104,14 @@ class User extends AppModel {
 					$this->data['User']['password']);
 		}
 	}
+
+	public function profile($user) {
+		$myprofile = 'Estudante';
+		if (isset($user['Professor']['id'])) {
+			$myprofile = 'Professor';
+		} else if (isset($user['Employee']['id'])) {
+			$myprofile = 'Funcionário';
+		}
+		return $myprofile;
+	}
 }

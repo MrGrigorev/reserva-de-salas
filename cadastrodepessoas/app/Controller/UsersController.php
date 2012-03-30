@@ -18,6 +18,12 @@ class UsersController extends AppController {
 		$this->Employee = ClassRegistry::init('Employee');
 	}
 
+	public function isAuthorized($user) {
+		parent::isAuthorized($user);
+
+		return true;
+	}
+
 	public function index() {
 	}
 
@@ -146,5 +152,19 @@ class UsersController extends AppController {
 		$this->Session->setFlash(__('E-mail reenviado.'));
 
 		$this->redirect(array('controller' => 'Users', 'action' => 'login'));
+	}
+
+	public function listActivationRequests() {
+		$users = $this->User->order = 'User.name ASC';
+		$users = $this->User
+				->find('all',
+						array(
+								'conditions' => array(
+										'activation_status' => 'waiting_activation')));
+
+		for ($i = 0; $i < count($users); $i++) {
+			$users[$i]['User']['profile'] = $this->User->profile($users[$i]);
+		}
+		$this->set('usersWaitingActivation', $users);
 	}
 }

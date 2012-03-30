@@ -34,8 +34,8 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testCreateAccount() {
 		$data = array(
 				'User' => array('name' => 'User Test', 'nusp' => '1234567',
-						'email' => 'test@ime.usp.br', 'password' => '12345',
-						'passwordConfirmation' => '12345',
+						'email' => 'test@ime.usp.br', 'password' => '123456',
+						'passwordConfirmation' => '123456',
 						'userType' => 'Student'));
 
 		$data['Student']['course'] = 'BCC';

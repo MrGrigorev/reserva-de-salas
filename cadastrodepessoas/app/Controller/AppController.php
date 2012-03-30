@@ -52,7 +52,8 @@ class AppController extends Controller {
 	}
 
 	public function isAuthorized($user) {
-		return true;
+		if ($user['user_type'] == 'admin')
+			return true;
 	}
 
 	public function getLoggedUser() {

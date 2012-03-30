@@ -4,13 +4,14 @@ USE cadastrodepessoas;
 
 CREATE TABLE users (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	nusp VARCHAR(10) NOT NULL,
+	nusp VARCHAR(10) NOT NULL UNIQUE,
 	name VARCHAR(70) NOT NULL,
-	email VARCHAR(50) NOT NULL,
+	email VARCHAR(50) NOT NULL UNIQUE,
 	password VARCHAR(50) NOT NULL,
 	photo VARCHAR(100) DEFAULT NULL,
     activation_status ENUM('waiting_validation', 'waiting_activation', 'active') DEFAULT 'waiting_validation' NOT NULL,
     hash VARCHAR(40) NOT NULL,
+    user_type ENUM('user', 'admin') DEFAULT 'user',
 	created DATETIME DEFAULT NULL,
 	modified DATETIME DEFAULT NULL
 );
