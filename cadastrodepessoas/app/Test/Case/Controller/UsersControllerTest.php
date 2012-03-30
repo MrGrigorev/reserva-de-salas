@@ -34,8 +34,8 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testCreateAccount() {
 		$data = array(
 				'User' => array('name' => 'User Test', 'nusp' => '1234567',
-						'email' => 'test@ime.usp.br', 'password' => '12345',
-						'passwordConfirmation' => '12345',
+						'email' => 'test@ime.usp.br', 'password' => '123456',
+						'passwordConfirmation' => '123456',
 						'userType' => 'Student'));
 
 		$data['Student']['course'] = 'BCC';
@@ -156,25 +156,91 @@ class UsersControllerTest extends ControllerTestCase {
 
 		$this->assertEqual($this->UsersController->getLoggedUser(), null);
 	}
-	
+
 	public function testCreateAccountInvalid() {
 		$data = array(
-				'User' => array('name' => '', 'nusp' => '',
-						'email' => '', 'password' => '',
-						'passwordConfirmation' => '',
+				'User' => array('name' => '', 'nusp' => '', 'email' => '',
+						'password' => '', 'passwordConfirmation' => '',
 						'userType' => ''));
 
 		$this->User->order = 'User.id DESC';
 		$userBefore = $this->User->find('first');
-		
+
 		$this
 				->testAction('Users/createAccount',
 						array('method' => 'post', 'data' => $data));
-						
+
 		$this->User->order = 'User.id DESC';
 		$userAfter = $this->User->find('first');
-		
-		$this->assertEqual($userBefore, $userAfter);
 
+		$this->assertEqual($userBefore, $userAfter);
+	}
+
+	private function loginWithAdmin() {
+		$admin = $this->User->findByUser_type('admin');
+
+		$data = array(
+				'User' => array('nusp' => $admin['User']['nusp'],
+						'password' => '12345'));
+
+		$this
+				->testAction('Users/login',
+						array('method' => 'post', 'data' => $data));
+	}
+
+	public function testActivateAccounts() {
+		$this->loginWithAdmin();
+
+		$users = $this->User
+				->find('all',
+						array(
+								'conditions' => array(
+										'activation_status' => 'waiting_activation')));
+
+		$data = array('User' => array());
+		foreach ($users as $user) {
+			$data['User'][$user['User']['id']]['isChecked'] = true;
+			$data['User'][$user['User']['id']]['id'] = $user['User']['id'];
+		}
+
+		$data['action'] = 'Ativa';
+
+		$this
+				->testAction('Users/listActivationRequests',
+						array('method' => 'post', 'data' => $data));
+
+		foreach ($users as $user) {
+			$result = $this->User->findById($user['User']['id']);
+
+			$this->assertEqual($result['User']['activation_status'], 'active');
+		}
+	}
+
+	public function testRejectAccounts() {
+		$this->loginWithAdmin();
+
+		$users = $this->User
+				->find('all',
+						array(
+								'conditions' => array(
+										'activation_status' => 'waiting_activation')));
+
+		$data = array('User' => array());
+		foreach ($users as $user) {
+			$data['User'][$user['User']['id']]['isChecked'] = true;
+			$data['User'][$user['User']['id']]['id'] = $user['User']['id'];
+		}
+
+		$data['action'] = 'Rejeita';
+
+		$this
+				->testAction('Users/listActivationRequests',
+						array('method' => 'post', 'data' => $data));
+
+		foreach ($users as $user) {
+			$result = $this->User->findById($user['User']['id']);
+
+			$this->assertEqual($result, null);
+		}
 	}
 }

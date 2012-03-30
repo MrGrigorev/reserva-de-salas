@@ -155,6 +155,18 @@ class UsersController extends AppController {
 	}
 
 	public function listActivationRequests() {
+		if ($this->request->is('post')) {
+			if ($this->request->data['action'] == 'Ativa') {
+				foreach ($this->request->data['User'] as $user)
+					if ($user['isChecked'])
+						$this->activateAccount($user['id']);
+			} else if ($this->request->data['action'] == 'Rejeita') {
+				foreach ($this->request->data['User'] as $user)
+					if ($user['isChecked'])
+						$this->rejectAccount($user['id']);
+			}
+		}
+
 		$users = $this->User->order = 'User.name ASC';
 		$users = $this->User
 				->find('all',
@@ -165,6 +177,25 @@ class UsersController extends AppController {
 		for ($i = 0; $i < count($users); $i++) {
 			$users[$i]['User']['profile'] = $this->User->profile($users[$i]);
 		}
+
 		$this->set('usersWaitingActivation', $users);
+	}
+
+	private function activateAccount($userId) {
+		$this->User->id = $userId;
+
+		if ($this->User->exists() == false)
+			return;
+
+		$this->User->saveField('activation_status', 'active');
+	}
+
+	private function rejectAccount($userId) {
+		$this->User->id = $userId;
+
+		if ($this->User->exists() == false)
+			return;
+
+		$this->User->delete($userId);
 	}
 }
