@@ -34,8 +34,8 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testCreateAccount() {
 		$data = array(
 				'User' => array('name' => 'User Test', 'nusp' => '1234567',
-						'email' => 'test@ime.usp.br', 'password' => '123456',
-						'passwordConfirmation' => '123456',
+						'email' => 'test@ime.usp.br', 'password' => '12345',
+						'passwordConfirmation' => '12345',
 						'userType' => 'Student'));
 
 		$data['Student']['course'] = 'BCC';
@@ -155,5 +155,26 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->testAction('Users/logout');
 
 		$this->assertEqual($this->UsersController->getLoggedUser(), null);
+	}
+	
+	public function testCreateAccountInvalid() {
+		$data = array(
+				'User' => array('name' => '', 'nusp' => '',
+						'email' => '', 'password' => '',
+						'passwordConfirmation' => '',
+						'userType' => ''));
+
+		$this->User->order = 'User.id DESC';
+		$userBefore = $this->User->find('first');
+		
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+						
+		$this->User->order = 'User.id DESC';
+		$userAfter = $this->User->find('first');
+		
+		$this->assertEqual($userBefore, $userAfter);
+
 	}
 }

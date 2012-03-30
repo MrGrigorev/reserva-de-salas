@@ -60,7 +60,7 @@ fieldset {
 #header {
 	width: 1034px;
 	margin: 0 auto;
-	height: 60px;
+	height: 40px;
 }
 #title {
 	float: left;
@@ -73,6 +73,9 @@ fieldset {
 #title a:hover {
 	color: #dddddd;
 	text-decoration: none;
+}
+#title img {
+	vertical-align: middle;
 }
 #menu {
 	float: right;

@@ -18,6 +18,7 @@
 		<div id="header">
 			<div id="title">
 				<h1>
+					<img src="/cadastrodepessoas/img/logo_ime.png" />
 					<?php echo $this->Html->link('Cadastro de Pessoas', array('controller' => 'Users', 'action' => 'index')); ?>
 				</h1>
 			</div>
