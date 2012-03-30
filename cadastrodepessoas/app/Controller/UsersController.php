@@ -23,6 +23,7 @@ class UsersController extends AppController {
 
 	public function createAccount() {
 		if ($this->request->is('post')) {
+			$this->Student->set($this->request->data);
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('Email enviado para validação'));
 
