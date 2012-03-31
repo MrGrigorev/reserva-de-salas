@@ -84,7 +84,7 @@ class User extends AppModel {
 	public $actsAs = array(
 			'MeioUpload.MeioUpload' => array(
 					'photo' => array('dir' => 'photos',
-							'create_directory' => true,
+							'create_directory' => true, 'maxSize' => 2097152,
 							'allowed_mime' => array('image/jpeg',
 									'image/pjpeg', 'image/png'),
 							'allowed_ext' => array('.jpg', '.jpeg', '.png'),

@@ -84,12 +84,6 @@ class MeioUploadBehavior extends ModelBehavior {
 			'check' => true,
 			'last' => true
 		),
-		'Empty' => array(
-			'rule' => array('uploadCheckEmpty'),
-			'check' => true,
-			'on' => 'create',
-			'last' => true
-		),
 		'UploadError' => array(
 			'rule' => array('uploadCheckUploadError'),
 			'check' => true,
