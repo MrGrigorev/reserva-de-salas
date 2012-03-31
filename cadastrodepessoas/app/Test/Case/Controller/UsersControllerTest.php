@@ -157,7 +157,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEqual($this->UsersController->getLoggedUser(), null);
 	}
 
-	public function testCreateAccountInvalid() {
+	public function testCreateBlankAccount() {
 		$data = array(
 				'User' => array('name' => '', 'nusp' => '', 'email' => '',
 						'password' => '', 'passwordConfirmation' => '',
@@ -174,6 +174,57 @@ class UsersControllerTest extends ControllerTestCase {
 		$userAfter = $this->User->find('first');
 
 		$this->assertEqual($userBefore, $userAfter);
+	}
+
+	public function testCreateAccountWithExistingNusp() {
+		$existingUser = $this->User->find('first');
+
+		$data = array(
+				'User' => array('name' => 'Teste',
+						'nusp' => $existingUser['User']['nusp'],
+						'email' => 'testExistingNusp@gmail.com',
+						'password' => '123456',
+						'passwordConfirmation' => '123456',
+						'userType' => 'Student'));
+
+		$data['Student']['course'] = 'BCC';
+
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+
+		$count = $this->User
+				->find('count',
+						array(
+								'conditions' => array(
+										'nusp' => $existingUser['User']['nusp'])));
+
+		$this->assertEqual($count, 1);
+	}
+
+	public function testCreateAccountWithExistingEmail() {
+		$existingUser = $this->User->find('first');
+
+		$data = array(
+				'User' => array('name' => 'Teste', 'nusp' => '98794561',
+						'email' => $existingUser['User']['email'],
+						'password' => '123456',
+						'passwordConfirmation' => '123456',
+						'userType' => 'Student'));
+
+		$data['Student']['course'] = 'BCC';
+
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+
+		$count = $this->User
+				->find('count',
+						array(
+								'conditions' => array(
+										'nusp' => $existingUser['User']['nusp'])));
+
+		$this->assertEqual($count, 1);
 	}
 
 	private function loginWithAdmin() {

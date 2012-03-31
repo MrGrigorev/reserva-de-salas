@@ -29,7 +29,6 @@ class UsersController extends AppController {
 
 	public function createAccount() {
 		if ($this->request->is('post')) {
-			$this->Student->set($this->request->data);
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('Email enviado para validação'));
 
@@ -43,7 +42,7 @@ class UsersController extends AppController {
 							->saveProfile($this->User->id, $this->request->data);
 					break;
 				case 'Employee':
-					$this->Professor
+					$this->Employee
 							->saveProfile($this->User->id, $this->request->data);
 					break;
 				default:
