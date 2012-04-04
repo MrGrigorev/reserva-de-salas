@@ -40,6 +40,11 @@ input[type='submit']:hover {
 	background: -webkit-linear-gradient(top, #FF6666, #700000);
 	background: -moz-linear-gradient(top, #FF6666, #700000);
 }
+form .required label:after {
+	color: #e32;
+	content: '*';
+	display:inline;
+}
 fieldset {
 	border: none;
 	margin: 5px 0;

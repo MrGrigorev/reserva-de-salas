@@ -23,7 +23,7 @@ class User extends AppModel {
 							'message' => 'Só números são permitidos.'),
 					'is unique' => array('required' => true,
 							'rule' => 'isUnique',
-							'message' => 'Esse Número USP já existe.')),
+							'message' => 'Esse Número USP já está cadastrado.')),
 			'name' => array(
 					'not empty' => array('required' => true,
 							'rule' => 'notEmpty',
@@ -37,7 +37,10 @@ class User extends AppModel {
 							'message' => "Não deve ser vazio."),
 					'valid email format' => array('rule' => 'email',
 							'required' => true,
-							'message' => 'Formato de e-mail inválido.')),
+							'message' => 'Formato de e-mail inválido.'),
+					'is unique' => array('required' => true,
+							'rule' => 'isUnique',
+							'message' => 'Esse E-mail já está cadastrado.')),
 			'password' => array(
 					'not empty' => array('required' => true,
 							'rule' => 'notEmpty',
