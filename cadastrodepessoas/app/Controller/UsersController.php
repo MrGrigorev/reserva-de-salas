@@ -2,6 +2,8 @@
 App::uses('Student', 'Model');
 App::uses('Professor', 'Model');
 App::uses('Employee', 'Model');
+App::uses('Department', 'Model');
+App::uses('Course', 'Model');
 
 class UsersController extends AppController {
 	public $name = 'Users';
@@ -16,6 +18,8 @@ class UsersController extends AppController {
 		$this->Student = ClassRegistry::init('Student');
 		$this->Professor = ClassRegistry::init('Professor');
 		$this->Employee = ClassRegistry::init('Employee');
+		$this->Department = ClassRegistry::init('Department');
+		$this->Course = ClassRegistry::init('Course');
 	}
 
 	public function isAuthorized($user) {
@@ -72,6 +76,12 @@ class UsersController extends AppController {
 				unset($this->request->data['User']['passwordConfirmation']);
 			}
 		}
+
+		$this->Department->order = 'Department.name ASC';
+		$this->Course->order = 'Course.name ASC';
+
+		$this->set('departments', $this->Department->find('all'));
+		$this->set('courses', $this->Course->find('all'));
 	}
 
 	public function login() {

@@ -60,7 +60,23 @@ class User extends AppModel {
 							'rule' => 'notEmpty',
 							'message' => "Não deve ser vazio."),
 					'validate user type' => array('required' => true,
-							'rule' => 'validateUserType', 'message' => '')));
+							'rule' => 'validateUserType', 'message' => '')),
+			'webpage' => array(
+					'between' => array('required' => true,
+							'allowEmpty' => true,
+							'rule' => array('between', 0, 100),
+							'message' => 'A página web pode ter no máximo 100 caracteres.'),
+					'url' => array('allowEmpty' => true, 'required' => true,
+							'rule' => 'url',
+							'message' => 'Formato de URL inválido.')),
+			'lattes' => array(
+					'between' => array('required' => true,
+							'allowEmpty' => true,
+							'rule' => array('between', 0, 100),
+							'message' => 'O currículo lattes pode ter no máximo 100 caracteres.'),
+					'url' => array('allowEmpty' => true, 'required' => true,
+							'rule' => 'url',
+							'message' => 'Formato de URL inválido.')));
 
 	function validateUserType() {
 		switch ($this->data['User']['userType']) {

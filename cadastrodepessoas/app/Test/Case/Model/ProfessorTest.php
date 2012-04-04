@@ -2,7 +2,7 @@
 App::uses('User', 'Model');
 
 class ProfessorTest extends CakeTestCase {
-	public $fixtures = array('app.user', 'app.professor');
+	public $fixtures = array('app.user', 'app.professor', 'app.department');
 
 	public function setup() {
 		parent::setUp();
@@ -11,30 +11,18 @@ class ProfessorTest extends CakeTestCase {
 	public function testSaveProfile() {
 
 		$user_id = 445678;
-		$user_dept = 'DCC';
-		$user_lattes = 'http://my.lattes.com';
-		$user_webpage = 'http://my.site.com';
-		
-		
+		$user_dept_id = 1;
+
 		$data = array('Professor' => array());
-		$data['Professor']['department'] = $user_dept;
-		$data['Professor']['lattes'] = $user_lattes;
-		$data['Professor']['webpage'] = $user_webpage;
-		
-		
+		$data['Professor']['department_id'] = $user_dept_id;
+
 		$this->Professor->saveProfile($user_id, $data);
 
 		$result = $this->Professor->findById($this->Professor->id);
 
 		$this
-				->assertEquals($data['Professor']['department'],
-						$result['Professor']['department']);
+				->assertEquals($data['Professor']['department_id'],
+						$result['Professor']['department_id']);
 		$this->assertEquals($user_id, $result['Professor']['user_id']);
-		$this->assertEquals($data['Professor']['lattes'],
-				$result['Professor']['lattes']);
-		$this
-		->assertEquals($data['Professor']['webpage'],
-				$result['Professor']['webpage']);
-
 	}
 }

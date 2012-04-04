@@ -4,7 +4,7 @@ App::uses('UsersController', 'Controller');
 
 class UsersControllerTest extends ControllerTestCase {
 	public $fixtures = array('app.user', 'app.student', 'app.professor',
-			'app.employee');
+			'app.employee', 'app.course', 'app.department');
 
 	public function setUp() {
 		parent::setUp();
@@ -36,9 +36,10 @@ class UsersControllerTest extends ControllerTestCase {
 				'User' => array('name' => 'User Test', 'nusp' => '1234567',
 						'email' => 'test@ime.usp.br', 'password' => '123456',
 						'passwordConfirmation' => '123456',
-						'userType' => 'Student'));
+						'userType' => 'Student', 'lattes' => '',
+						'webpage' => ''));
 
-		$data['Student']['course'] = 'BCC';
+		$data['Student']['course_id'] = 1;
 		$this
 				->testAction('Users/createAccount',
 						array('method' => 'post', 'data' => $data));
