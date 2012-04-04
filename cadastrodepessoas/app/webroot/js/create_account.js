@@ -17,6 +17,14 @@ $(document).ready(function() {
 		});
 	}
 	
+	$('.radio').each(function() {
+		$(this).removeClass('required');
+	});
+	
+	$('.radio').each(function() {
+		$(this).addClass('requiredLegend');
+	});
+	
 	showSelectedRadio();
 	
 	$('.userTypeRadio').change(function() {

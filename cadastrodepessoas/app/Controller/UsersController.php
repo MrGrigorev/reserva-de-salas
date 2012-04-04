@@ -21,6 +21,13 @@ class UsersController extends AppController {
 	public function isAuthorized($user) {
 		parent::isAuthorized($user);
 
+		$params = $this->params;
+
+		if ($params['action'] == 'listActivationRequests') {
+			if ($user['user_type'] == 'user')
+				return false;
+		}
+
 		return true;
 	}
 
@@ -67,7 +74,7 @@ class UsersController extends AppController {
 		}
 	}
 
-	public function login() {		
+	public function login() {
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				$user = $this->getLoggedUser();
@@ -186,6 +193,8 @@ class UsersController extends AppController {
 		if ($this->User->exists() == false)
 			return;
 
+		$this->Email->sendActivationReport($this->User->findById($userId));
+
 		$this->User->saveField('activation_status', 'active');
 	}
 
@@ -194,6 +203,8 @@ class UsersController extends AppController {
 
 		if ($this->User->exists() == false)
 			return;
+
+		$this->Email->sendRejectionReport($this->User->findById($userId));
 
 		$this->User->delete($userId);
 	}

@@ -9,6 +9,9 @@ body {
 	background: #D1D1D1 url(../img/bg.png) repeat;
 	font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
 }
+h1 {
+	margin-bottom: 30px;
+}
 /* Rounded Borders */
 .roundedBorders {
 	-moz-border-radius: 8px;
@@ -40,7 +43,7 @@ input[type='submit']:hover {
 	background: -webkit-linear-gradient(top, #FF6666, #700000);
 	background: -moz-linear-gradient(top, #FF6666, #700000);
 }
-form .required label:after {
+form .required label:after, .required legend:after, .requiredLegend legend:after {
 	color: #e32;
 	content: '*';
 	display:inline;
