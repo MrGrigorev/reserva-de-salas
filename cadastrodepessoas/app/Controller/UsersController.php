@@ -170,7 +170,7 @@ class UsersController extends AppController {
 		$this->redirect(array('controller' => 'Users', 'action' => 'login'));
 	}
 
-	public function listActivationRequests() {
+	public function listActivationRequests($order = 'User.name ASC') {
 		if ($this->request->is('post')) {
 			if ($this->request->data['action'] == 'Ativa') {
 				foreach ($this->request->data['User'] as $user)
@@ -183,7 +183,7 @@ class UsersController extends AppController {
 			}
 		}
 
-		$users = $this->User->order = 'User.name ASC';
+		$users = $this->User->order = $order;
 		$users = $this->User
 				->find('all',
 						array(
@@ -195,6 +195,7 @@ class UsersController extends AppController {
 		}
 
 		$this->set('usersWaitingActivation', $users);
+		$this->set('actualOrder', $order);
 	}
 
 	private function activateAccount($userId) {

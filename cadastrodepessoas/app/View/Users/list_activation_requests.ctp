@@ -1,21 +1,39 @@
 <h1>Lista de usuários aguandando ativação</h1>
 <br />
-<table width='80%' align='center'>
-	<tr><th>Nome</th><th>Nusp</th><th>Perfil</th><th>Seleção</th></tr>
+
+<table id="usersTable">
 <?php
-	$html = "";
-	echo $this->Form->Create('User');
-	foreach ($usersWaitingActivation as $userWaitingActivation) {
-		$html = "<tr><td>{$userWaitingActivation['User']['name']}</td>";
-		$html .= "<td>{$userWaitingActivation['User']['nusp']}</td>";
-		$html .= "<td>{$userWaitingActivation['User']['profile']}</td>";
-		$html .= "<td>" . $this->Form->Input($userWaitingActivation['User']['id'] . '.isChecked', array('type'=>'checkbox', 'label' => '')) ."</td></tr>";
-		echo $this->Form->Input($userWaitingActivation['User']['id'] . '.id', array('type' => 'hidden', 'value' => $userWaitingActivation['User']['id']));
+	function orderParameter($attribute, $actualOrder) {
+		$parameter = 'User.' . $attribute . ' ASC';
+
+		if ($parameter != $actualOrder)
+			return $parameter;
 		
-		echo $html;
+		return 'User.' . $attribute . ' DESC'; 
 	}
+
+	$parameter = orderParameter('name', $actualOrder);
+	$linkName = $this->Html->link('Nome', array('controller' => 'Users', 'action' => 'listActivationRequests', $parameter));
+	
+	$parameter = orderParameter('nusp', $actualOrder);
+	$linkNusp = $this->Html->link('Número USP', array('controller' => 'Users', 'action' => 'listActivationRequests', $parameter));
+
+	echo $this->Html->tableHeaders(array($linkName, $linkNusp, __('Perfil'), __('Seleção')));
+
+	echo $this->Form->Create('User');
+	
+	$cells = array();
+	foreach ($usersWaitingActivation as $userWaitingActivation) {
+		$cells[] = array($userWaitingActivation['User']['name'],
+						 $userWaitingActivation['User']['nusp'],
+						 $userWaitingActivation['User']['profile'],
+						 $this->Form->Input($userWaitingActivation['User']['id'] . '.isChecked', array('type'=>'checkbox', 'label' => '')));
+	}
+
+	echo $this->Html->tableCells($cells);
 ?>
 </table>
+
 <table>
 <?php
 	echo "<tr><td>" . $this->Form->Submit('Ativa', array('name' => 'action')) . "</td>"; 

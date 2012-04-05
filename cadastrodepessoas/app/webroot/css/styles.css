@@ -2,13 +2,15 @@
 ** GENERAL
 */
 * {
-	margin:0;
-	padding:0;
+	margin: 0;
+	padding: 0;
 }
+
 body {
 	background: #D1D1D1 url(../img/bg.png) repeat;
 	font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
 }
+
 h1 {
 	margin-bottom: 30px;
 }
@@ -17,14 +19,17 @@ h1 {
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 }
+
 input {
 	margin: 5px;
 	padding: 5px;
 }
-input[type='text'], input[type='password'] {
+
+input[type='text'],input[type='password'] {
 	background: #dddddd;
 	border: 2px solid #aaaaaa;
 }
+
 input[type='submit'] {
 	color: #ffffff;
 	font-weight: bold;
@@ -38,16 +43,20 @@ input[type='submit'] {
 	-webkit-border-radius: 8px;
 	cursor: pointer;
 }
+
 input[type='submit']:hover {
 	background: #700000;
 	background: -webkit-linear-gradient(top, #FF6666, #700000);
 	background: -moz-linear-gradient(top, #FF6666, #700000);
 }
-form .required label:after, .required legend:after, .requiredLegend legend:after {
+
+form .required label:after,.required legend:after,.requiredLegend legend:after
+	{
 	color: #e32;
 	content: '*';
-	display:inline;
+	display: inline;
 }
+
 fieldset {
 	border: none;
 	margin: 5px 0;
@@ -65,43 +74,52 @@ fieldset {
 	background: -webkit-linear-gradient(top, #D60000, #700000);
 	background: -moz-linear-gradient(top, #D60000, #700000);
 }
+
 #header {
 	width: 1034px;
 	margin: 0 auto;
 	height: 40px;
 }
+
 #title {
 	float: left;
-	
 }
+
 #title a {
 	color: #ffffff;
 	text-decoration: none;
 }
+
 #title a:hover {
 	color: #dddddd;
 	text-decoration: none;
 }
+
 #title img {
 	vertical-align: middle;
 }
+
 #menu {
 	float: right;
 }
+
 #menu ul {
 	list-style: none;
 }
+
 #menu ul li {
 	display: inline;
 	padding: 5px;
-	
 }
+
 #menu ul li:hover {
 	background: #ffffff;
 }
+
 #menu ul li:hover a {
 	color: #000000;
 }
+
 #menu ul li a {
 	color: #ffffff;
 	text-decoration: none;
@@ -116,6 +134,15 @@ fieldset {
 	border: 2px solid #aaaaaa;
 	background: #ffffff;
 }
+
 .userType {
 	display: none;
+}
+
+#usersTable {
+	width: 100%;
+}
+
+#usersTable tr:HOVER {
+	background-color: yellow;
 }
