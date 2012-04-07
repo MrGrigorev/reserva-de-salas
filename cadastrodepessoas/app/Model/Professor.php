@@ -6,6 +6,12 @@ class Professor extends AppModel {
 			'User' => array('className' => 'User', 'foreignKey' => 'user_id'),
 			'Department' => array('className' => 'Department',
 					'foreignKey' => 'department_id'));
+	
+	public $validate = array(
+			'department_id' => array(
+					'not empty' => array('required' => true,
+							'rule' => 'notEmpty',
+							'message' => "Não deve ser vazio.")));
 
 	public function saveProfile($id, $data) {
 		$data['Professor']['user_id'] = $id;

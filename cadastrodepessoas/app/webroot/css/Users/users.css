@@ -1,12 +1,17 @@
 @CHARSET "UTF-8";
-.mandatory {
-	background: #ffff00;
-}
-.text label, .password label, .file label, .radio legend {
+.text label, .password label, .file label, .radio legend, .select label {
 	display: inline-block;
 	width: 200px;
 	text-align: right;
 }
 .radio legend {
 	float: left;
+}
+select {
+	margin-left: 5px;
+	font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+	font-size: 1.0em;
+}
+.userType {
+	display: none;
 }

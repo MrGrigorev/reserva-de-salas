@@ -7,6 +7,12 @@ class Student extends AppModel {
 			'Course' => array('className' => 'Course',
 					'foreignKey' => 'course_id'));
 
+	public $validate = array(
+			'course_id' => array(
+					'not empty' => array('required' => true,
+							'rule' => 'notEmpty',
+							'message' => "Não deve ser vazio.")));
+
 	public function saveProfile($id, $data) {
 		$data['Student']['user_id'] = $id;
 
