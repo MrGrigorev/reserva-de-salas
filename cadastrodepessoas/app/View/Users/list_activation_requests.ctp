@@ -1,4 +1,4 @@
-<h1>Lista de usuários aguandando ativação</h1>
+<h1><?php __('Lista de usuários aguandando ativação'); ?></h1>
 <br />
 
 <table id="usersTable">
@@ -13,10 +13,10 @@
 	}
 
 	$parameter = orderParameter('name', $actualOrder);
-	$linkName = $this->Html->link('Nome', array('controller' => 'Users', 'action' => 'listActivationRequests', $parameter));
+	$linkName = $this->Html->link(__('Nome'), array('controller' => 'Users', 'action' => 'listActivationRequests', $parameter));
 	
 	$parameter = orderParameter('nusp', $actualOrder);
-	$linkNusp = $this->Html->link('Número USP', array('controller' => 'Users', 'action' => 'listActivationRequests', $parameter));
+	$linkNusp = $this->Html->link(__('Número USP'), array('controller' => 'Users', 'action' => 'listActivationRequests', $parameter));
 
 	echo $this->Html->tableHeaders(array($linkName, $linkNusp, __('Perfil'), __('Seleção')));
 
@@ -36,9 +36,9 @@
 
 <table>
 <?php
-	echo "<tr><td>" . $this->Form->Submit('Ativa', array('name' => 'action')) . "</td>"; 
-	echo "<td>" . $this->Form->Submit('Rejeita', array('name' => 'action')) . "</td></tr>";
-	
+	echo "<tr><td>" . $this->Form->Submit(__('Ativa'), array('name' => 'action')) . "</td>"; 
+	echo "<td>" . $this->Form->Submit(__('Rejeita'), array('name' => 'action')) . "</td></tr>";
+
 	echo $this->Form->End();
 ?>
 </table>
