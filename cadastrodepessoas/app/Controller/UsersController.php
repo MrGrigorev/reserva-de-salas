@@ -170,7 +170,8 @@ class UsersController extends AppController {
 		$this->redirect(array('controller' => 'Users', 'action' => 'login'));
 	}
 
-	public function listActivationRequests($order = 'User.name ASC') {
+	public function listActivationRequests($order = 'User.name ASC',
+			$profileOrder = null) {
 		if ($this->request->is('post')) {
 			if ($this->request->data['action'] == 'Ativa') {
 				foreach ($this->request->data['User'] as $user)
@@ -194,8 +195,15 @@ class UsersController extends AppController {
 			$users[$i]['User']['profile'] = $this->User->profile($users[$i]);
 		}
 
+		if ($profileOrder != null)
+			array_multisort(array_map($this->getProfile, $users), $users);
+
+		if ($profileOrder == 'DESC')
+			$users = array_reverse($users);
+
 		$this->set('usersWaitingActivation', $users);
 		$this->set('actualOrder', $order);
+		$this->set('profileOrder', $profileOrder);
 	}
 
 	private function activateAccount($userId) {
@@ -218,5 +226,9 @@ class UsersController extends AppController {
 		$this->Email->sendRejectionReport($this->User->findById($userId));
 
 		$this->User->delete($userId);
+	}
+
+	private function getProfile($user) {
+		return $user['User']['profile'];
 	}
 }

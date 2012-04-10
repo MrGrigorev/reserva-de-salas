@@ -17,8 +17,13 @@
 	
 	$parameter = orderParameter('nusp', $actualOrder);
 	$linkNusp = $this->Html->link(__('Número USP'), array('controller' => 'Users', 'action' => 'listActivationRequests', $parameter));
+	
+	$parameter = 'ASC';
+	if ($parameter == $profileOrder)
+		$parameter = 'DESC';
+	$linkProfile = $this->Html->link(__('Perfil'), array('controller' => 'Users', 'action' => 'listActivationRequests', 'User.name ASC', $parameter));
 
-	echo $this->Html->tableHeaders(array($linkName, $linkNusp, __('Perfil'), __('Seleção')));
+	echo $this->Html->tableHeaders(array($linkName, $linkNusp, $linkProfile, __('Seleção')));
 
 	echo $this->Form->Create('User');
 	
