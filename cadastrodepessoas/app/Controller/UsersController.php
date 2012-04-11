@@ -85,6 +85,11 @@ class UsersController extends AppController {
 	}
 
 	public function login() {
+		if ($this->Auth->loggedIn())
+			$this
+					->redirect(
+							array('controller' => 'Users', 'action' => 'index'));
+
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				$user = $this->getLoggedUser();
