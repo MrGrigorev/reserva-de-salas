@@ -131,6 +131,39 @@ class UsersController extends AppController {
 		}
 	}
 
+	public function editProfile() {
+		debug($this->request->data);
+		
+		if ($this->request->is('post') || $this->request->is('put')) {			
+			if ($this->User->save($this->request->data)) {
+				$this->Session->setFlash(__('Dados atualizados.'));
+
+				$this
+						->redirect(
+								array('controller' => 'Users',
+										'action' => 'index'));
+			} else {
+				$this->Session
+						->setFlash(__('E#6: Não foi possível atualizar os dados.'));
+			}
+		}
+
+		$user = array();
+		$user = $this->getLoggedUser();
+		$user = $this->User->findById($user['id']);
+		$this->request->data = $user;
+
+		$this->set('profile', $this->User->profile($user));
+
+		$this->Department->order = 'Department.name ASC';
+		$departments = $this->Department->find('all');
+		$this->set('departments', $departments);
+
+		$this->Course->order = 'Course.name ASC';
+		$courses = $this->Course->find('all');
+		$this->set('courses', $courses);
+	}
+
 	public function logout() {
 		$this->redirect($this->Auth->logout());
 	}

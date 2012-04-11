@@ -32,6 +32,15 @@
 	
 	$cells = array();
 	foreach ($usersWaitingActivation as $userWaitingActivation) {
+		switch ($userWaitingActivation['User']['profile']) {
+			case 'Student': $userWaitingActivation['User']['profile'] = __('Estudante');
+							break;
+			case 'Professor': $userWaitingActivation['User']['profile'] = __('Funcionário Docente');
+							break;
+			case 'Employee': $userWaitingActivation['User']['profile'] = __('Funcionário Não-docente');
+							break;
+		}
+		
 		$cells[] = array($this->Form->Input($userWaitingActivation['User']['id'] . '.isChecked', array('type'=>'checkbox', 'label' => '', 'class' => 'selectableBySelectAll')),
 						 $userWaitingActivation['User']['name'],
 						 $userWaitingActivation['User']['nusp'],

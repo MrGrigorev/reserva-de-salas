@@ -35,6 +35,9 @@
 					</li>
 					<?php } else {?>
 					<li>
+						<?php echo $this->Html->link('Editar perfil', array('controller' => 'Users', 'action' => 'editProfile') ); ?>
+					</li>
+					<li>
 						<?php echo $this->Html->link('Logout', array('controller' => 'Users', 'action' => 'logout') ); ?>
 					</li>
 					<?php } ?>

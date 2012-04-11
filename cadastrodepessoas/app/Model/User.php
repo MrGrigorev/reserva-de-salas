@@ -13,15 +13,15 @@ class User extends AppModel {
 
 	public $validate = array(
 			'nusp' => array(
-					'not empty' => array('required' => true,
+					'not empty' => array('required' => 'create',
 							'rule' => 'notEmpty',
 							'message' => "Não deve ser vazio."),
-					'between' => array('required' => true,
+					'between' => array('required' => 'create',
 							'rule' => array('between', 2, 10),
 							'message' => 'O Número USP deve ser entre 2 e 10 dígitos.'),
-					'numeric' => array('required' => true, 'rule' => 'numeric',
+					'numeric' => array('required' => 'create', 'rule' => 'numeric',
 							'message' => 'Só números são permitidos.'),
-					'is unique' => array('required' => true,
+					'is unique' => array('required' => 'create',
 							'rule' => 'isUnique',
 							'message' => 'Esse Número USP já está cadastrado.')),
 			'name' => array(
@@ -125,11 +125,11 @@ class User extends AppModel {
 	}
 
 	public function profile($user) {
-		$myprofile = 'Estudante';
+		$myprofile = 'Student';
 		if (isset($user['Professor']['id'])) {
 			$myprofile = 'Professor';
 		} else if (isset($user['Employee']['id'])) {
-			$myprofile = 'Funcionário';
+			$myprofile = 'Employee';
 		}
 		return $myprofile;
 	}
