@@ -179,13 +179,13 @@ class UsersController extends AppController {
 			$profileOrder = null) {
 		if ($this->request->is('post')) {
 			if ($this->request->data['action'] == 'Ativa') {
-				foreach ($this->request->data['User'] as $user)
+				foreach ($this->request->data['User'] as $id => $user)
 					if ($user['isChecked'])
-						$this->activateAccount($user['id']);
+						$this->activateAccount($id);
 			} else if ($this->request->data['action'] == 'Rejeita') {
-				foreach ($this->request->data['User'] as $user)
+				foreach ($this->request->data['User'] as $id => $user)
 					if ($user['isChecked'])
-						$this->rejectAccount($user['id']);
+						$this->rejectAccount($id);
 			}
 		}
 

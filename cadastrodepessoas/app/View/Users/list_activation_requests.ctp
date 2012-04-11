@@ -28,7 +28,7 @@
 
 	echo $this->Html->tableHeaders(array($this->Form->Input('selectAll', array('type' => 'checkbox', 'label' => '', 'class' => 'selectAll') ), $linkName, $linkNusp, $linkProfile));
 
-	echo $this->Form->Create('User');
+	echo $this->Form->Create('User', array('class' => 'submittableForm'));
 	
 	$cells = array();
 	foreach ($usersWaitingActivation as $userWaitingActivation) {
@@ -43,10 +43,13 @@
 ?>
 </table>
 
+<div id="dialog-confirm" style="display:none"></div>
+
 <table>
 <?php
-	echo "<tr><td>" . $this->Form->Submit(__('Ativa'), array('name' => 'action')) . "</td>"; 
-	echo "<td>" . $this->Form->Submit(__('Rejeita'), array('name' => 'action')) . "</td></tr>";
+	echo "<tr><td>" . $this->Form->Submit(__('Ativa'), array('class' => 'needConfirmation')) . "</td>"; 
+	echo "<td>" . $this->Form->Submit(__('Rejeita'), array('class' => 'needConfirmation')) . "</td>";
+	echo "<td>" . $this->Form->Input('action', array('type' => 'hidden', 'name' => 'action')) . "</td></tr>";
 
 	echo $this->Form->End();
 ?>

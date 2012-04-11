@@ -7,10 +7,12 @@
 		echo $this->Html->meta('icon');
 		//echo $this->Html->css('cake.generic');
 		echo $this->Html->css('styles');
+		echo $this->Html->css('blitzer/jquery-ui-1.8.18.custom');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 		echo $this->Html->script('lib/jquery-1.7.2.min');
+		echo $this->Html->script('lib/jquery-ui-1.8.18.custom.min');
 	?>
 </head>
 <body>
