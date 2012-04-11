@@ -1,3 +1,6 @@
+<?php
+	echo $this->Html->script('list_activation_requests');  
+?>
 <h1><?php __('Lista de usuários aguandando ativação'); ?></h1>
 <br />
 
@@ -23,16 +26,17 @@
 		$parameter = 'DESC';
 	$linkProfile = $this->Html->link(__('Perfil'), array('controller' => 'Users', 'action' => 'listActivationRequests', 'User.name ASC', $parameter));
 
-	echo $this->Html->tableHeaders(array($linkName, $linkNusp, $linkProfile, __('Seleção')));
+	echo $this->Html->tableHeaders(array($this->Form->Input('selectAll', array('type' => 'checkbox', 'label' => '', 'class' => 'selectAll') ), $linkName, $linkNusp, $linkProfile));
 
 	echo $this->Form->Create('User');
 	
 	$cells = array();
 	foreach ($usersWaitingActivation as $userWaitingActivation) {
-		$cells[] = array($userWaitingActivation['User']['name'],
+		$cells[] = array($this->Form->Input($userWaitingActivation['User']['id'] . '.isChecked', array('type'=>'checkbox', 'label' => '', 'class' => 'selectableBySelectAll')),
+						 $userWaitingActivation['User']['name'],
 						 $userWaitingActivation['User']['nusp'],
-						 $userWaitingActivation['User']['profile'],
-						 $this->Form->Input($userWaitingActivation['User']['id'] . '.isChecked', array('type'=>'checkbox', 'label' => '')));
+						 $userWaitingActivation['User']['profile']
+						 );
 	}
 
 	echo $this->Html->tableCells($cells);
