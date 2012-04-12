@@ -43,23 +43,10 @@ class UsersController extends AppController {
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('Email enviado para validação'));
 
-				switch ($this->request->data['User']['userType']) {
-				case 'Professor':
-					$this->Professor
-							->saveProfile($this->User->id, $this->request->data);
-					break;
-				case 'Student':
-					$this->Student
-							->saveProfile($this->User->id, $this->request->data);
-					break;
-				case 'Employee':
-					$this->Employee
-							->saveProfile($this->User->id, $this->request->data);
-					break;
-				default:
-					$this->Session
-							->setFlash(__('E#2: Erro ao cadastrar perfil'));
-				}
+				$this
+						->saveProfile($this->request->data,
+								$this->request->data['User']['userType'],
+								$this->User->id);
 
 				$user = $this->User->findById($this->User->id);
 
@@ -132,10 +119,10 @@ class UsersController extends AppController {
 	}
 
 	public function editProfile() {
-		debug($this->request->data);
-		
-		if ($this->request->is('post') || $this->request->is('put')) {			
+		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->User->save($this->request->data)) {
+				$this->saveProfile($this->request->data);
+
 				$this->Session->setFlash(__('Dados atualizados.'));
 
 				$this
@@ -144,7 +131,8 @@ class UsersController extends AppController {
 										'action' => 'index'));
 			} else {
 				$this->Session
-						->setFlash(__('E#6: Não foi possível atualizar os dados.'));
+						->setFlash(
+								__('E#6: Não foi possível atualizar os dados.'));
 			}
 		}
 
@@ -268,5 +256,27 @@ class UsersController extends AppController {
 
 	private function getProfile($user) {
 		return $user['User']['profile'];
+	}
+
+	private function saveProfile($user, $profile = null, $userId = null) {
+		if ($profile == null)
+			$profile = $this->User->profile($user);
+
+		if ($userId == null)
+			$userId = $user['User']['id'];
+
+		switch ($profile) {
+		case 'Professor':
+			$this->Professor->saveProfile($userId, $user);
+			break;
+		case 'Student':
+			$this->Student->saveProfile($userId, $user);
+			break;
+		case 'Employee':
+			$this->Employee->saveProfile($userId, $user);
+			break;
+		default:
+			$this->Session->setFlash(__('E#2: Erro ao cadastrar perfil'));
+		}
 	}
 }
