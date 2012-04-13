@@ -13,10 +13,10 @@
 <h1><?php echo __('Editar conta'); ?></h1>
 
 <?php
-	echo $this->Html->Image('..' . DS . 'app' . DS . 'webroot' . DS . 'photos' . DS . 'thumb' . DS . 'small' . DS . $this->request->data['User']['photo']);
-	echo "<br />";
-	echo __('Nusp: ') . $this->request->data['User']['nusp'] . "<br />";
-	echo __('Nome: ') . $this->request->data['User']['name'] . "<br />";
+	echo '<span class="nonEditable">' . __('Foto ') . '</span>&nbsp;' . $this->Html->Image('..' . DS . 'app' . DS . 'webroot' . DS . 'photos' . DS . 'thumb' . DS . 'small' . DS . $this->request->data['User']['photo']);
+	echo '<br />';
+ 	echo '<span class="nonEditable">' . __('Número USP') . '</span>&nbsp;' . $this->request->data['User']['nusp'] . '<br />';
+	echo '<span class="nonEditable">' . __('Nome Completo ') . '</span>&nbsp;' . $this->request->data['User']['name'] . '<br />';
 
 	echo $this->Form->Create('User', array('type' => 'file'));
 	echo $this->Form->Input('id', array('type' => 'hidden'));
