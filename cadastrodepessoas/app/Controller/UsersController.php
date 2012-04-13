@@ -31,6 +31,11 @@ class UsersController extends AppController {
 			if ($user['user_type'] == 'user')
 				return false;
 		}
+		
+		if ($params['action'] == 'listUsers') {
+			if ($user['user_type'] == 'user')
+				return false;
+		}
 
 		return true;
 	}
@@ -228,6 +233,28 @@ class UsersController extends AppController {
 			$users = array_reverse($users);
 
 		$this->set('usersWaitingActivation', $users);
+		$this->set('actualOrder', $order);
+		$this->set('profileOrder', $profileOrder);
+	}
+	
+	public function listUsers($order = 'User.name ASC',
+			$profileOrder = null) {
+
+		$users = $this->User->order = $order;
+		$users = $this->User
+				->find('all');
+
+		for ($i = 0; $i < count($users); $i++) {
+			$users[$i]['User']['profile'] = $this->User->profile($users[$i]);
+		}
+
+		if ($profileOrder != null)
+			array_multisort(array_map($this->getProfile, $users), $users);
+
+		if ($profileOrder == 'DESC')
+			$users = array_reverse($users);
+
+		$this->set('users', $users);
 		$this->set('actualOrder', $order);
 		$this->set('profileOrder', $profileOrder);
 	}

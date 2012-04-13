@@ -22,6 +22,10 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testGetLogin() {
 		$this->testAction('/Users/login', array('method' => 'get'));
 	}
+	
+	public function testGetListUsers() {
+		$this->testAction('/Users/listUsers', array('method' => 'get'));
+	}
 
 	public function testGetResendConfirmationEmail() {
 		$user = $this->User->find('first');

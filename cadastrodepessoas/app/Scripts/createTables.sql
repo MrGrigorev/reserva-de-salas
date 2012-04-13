@@ -11,7 +11,7 @@ CREATE TABLE users (
 	photo VARCHAR(100) DEFAULT NULL,
 	webpage VARCHAR(100) DEFAULT NULL,
 	lattes VARCHAR(100) DEFAULT NULL,
-    activation_status ENUM('waiting_validation', 'waiting_activation', 'active') DEFAULT 'waiting_validation' NOT NULL,
+    activation_status ENUM('active', 'waiting_activation', 'waiting_validation') DEFAULT 'waiting_validation' NOT NULL,
     hash VARCHAR(40) NOT NULL,
     user_type ENUM('user', 'admin') DEFAULT 'user',
 	created DATETIME DEFAULT NULL,
