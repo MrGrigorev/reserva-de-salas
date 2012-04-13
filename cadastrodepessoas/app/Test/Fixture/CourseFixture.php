@@ -27,5 +27,6 @@ class CourseFixture extends CakeTestFixture {
 	 * @var array
 	 */
 	public $records = array(
-			array('id' => 1, 'name' => 'Lorem ipsum dolor sit amet'),);
+			array('id' => 1, 'name' => 'BCC'),
+			array('id' => 2, 'name' => 'Pura'),);
 }

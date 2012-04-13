@@ -124,6 +124,7 @@ class UsersController extends AppController {
 	}
 
 	public function editProfile() {
+		debug($this->request->data);
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->User->save($this->request->data)) {
 				$this->saveProfile($this->request->data);

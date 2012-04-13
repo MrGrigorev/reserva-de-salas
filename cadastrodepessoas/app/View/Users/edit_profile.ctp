@@ -20,7 +20,6 @@
 
 	echo $this->Form->Create('User', array('type' => 'file'));
 	echo $this->Form->Input('id', array('type' => 'hidden'));
-	echo $this->Form->Input('email', array('label' => __('E-mail')));
 	echo $this->Form->Input('photo', array('label' => __('Trocar Foto'), 'type' => 'file'));
 	echo $this->Form->Input('webpage', array('label' => __('Página na Web')));
 	echo $this->Form->Input('lattes', array('label' => __('Currículo Lattes')));

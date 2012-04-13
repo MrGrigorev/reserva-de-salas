@@ -100,5 +100,16 @@ class UserFixture extends CakeTestFixture {
 					'hash' => 'dhjlkhfdajlkhf', 'user_type' => 'admin',
 					'created' => '2012-03-23 15:48:25',
 					'modified' => '2012-03-23 15:48:25',
-					'activation_status' => 'active'));
+					'activation_status' => 'active'),
+			array('id' => 6, 'nusp' => '424242',
+					'name' => 'Lorem ipsum dolor sit amet',
+					'email' => 'test6@cadastrodepessoas.com.br',
+					'password' => '5d4ec527e929f6b5d1715451f7b3d37f4da56326',
+					'photo' => 'Lorem ipsum dolor sit amet',
+					'hash' => 'dhjlkhfdajlkhf', 'user_type' => 'user',
+					'created' => '2012-03-23 15:48:25',
+					'modified' => '2012-03-23 15:48:25',
+					'activation_status' => 'active')
+			);
+			
 }

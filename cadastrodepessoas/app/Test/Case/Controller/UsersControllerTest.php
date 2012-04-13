@@ -22,7 +22,7 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testGetLogin() {
 		$this->testAction('/Users/login', array('method' => 'get'));
 	}
-	
+
 	public function testGetListUsers() {
 		$this->testAction('/Users/listUsers', array('method' => 'get'));
 	}
@@ -57,6 +57,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this
 				->assertEqual($user['User']['password'],
 						AuthComponent::password($data['User']['password']));
+		/* TODO: Test course */
 	}
 
 	public function testConfirmEmail() {
@@ -70,6 +71,58 @@ class UsersControllerTest extends ControllerTestCase {
 		$this
 				->assertEqual($result['User']['activation_status'],
 						'waiting_activation');
+	}
+
+	public function testEditProfile() {
+		$user_id = 6;
+		$user_before = $this->User->findById($user_id);
+
+		$data = array(
+				'User' => array('id' => $user_id,
+						'lattes' => 'http://changedlattes.com',
+						'webpage' => 'http://changedsite.com'));
+		$data['Student']['id'] = 2;
+		$data['Student']['course_id'] = 2;
+
+		$this
+				->testAction('Users/editProfile/',
+						array('method' => 'post', 'data' => $data));
+
+		$user_after = $this->User->findById($user_id);
+
+		$this
+				->assertEqual($user_after['User']['webpage'],
+						$data['User']['webpage']);
+		$this
+				->assertEqual($user_after['User']['lattes'],
+						$data['User']['lattes']);
+		$this
+				->assertEqual($user_after['Student']['course_id'],
+						$data['Student']['course_id']);
+		/* TODO: test photo */
+	}
+
+	public function testEditProfileInvalidURL() {
+		$user_id = 6;
+		$user_before = $this->User->findById($user_id);
+
+		$data = array(
+				'User' => array('id' => $user_id,
+						'lattes' => 'IamNotAnURL',
+						'webpage' => 'meNeither'));
+
+		$this
+				->testAction('Users/editProfile/',
+						array('method' => 'post', 'data' => $data));
+
+		$user_after = $this->User->findById($user_id);
+
+		$this
+				->assertEqual($user_after['User']['webpage'],
+						$user_before['User']['webpage']);
+		$this
+				->assertEqual($user_after['User']['lattes'],
+						$user_before['User']['lattes']);
 	}
 
 	public function testLogin() {
