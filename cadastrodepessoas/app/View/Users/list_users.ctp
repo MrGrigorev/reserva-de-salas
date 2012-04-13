@@ -1,8 +1,9 @@
-<?php include_once 'sharedFunctions.php'; ?>
-
+<?php 
+	include_once 'sharedFunctions.php';
+	echo $this->Html->css('Users/list_users');
+?>
 <h1><?php echo __('Lista de usuários'); ?></h1>
 <br />
-
 <table id="usersTable">
 <?php
 	function orderParameter($attribute, $actualOrder) {
@@ -41,6 +42,20 @@
 		)
 	);
 	echo $this->Html->tableCells($header);
+	
+	echo $this->Form->Create('User');	
+	echo $this->Html->tableCells(array(
+		array(
+			array($this->Form->Input('name', array('label' => __(' '), 'placeholder' => 'Filtrar por nome...')), array()),
+			array($this->Form->Input('nusp', array('label' => __(' '), 'placeholder' => 'Filtrar por NUSP...')), array()),
+			array($this->Form->Input('email', array('label' => __(' '), 'placeholder' => 'Filtrar por e-mail...')), array()),
+			array($this->Form->Input('userType', array('label' => __(' '), 'placeholder' => 'Filtrar por perfil...', 'type' => 'select', 
+				'options' => array('Student' => __('Estudante'), 'Employee' => __('Funcionário (Não Docente)'), 'Professor' => __('Funcionário (Docente)')))), array()),
+			array($this->Form->Input('status', array('label' => __(' '), 'placeholder' => 'Filtrar por status...', 'type' => 'select',
+				'options' => array('active' => __('Ativo'), 'waiting_activation' => __('Esperando ativação'), 'waiting_validation' => __('Esperando validação')))), array())
+		) 
+	));
+	$this->Form->End();
 
 	$cells = array();
 	foreach ($users as $user) {

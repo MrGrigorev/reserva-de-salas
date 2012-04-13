@@ -1,0 +1,9 @@
+input[type='text'],select {
+	width: 88%;
+}
+
+select {
+	font-size: 1.0em;
+	margin: 5px;
+	padding: 5px;
+}
