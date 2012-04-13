@@ -34,4 +34,8 @@
 ?>
 </table>
 <br />
-<?php echo $this->Html->link('Editar perfil', array('controller' => 'Users', 'action' => 'editProfile'), array('class' => 'linkStylized')); ?>
+<?php 
+	if ($loggedUser['id'] == $user['User']['id']) {
+		echo $this->Html->link('Editar perfil', array('controller' => 'Users', 'action' => 'editProfile'), array('class' => 'linkStylized')); 
+	}
+?>
