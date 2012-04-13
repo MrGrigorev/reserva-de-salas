@@ -137,10 +137,41 @@ fieldset {
 
 #usersTable {
 	width: 100%;
+	border-collapse: collapse;
+	border-top: 1px solid #aaaaaa;
+	border-bottom: 1px solid #aaaaaa;
 }
-
-#usersTable tr:HOVER {
-	background-color: yellow;
+#usersTable tr {
+	border-left: 1px solid #aaaaaa;
+}
+#usersTable td.header {
+	background: #E86D6D;
+	padding: 5px;
+	border-right: 1px solid #aaaaaa;
+	font-weight: bold;
+	text-align: center;
+}
+#usersTable td.checkbox {
+	width: 10px;
+}
+#usersTable td.header a {
+	text-decoration: none;
+	color: #000000;
+	display: inline-block;
+	width: 100%;
+}
+#usersTable tr:nth-child(2n+1) {
+	background: #f5f5f5;
+}
+#usersTable tr:nth-child(2n) {
+	background: #ededed;
+}
+#usersTable tr:hover {
+	background: #F09E9E;
+}
+#usersTable td {
+	padding: 3px;
+	border-right: 1px solid #aaaaaa;
 }
 
 /* Form errors */

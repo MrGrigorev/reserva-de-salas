@@ -1,7 +1,7 @@
 <?php
 	echo $this->Html->script('list_activation_requests');  
 ?>
-<h1><?php __('Lista de usuários aguandando ativação'); ?></h1>
+<h1><?php echo __('Lista de usuários aguandando ativação'); ?></h1>
 <br />
 
 <table id="usersTable">
@@ -21,12 +21,26 @@
 	$parameter = orderParameter('nusp', $actualOrder);
 	$linkNusp = $this->Html->link(__('Número USP'), array('controller' => 'Users', 'action' => 'listActivationRequests', $parameter));
 	
+	$parameter = orderParameter('email', $actualOrder);
+	$linkEmail = $this->Html->link(__('E-Mail'), array('controller' => 'Users', 'action' => 'listActivationRequests', $parameter));
+	
 	$parameter = 'ASC';
 	if ($parameter == $profileOrder)
 		$parameter = 'DESC';
 	$linkProfile = $this->Html->link(__('Perfil'), array('controller' => 'Users', 'action' => 'listActivationRequests', 'User.name ASC', $parameter));
 
-	echo $this->Html->tableHeaders(array($this->Form->Input('selectAll', array('type' => 'checkbox', 'label' => '', 'class' => 'selectAll') ), $linkName, $linkNusp, $linkProfile));
+	
+	$header = array(
+		array(
+			array($this->Form->Input('selectAll', array('type' => 'checkbox', 'label' => '', 'class' => 'selectAll')), array('class' => 'header checkbox')),
+			array($linkName, array('class' => 'header')),
+			array($linkNusp, array('class' => 'header')),
+			array($linkEmail, array('class' => 'header')),
+			array($linkProfile, array('class' => 'header'))
+		)
+	);
+	echo $this->Html->tableCells($header);
+	
 
 	echo $this->Form->Create('User', array('class' => 'submittableForm'));
 	
@@ -44,6 +58,7 @@
 		$cells[] = array($this->Form->Input($userWaitingActivation['User']['id'] . '.isChecked', array('type'=>'checkbox', 'label' => '', 'class' => 'selectableBySelectAll')),
 						 $userWaitingActivation['User']['name'],
 						 $userWaitingActivation['User']['nusp'],
+						 $userWaitingActivation['User']['email'],
 						 $userWaitingActivation['User']['profile']
 						 );
 	}

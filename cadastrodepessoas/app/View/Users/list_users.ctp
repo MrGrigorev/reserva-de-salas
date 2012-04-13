@@ -29,7 +29,16 @@
 	$parameter = orderParameter('activation_status', $actualOrder);
 	$linkStatus = $this->Html->link(__('Status'), array('controller' => 'Users', 'action' => 'listUsers', $parameter));
 
-	echo $this->Html->tableHeaders(array($linkName, $linkNusp, $linkEmail, $linkProfile, $linkStatus));
+	$header = array(
+		array(
+			array($linkName, array('class' => 'header')),
+			array($linkNusp, array('class' => 'header')),
+			array($linkEmail, array('class' => 'header')),
+			array($linkProfile, array('class' => 'header')),
+			array($linkStatus, array('class' => 'header'))
+		)
+	);
+	echo $this->Html->tableCells($header);
 
 	$cells = array();
 	foreach ($users as $user) {
