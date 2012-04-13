@@ -106,6 +106,24 @@ class User extends AppModel {
 			$this->data['User']['password'] = AuthComponent::password(
 					$this->data['User']['password']);
 		}
+
+		if (isset($this->data['User']['webpage'])) {
+			$webpageAddress = $this->data['User']['webpage'];
+			if (!preg_match('/^http:\/\//', $webpageAddress)
+					&& !preg_match('/^https:\/\//', $webpageAddress)) {
+				$webpageAddress = "http://" . $webpageAddress;
+			}
+			$this->data['User']['webpage'] = $webpageAddress;
+		}
+
+		if (isset($this->data['User']['lattes'])) {
+			$lattesAddress = $this->data['User']['lattes'];
+			if (!preg_match('/^http:\/\//', $lattesAddress)
+					&& !preg_match('/^https:\/\//', $lattesAddress)) {
+				$lattesAddress = "http://" . $lattesAddress;
+			}
+			$this->data['User']['lattes'] = $lattesAddress;
+		}
 	}
 
 	public function profile($user) {

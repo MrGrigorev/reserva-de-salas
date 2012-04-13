@@ -31,7 +31,7 @@ class UsersController extends AppController {
 			if ($user['user_type'] == 'user')
 				return false;
 		}
-		
+
 		if ($params['action'] == 'listUsers') {
 			if ($user['user_type'] == 'user')
 				return false;
@@ -124,7 +124,6 @@ class UsersController extends AppController {
 	}
 
 	public function editProfile() {
-		debug($this->request->data);
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->User->save($this->request->data)) {
 				$this->saveProfile($this->request->data);
@@ -237,13 +236,11 @@ class UsersController extends AppController {
 		$this->set('actualOrder', $order);
 		$this->set('profileOrder', $profileOrder);
 	}
-	
-	public function listUsers($order = 'User.name ASC',
-			$profileOrder = null) {
+
+	public function listUsers($order = 'User.name ASC', $profileOrder = null) {
 
 		$users = $this->User->order = $order;
-		$users = $this->User
-				->find('all');
+		$users = $this->User->find('all');
 
 		for ($i = 0; $i < count($users); $i++) {
 			$users[$i]['User']['profile'] = $this->User->profile($users[$i]);
@@ -258,6 +255,31 @@ class UsersController extends AppController {
 		$this->set('users', $users);
 		$this->set('actualOrder', $order);
 		$this->set('profileOrder', $profileOrder);
+	}
+
+	public function viewProfile($userId = null) {
+		if ($userId == null) {
+			$user = $this->getLoggedUser();
+			$userId = $user['id'];
+		}
+
+		$user = $this->User->findById($userId);
+		$user['User']['profile'] = $this->User->profile($user);
+		if ($user['User']['profile'] == 'Student') {
+			$course = $this->Course->findById($user['Student']['course_id']);
+			$user['User']['subProfile'] = $course['Course']['name'];
+		}
+		
+		if ($user['User']['profile'] == 'Professor') {
+			$department = $this->Department->findById($user['Professor']['department_id']);
+			$user['User']['subProfile'] = $department['Department']['name'];
+		}
+		
+		if ($user['User']['profile'] == 'Employee') {
+			$user['User']['subProfile'] = $user['Employee']['occupation'];
+		}
+
+		$this->set('user', $user);
 	}
 
 	private function activateAccount($userId) {

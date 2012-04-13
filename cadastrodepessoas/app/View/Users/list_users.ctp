@@ -1,3 +1,5 @@
+<?php include_once 'sharedFunctions.php'; ?>
+
 <h1><?php echo __('Lista de usuários'); ?></h1>
 <br />
 
@@ -42,24 +44,13 @@
 
 	$cells = array();
 	foreach ($users as $user) {
-		switch ($user['User']['profile']) {
-			case 'Student': $user['User']['profile'] = __('Estudante');
-							break;
-			case 'Professor': $user['User']['profile'] = __('Funcionário Docente');
-							break;
-			case 'Employee': $user['User']['profile'] = __('Funcionário Não-docente');
-							break;
-		}
-		switch ($user['User']['activation_status']) {
-			case 'active': $user['User']['activation_status'] = __('Ativo');
-							break;
-			case 'waiting_validation': $user['User']['activation_status'] = __('Esperando validação');
-							break;
-			case 'waiting_activation': $user['User']['activation_status'] = __('Esperando ativação');
-							break;
-		}
+		$user['User']['profile'] = getTranslatedProfile($user);
 		
-		$cells[] = array($user['User']['name'], $user['User']['nusp'], $user['User']['email'], $user['User']['profile'], $user['User']['activation_status']);
+		$user['User']['activation_status'] = getTranslatedStatus($user);
+		
+		$linkView = $this->Html->link($user['User']['name'], array('controller' => 'Users', 'action' => 'viewProfile', $user['User']['id']));
+		
+		$cells[] = array($linkView, $user['User']['nusp'], $user['User']['email'], $user['User']['profile'], $user['User']['activation_status']);
 	}
 
 	echo $this->Html->tableCells($cells);

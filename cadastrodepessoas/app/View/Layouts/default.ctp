@@ -28,17 +28,17 @@
 				<ul>
 					<?php if ($isLogged == false) {?>
 					<li>
-						<?php echo $this->Html->link('Criar conta', array('controller' => 'Users', 'action' => 'createAccount') ); ?>
+						<?php echo $this->Html->link(__('Criar conta'), array('controller' => 'Users', 'action' => 'createAccount') ); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->link('Login', array('controller' => 'Users', 'action' => 'login') ); ?>
+						<?php echo $this->Html->link(__('Entrar'), array('controller' => 'Users', 'action' => 'login') ); ?>
 					</li>
 					<?php } else {?>
 					<li>
-						<?php echo $this->Html->link('Editar perfil', array('controller' => 'Users', 'action' => 'editProfile') ); ?>
+						<?php echo $this->Html->link(__('Perfil'), array('controller' => 'Users', 'action' => 'viewProfile') ); ?>
 					</li>
 					<li>
-						<?php echo $this->Html->link('Logout', array('controller' => 'Users', 'action' => 'logout') ); ?>
+						<?php echo $this->Html->link(__('Sair'), array('controller' => 'Users', 'action' => 'logout') ); ?>
 					</li>
 					<?php } ?>
 				</ul>

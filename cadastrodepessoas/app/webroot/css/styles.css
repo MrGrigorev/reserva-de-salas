@@ -30,7 +30,7 @@ input[type='text'],input[type='password'] {
 	border: 2px solid #aaaaaa;
 }
 
-input[type='submit'] {
+input[type='submit'], a.linkStylized {
 	color: #ffffff;
 	font-weight: bold;
 	font-size: 1em;
@@ -42,9 +42,10 @@ input[type='submit'] {
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	cursor: pointer;
+	text-decoration: none;
 }
 
-input[type='submit']:hover {
+input[type='submit']:hover, a.linkStylized:hover {
 	background: #700000;
 	background: -webkit-linear-gradient(top, #FF6666, #700000);
 	background: -moz-linear-gradient(top, #FF6666, #700000);
