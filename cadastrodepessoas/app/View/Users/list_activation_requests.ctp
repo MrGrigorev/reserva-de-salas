@@ -3,7 +3,6 @@
 	echo $this->Html->script('list_activation_requests');  
 ?>
 <h1><?php echo __('Lista de usuários aguandando ativação'); ?></h1>
-<br />
 
 <table id="usersTable">
 <?php
@@ -49,12 +48,14 @@
 	foreach ($usersWaitingActivation as $userWaitingActivation) {
 		$userWaitingActivation['User']['profile'] = getTranslatedProfile($userWaitingActivation);
 		
+		$linkToProfile = $this->Html->link($userWaitingActivation['User']['name'], array('controller' => 'Users', 'action' => 'viewProfile', $userWaitingActivation['User']['id']));
+		
 		$cells[] = array($this->Form->Input($userWaitingActivation['User']['id'] . '.isChecked', array('type'=>'checkbox', 'label' => '', 'class' => 'selectableBySelectAll')),
-						 $userWaitingActivation['User']['name'],
+						 $linkToProfile,
 						 $userWaitingActivation['User']['nusp'],
 						 $userWaitingActivation['User']['email'],
 						 $userWaitingActivation['User']['profile']
-						 );
+				   );
 	}
 
 	echo $this->Html->tableCells($cells);
