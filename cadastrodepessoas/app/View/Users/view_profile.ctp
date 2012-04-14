@@ -34,8 +34,10 @@
 ?>
 </table>
 <br />
-<?php 
-	if ($loggedUser['id'] == $user['User']['id']) {
+<?php
+	if ($loggedUser['user_type'] == 'admin') {
+		echo $this->Html->link('Editar perfil', array('controller' => 'Users', 'action' => 'adminEdit', $user['User']['id']), array('class' => 'linkStylized'));
+	} else if ($loggedUser['id'] == $user['User']['id']) {
 		echo $this->Html->link('Editar perfil', array('controller' => 'Users', 'action' => 'editProfile'), array('class' => 'linkStylized')); 
 	}
 ?>

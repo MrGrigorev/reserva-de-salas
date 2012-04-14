@@ -43,6 +43,7 @@ class User extends AppModel {
 					'not empty' => array('rule' => 'notEmpty',
 							'message' => "Não deve ser vazio."),
 					'confirmation' => array('rule' => 'comparePasswords',
+							'required' => 'create',
 							'message' => 'Senhas não correspondem.')),
 			'userType' => array(
 					'not empty' => array('rule' => 'notEmpty',
@@ -60,7 +61,11 @@ class User extends AppModel {
 							'rule' => array('between', 0, 100),
 							'message' => 'O currículo lattes pode ter no máximo 100 caracteres.'),
 					'url' => array('allowEmpty' => true, 'rule' => 'url',
-							'message' => 'Formato de URL inválido.')));
+							'message' => 'Formato de URL inválido.')),
+			'activation_status' => array('rule' => 'notEmpty',
+					'message' => 'Não deve ser vazio.'),
+			'user_type' => array('rule' => 'notEmpty',
+					'message' => 'Não deve ser vazio.'));
 
 	function validateUserType() {
 		switch ($this->data['User']['userType']) {
@@ -107,21 +112,27 @@ class User extends AppModel {
 					$this->data['User']['password']);
 		}
 
-		if (isset($this->data['User']['webpage'])) {
+		if (isset($this->data['User']['webpage'])
+				&& $this->data['User']['webpage'] != '') {
 			$webpageAddress = $this->data['User']['webpage'];
+
 			if (!preg_match('/^http:\/\//', $webpageAddress)
 					&& !preg_match('/^https:\/\//', $webpageAddress)) {
 				$webpageAddress = "http://" . $webpageAddress;
 			}
+
 			$this->data['User']['webpage'] = $webpageAddress;
 		}
 
-		if (isset($this->data['User']['lattes'])) {
+		if (isset($this->data['User']['lattes'])
+				&& $this->data['User']['lattes'] != '') {
 			$lattesAddress = $this->data['User']['lattes'];
+
 			if (!preg_match('/^http:\/\//', $lattesAddress)
 					&& !preg_match('/^https:\/\//', $lattesAddress)) {
 				$lattesAddress = "http://" . $lattesAddress;
 			}
+
 			$this->data['User']['lattes'] = $lattesAddress;
 		}
 	}

@@ -1,5 +1,7 @@
 <?php
 App::uses('User', 'Model');
+App::uses('Student', 'Model');
+App::uses('Professor', 'Model');
 App::uses('UsersController', 'Controller');
 
 class UsersControllerTest extends ControllerTestCase {
@@ -10,6 +12,8 @@ class UsersControllerTest extends ControllerTestCase {
 		parent::setUp();
 
 		$this->User = ClassRegistry::init('User');
+		$this->Student = ClassRegistry::init('Student');
+		$this->Professor = ClassRegistry::init('Professor');
 
 		$this->UsersController = new UsersController();
 		$this->UsersController->constructClasses();
@@ -26,7 +30,7 @@ class UsersControllerTest extends ControllerTestCase {
 	public function testGetListUsers() {
 		$this->testAction('/Users/listUsers', array('method' => 'get'));
 	}
-	
+
 	public function testGetViewProfile() {
 		$this->testAction('/Users/viewProfile', array('method' => 'get'));
 	}
@@ -37,6 +41,10 @@ class UsersControllerTest extends ControllerTestCase {
 		$this
 				->testAction(
 						'Users/resendConfirmationEmail/' . $user['User']['id']);
+	}
+
+	public function testGetAdminEdit() {
+		$this->testAction('Users/adminEdit', array('method' => 'get'));
 	}
 
 	public function testCreateAccount() {
@@ -111,8 +119,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$user_before = $this->User->findById($user_id);
 
 		$data = array(
-				'User' => array('id' => $user_id,
-						'lattes' => 'IamNotAnURL',
+				'User' => array('id' => $user_id, 'lattes' => 'IamNotAnURL',
 						'webpage' => 'meNeither'));
 
 		$this
@@ -354,6 +361,52 @@ class UsersControllerTest extends ControllerTestCase {
 			$result = $this->User->findById($user['User']['id']);
 
 			$this->assertEqual($result, null);
+		}
+	}
+
+	public function testAdminEdit() {
+		$this->loginWithAdmin();
+
+		$userBefore = $this->User->find('first');
+
+		$userProfile = 'Student';
+		if ($userProfile == $this->User->profile($userBefore))
+			$userProfile = 'Professor';
+
+		$data = array(
+				'User' => array('id' => $userBefore['User']['id'],
+						'name' => 'User Admin Edit',
+						'nusp' => $userBefore['User']['nusp'],
+						'email' => $userBefore['User']['email'],
+						'profile' => $userProfile, 'lattes' => '',
+						'webpage' => ''),
+				$userProfile => array('user_id' => null, 'id' => 1));
+
+		$this
+				->testAction('Users/adminEdit/' . $userBefore['User']['id'],
+						array('method' => 'post', 'data' => $data));
+
+		$userAfter = $this->User->findById($userBefore['User']['id']);
+
+		$this->assertEqual($userAfter['User']['name'], $data['User']['name']);
+		$this->assertEqual($userAfter['User']['nusp'], $data['User']['nusp']);
+
+		if ($userProfile == 'Student') {
+			$professor = $this->Professor
+					->findById($userBefore['Professor']['id']);
+			$this->assertEqual($professor, null);
+
+			$student = $this->Student->findById($userAfter['Student']['id']);
+			$this->assertNotEqual($student, null);
+		}
+
+		if ($userProfile == 'Professor') {
+			$student = $this->Student->findById($userBefore['Student']['id']);
+			$this->assertEqual($student, null);
+
+			$professor = $this->Professor
+					->findById($userAfter['Professor']['id']);
+			$this->assertNotEqual($professor, null);
 		}
 	}
 }

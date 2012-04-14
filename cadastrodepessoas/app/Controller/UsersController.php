@@ -37,6 +37,11 @@ class UsersController extends AppController {
 				return false;
 		}
 
+		if ($params['action'] == 'adminEdit') {
+			if ($user['user_type'] == 'user')
+				return false;
+		}
+
 		return true;
 	}
 
@@ -69,11 +74,7 @@ class UsersController extends AppController {
 			}
 		}
 
-		$this->Department->order = 'Department.name ASC';
-		$this->Course->order = 'Course.name ASC';
-
-		$this->set('departments', $this->Department->find('all'));
-		$this->set('courses', $this->Course->find('all'));
+		$this->setCoursesAndDepartments();
 	}
 
 	public function login() {
@@ -269,17 +270,59 @@ class UsersController extends AppController {
 			$course = $this->Course->findById($user['Student']['course_id']);
 			$user['User']['subProfile'] = $course['Course']['name'];
 		}
-		
+
 		if ($user['User']['profile'] == 'Professor') {
-			$department = $this->Department->findById($user['Professor']['department_id']);
+			$department = $this->Department
+					->findById($user['Professor']['department_id']);
 			$user['User']['subProfile'] = $department['Department']['name'];
 		}
-		
+
 		if ($user['User']['profile'] == 'Employee') {
 			$user['User']['subProfile'] = $user['Employee']['occupation'];
 		}
 
 		$this->set('user', $user);
+	}
+
+	public function adminEdit($userId = null) {
+		if ($userId == null) {
+			$this
+					->redirect(
+							array('controller' => 'Users', 'action' => 'index'));
+		}
+
+		if ($this->request->is('post') || $this->request->is('put')) {
+			$user = $this->User->findById($userId);
+			$userProfile = $this->User->profile($user);
+
+			if ($this->User->save($this->request->data)) {
+				if ($userProfile != $this->request->data['User']['profile'])
+					$this->deleteProfile($user);
+
+				$this
+						->saveProfile($this->request->data,
+								$this->request->data['User']['profile'],
+								$userId);
+
+				$this->Session->setFlash(__('Dados atualizados.'));
+
+				$this
+						->redirect(
+								array('controller' => 'Users',
+										'action' => 'viewProfile', $userId));
+			} else {
+				$this->Session
+						->setFlash(
+								__('E#7: Não foi possível atualizar o usuário.'));
+			}
+		}
+
+		$user = $this->User->findById($userId);
+		$user['User']['profile'] = $this->User->profile($user);
+
+		$this->request->data = $user;
+
+		$this->setCoursesAndDepartments();
 	}
 
 	private function activateAccount($userId) {
@@ -302,6 +345,14 @@ class UsersController extends AppController {
 		$this->Email->sendRejectionReport($this->User->findById($userId));
 
 		$this->User->delete($userId);
+	}
+
+	private function setCoursesAndDepartments() {
+		$this->Department->order = 'Department.name ASC';
+		$this->Course->order = 'Course.name ASC';
+
+		$this->set('departments', $this->Department->find('all'));
+		$this->set('courses', $this->Course->find('all'));
 	}
 
 	private function getProfile($user) {
@@ -327,6 +378,22 @@ class UsersController extends AppController {
 			break;
 		default:
 			$this->Session->setFlash(__('E#2: Erro ao cadastrar perfil'));
+		}
+	}
+
+	private function deleteProfile($user) {
+		$profile = $this->User->profile($user);
+
+		switch ($profile) {
+		case 'Professor':
+			$this->Professor->delete($user['Professor']['id']);
+			break;
+		case 'Student':
+			$this->Student->delete($user['Student']['id']);
+			break;
+		case 'Employee':
+			$this->Employee->delete($user['Employee']['id']);
+			break;
 		}
 	}
 }
