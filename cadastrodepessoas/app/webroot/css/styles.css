@@ -8,10 +8,15 @@
 
 body {
 	background: #D1D1D1 url(../img/bg.png) repeat;
-	font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+	font-family: 'Droid Sans', sans-serif;
+	font-size: 14px;
 }
 
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'PT Sans', sans-serif;
+}
 h1 {
+	font-size: 1.5em;
 	margin-bottom: 30px;
 }
 /* Rounded Borders */
