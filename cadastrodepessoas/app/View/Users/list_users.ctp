@@ -1,6 +1,7 @@
 <?php 
 	include_once 'sharedFunctions.php';
 	echo $this->Html->css('Users/list_users');
+	echo $this->Html->script('list_users');
 ?>
 <h1><?php echo __('Lista de usuários'); ?></h1>
 <br />
@@ -43,16 +44,16 @@
 	);
 	echo $this->Html->tableCells($header);
 	
-	echo $this->Form->Create('User');	
+	echo $this->Form->Create('User', array('class' => 'submittableForm'));	
 	echo $this->Html->tableCells(array(
 		array(
 			array($this->Form->Input('name', array('label' => __(' '), 'placeholder' => 'Filtrar por nome...')), array()),
 			array($this->Form->Input('nusp', array('label' => __(' '), 'placeholder' => 'Filtrar por NUSP...')), array()),
 			array($this->Form->Input('email', array('label' => __(' '), 'placeholder' => 'Filtrar por e-mail...')), array()),
-			array($this->Form->Input('userType', array('label' => __(' '), 'placeholder' => 'Filtrar por perfil...', 'type' => 'select', 
-				'options' => array('Student' => __('Estudante'), 'Employee' => __('Funcionário (Não Docente)'), 'Professor' => __('Funcionário (Docente)')))), array()),
-			array($this->Form->Input('status', array('label' => __(' '), 'placeholder' => 'Filtrar por status...', 'type' => 'select',
-				'options' => array('active' => __('Ativo'), 'waiting_activation' => __('Esperando ativação'), 'waiting_validation' => __('Esperando validação')))), array())
+			array($this->Form->Input('profile', array('label' => __(' '), 'placeholder' => 'Filtrar por perfil...', 'type' => 'select', 
+				'options' => array('all' => __('Todos'), 'Student' => __('Estudante'), 'Employee' => __('Funcionário (Não Docente)'), 'Professor' => __('Funcionário (Docente)')))), array()),
+			array($this->Form->Input('activation_status', array('label' => __(' '), 'placeholder' => 'Filtrar por status...', 'type' => 'select',
+				'options' => array('all' => __('Todos'), 'active' => __('Ativo'), 'waiting_activation' => __('Esperando ativação'), 'waiting_validation' => __('Esperando validação')))), array())
 		) 
 	));
 	$this->Form->End();

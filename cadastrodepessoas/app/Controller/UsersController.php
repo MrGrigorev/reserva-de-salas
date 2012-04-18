@@ -237,9 +237,47 @@ class UsersController extends AppController {
 		$this->set('actualOrder', $order);
 		$this->set('profileOrder', $profileOrder);
 	}
+	
+	private function containsCaseInsensitive($value, $filter) {
+		$valueLowerCase = strtolower($value);
+		$filterLowerCase = strtolower($filter);
+		
+		$position = strpos($valueLowerCase, $filterLowerCase);
+		
+		if($position === false)
+			return false;
+			
+		return true;
+	}
+	
+	private function arrayFilter($users, $key, $filter) {
+		if($key != 'profile' && $key != 'activation_status') {
+			if ($filter == '')
+				return $users;			
+		}
+		else if($filter == 'all')
+			return $users;
+			
+		foreach ($users as $i => $user) {
+			if ($this->containsCaseInsensitive($user['User'][$key], $filter) == false) {
+				unset($users[$i]);
+			}
+		}
+		
+		return $users;
+	}
+	
+	private function filterUsers($users) {
+		$filteredUsers = $users;
+		
+		foreach ($this->request->data['User'] as $key => $filter) {
+			$filteredUsers = $this->arrayFilter($filteredUsers, $key, $filter);
+		}
+		
+		return $filteredUsers;
+	}
 
 	public function listUsers($order = 'User.name ASC', $profileOrder = null) {
-
 		$users = $this->User->order = $order;
 		$users = $this->User->find('all');
 
@@ -252,6 +290,10 @@ class UsersController extends AppController {
 
 		if ($profileOrder == 'DESC')
 			$users = array_reverse($users);
+			
+		if($this->request->is('post')) {
+			$users = $this->filterUsers($users);
+		}
 
 		$this->set('users', $users);
 		$this->set('actualOrder', $order);
