@@ -22,22 +22,22 @@
 	echo $this->Form->Input('photo', array('label' => __('Foto'), 'type' => 'file'));
 	echo $this->Form->Input('webpage', array('label' => __('Página na Web')));
 	echo $this->Form->Input('lattes', array('label' => __('Currículo Lattes')));
-	echo $this->Form->Input('userType', array('legend' => __('Tipo de usuário'), 'options' => array('Student' => __('Estudante'), 'Employee' => __('Funcionário (Não Docente)'), 'Professor' => __('Funcionário (Docente)')), 'type' => 'radio', 'class' => 'userTypeRadio'));
+	echo $this->Form->Input('profile', array('legend' => __('Tipo de usuário'), 'options' => array('Student' => __('Estudante'), 'Employee' => __('Funcionário (Não Docente)'), 'Professor' => __('Funcionário (Docente)')), 'type' => 'radio', 'class' => 'profileRadio'));
 ?>
 
-<div id="Employee" class="userType">
+<div id="Employee" class="profile">
 	<?php
 		echo $this->Form->Input('Employee.occupation', array('label' => __('Cargo')));
 	?>
 </div>
 
-<div id="Student" class="userType">
+<div id="Student" class="profile">
 	<?php
 		echo $this->Form->Input('Student.course_id', array('label' => __('Curso'), 'type' => 'select', 'options' => $coursesList));
 	?>
 </div>
 	
-<div id="Professor" class="userType">
+<div id="Professor" class="profile">
 	<?php
 		echo $this->Form->Input('Professor.department_id', array('label' => __('Departamento'), 'type' => 'select', 'options' => $departmentsList));
 	?>

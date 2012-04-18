@@ -55,7 +55,7 @@ class UsersController extends AppController {
 
 				$this
 						->saveProfile($this->request->data,
-								$this->request->data['User']['userType'],
+								$this->request->data['User']['profile'],
 								$this->User->id);
 
 				$user = $this->User->findById($this->User->id);

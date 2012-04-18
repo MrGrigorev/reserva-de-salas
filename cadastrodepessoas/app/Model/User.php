@@ -45,11 +45,11 @@ class User extends AppModel {
 					'confirmation' => array('rule' => 'comparePasswords',
 							'required' => 'create',
 							'message' => 'Senhas não correspondem.')),
-			'userType' => array(
+			'profile' => array(
 					'not empty' => array('rule' => 'notEmpty',
 							'message' => "Não deve ser vazio."),
-					'validate user type' => array(
-							'rule' => 'validateUserType', 'message' => 'Não deve ser vazio')),
+					'validate profile' => array(
+							'rule' => 'validateProfile', 'message' => '')),
 			'webpage' => array(
 					'between' => array('allowEmpty' => true,
 							'rule' => array('between', 0, 100),
@@ -67,8 +67,8 @@ class User extends AppModel {
 			'user_type' => array('rule' => 'notEmpty',
 					'message' => 'Não deve ser vazio.'));
 
-	function validateUserType() {
-		switch ($this->data['User']['userType']) {
+	function validateProfile() {
+		switch ($this->data['User']['profile']) {
 			case 'Professor':
 				$this->Professor->set($this->data['Professor']);
 				return $this->Professor->validates();

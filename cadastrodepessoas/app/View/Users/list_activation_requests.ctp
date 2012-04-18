@@ -2,7 +2,7 @@
 	include_once 'sharedFunctions.php';
 	echo $this->Html->script('list_activation_requests');  
 ?>
-<h1><?php echo __('Lista de usuários aguandando ativação'); ?></h1>
+<h1><?php echo __('Lista de usuários aguardando ativação'); ?></h1>
 
 <table id="usersTable">
 <?php

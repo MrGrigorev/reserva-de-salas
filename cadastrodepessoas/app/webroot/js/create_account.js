@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	function showSelectedRadio() {
-		$('.userTypeRadio').each(function() {
+		$('.profileRadio').each(function() {
 			if ($(this).attr('checked')) {
 				var selectedVal = $(this).val();
 				$("#" + selectedVal).show();
@@ -9,7 +9,7 @@ $(document).ready(function() {
 		});
 	}
 	function hideAndClean() {
-		$('.userType').each(function() {
+		$('.profile').each(function() {
 			$(this).find('input').each(function() {
 				$(this).attr('value', '');
 			});
@@ -27,7 +27,7 @@ $(document).ready(function() {
 	
 	showSelectedRadio();
 	
-	$('.userTypeRadio').change(function() {
+	$('.profileRadio').change(function() {
 		hideAndClean();
 		showSelectedRadio();
 	});

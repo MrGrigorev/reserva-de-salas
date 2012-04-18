@@ -52,7 +52,7 @@ class UsersControllerTest extends ControllerTestCase {
 				'User' => array('name' => 'User Test', 'nusp' => '1234567',
 						'email' => 'test@ime.usp.br', 'password' => '123456',
 						'passwordConfirmation' => '123456',
-						'userType' => 'Student', 'lattes' => '',
+						'profile' => 'Student', 'lattes' => '',
 						'webpage' => ''));
 
 		$data['Student']['course_id'] = 1;
@@ -230,7 +230,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$data = array(
 				'User' => array('name' => '', 'nusp' => '', 'email' => '',
 						'password' => '', 'passwordConfirmation' => '',
-						'userType' => ''));
+						'profile' => ''));
 
 		$this->User->order = 'User.id DESC';
 		$userBefore = $this->User->find('first');
@@ -254,7 +254,7 @@ class UsersControllerTest extends ControllerTestCase {
 						'email' => 'testExistingNusp@gmail.com',
 						'password' => '123456',
 						'passwordConfirmation' => '123456',
-						'userType' => 'Student'));
+						'profile' => 'Student'));
 
 		$data['Student']['course'] = 'BCC';
 
@@ -279,7 +279,7 @@ class UsersControllerTest extends ControllerTestCase {
 						'email' => $existingUser['User']['email'],
 						'password' => '123456',
 						'passwordConfirmation' => '123456',
-						'userType' => 'Student'));
+						'profile' => 'Student'));
 
 		$data['Student']['course'] = 'BCC';
 
@@ -370,8 +370,11 @@ class UsersControllerTest extends ControllerTestCase {
 		$userBefore = $this->User->find('first');
 
 		$userProfile = 'Student';
-		if ($userProfile == $this->User->profile($userBefore))
+		$course_or_dep = "course_id"; 
+		if ($userProfile == $this->User->profile($userBefore)) {
 			$userProfile = 'Professor';
+			$course_or_dep = "department_id";
+		}
 
 		$data = array(
 				'User' => array('id' => $userBefore['User']['id'],
@@ -380,7 +383,7 @@ class UsersControllerTest extends ControllerTestCase {
 						'email' => $userBefore['User']['email'],
 						'profile' => $userProfile, 'lattes' => '',
 						'webpage' => ''),
-				$userProfile => array('user_id' => null, 'id' => 1));
+				$userProfile => array('user_id' => $userBefore['User']['id'], 'id' => 42, $course_or_dep => 1));
 
 		$this
 				->testAction('Users/adminEdit/' . $userBefore['User']['id'],
