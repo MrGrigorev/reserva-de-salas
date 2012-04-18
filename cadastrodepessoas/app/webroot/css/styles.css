@@ -19,6 +19,18 @@ h1 {
 	font-size: 1.5em;
 	margin-bottom: 30px;
 }
+a {
+	color: #2D7BE1;
+	text-decoration: none;
+	font-weight: bold;
+}
+a:hover {
+	color: #d60000;
+}
+a:active {
+}
+a:visited {
+}
 /* Rounded Borders */
 .roundedBorders {
 	-moz-border-radius: 8px;
