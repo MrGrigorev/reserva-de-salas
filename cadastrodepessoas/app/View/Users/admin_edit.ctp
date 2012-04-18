@@ -52,5 +52,5 @@
 </div>
 	
 <?php
-	echo $this->Form->End(__('Criar conta'));
+	echo $this->Form->End(__('Salvar'));
 ?>

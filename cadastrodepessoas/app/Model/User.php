@@ -49,7 +49,7 @@ class User extends AppModel {
 					'not empty' => array('rule' => 'notEmpty',
 							'message' => "Não deve ser vazio."),
 					'validate user type' => array(
-							'rule' => 'validateUserType', 'message' => '')),
+							'rule' => 'validateUserType', 'message' => 'Não deve ser vazio')),
 			'webpage' => array(
 					'between' => array('allowEmpty' => true,
 							'rule' => array('between', 0, 100),
@@ -69,18 +69,18 @@ class User extends AppModel {
 
 	function validateUserType() {
 		switch ($this->data['User']['userType']) {
-		case 'Professor':
-			$this->Professor->set($this->data['Professor']);
-			return $this->Professor->validates();
-			break;
-		case 'Student':
-			$this->Student->set($this->data['Student']);
-			return $this->Student->validates();
-		case 'Employee':
-			$this->Employee->set($this->data['Employee']);
-			return $this->Employee->validates();
-		default:
-			return false;
+			case 'Professor':
+				$this->Professor->set($this->data['Professor']);
+				return $this->Professor->validates();
+				break;
+			case 'Student':
+				$this->Student->set($this->data['Student']);
+				return $this->Student->validates();
+			case 'Employee':
+				$this->Employee->set($this->data['Employee']);
+				return $this->Employee->validates();
+			default:
+				return false;
 		}
 	}
 
