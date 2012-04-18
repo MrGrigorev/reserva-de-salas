@@ -379,4 +379,9 @@ p.error em {
 	padding: 5px;
 	margin: 0 10px 10px 0;
 	border: 1px solid #aaaaaa;
+	max-width: 120px;
+	max-height: 120px;
+}
+.profileName {
+	color: #2D7BE1;
 }

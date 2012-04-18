@@ -8,7 +8,7 @@
 	if ($user['User']['photo'] == '')
 		$photo = '..' . DS . 'app' . DS . 'webroot' . DS . 'img' . DS . 'defaultPhoto.png';
 	
-	$name = "<h1>" . $user['User']['name'] . "</h1>";
+	$name = "<h1 class='profileName'>" . $user['User']['name'] . "</h1>";
 	$profile = "<h2>" . getTranslatedProfile($user) . "</h2>";
 	$subProfile = "<h3>" . $user['User']['subProfile'] . "</h3>";
 		
