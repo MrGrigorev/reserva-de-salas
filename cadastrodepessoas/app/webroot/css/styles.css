@@ -89,6 +89,7 @@ fieldset {
 
 #title {
 	float: left;
+	margin-top: 2px;
 }
 
 #title a {
@@ -359,4 +360,11 @@ p.error em {
 
 .success {
 	color: #fff;
+}
+
+.profilePhoto {
+	background: #f0f0f0;
+	padding: 5px;
+	margin: 0 10px 10px 0;
+	border: 1px solid #aaaaaa;
 }

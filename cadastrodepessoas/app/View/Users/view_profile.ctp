@@ -12,7 +12,7 @@
 	$profile = "<h2>" . getTranslatedProfile($user) . "</h2>";
 	$subProfile = "<h3>" . $user['User']['subProfile'] . "</h3>";
 		
-	$cells[] = array($this->Html->Image($photo), $name . $profile . $subProfile);
+	$cells[] = array($this->Html->Image($photo, array('class' => 'profilePhoto')), $name . $profile . $subProfile);
 	
 	echo $this->Html->tableCells($cells);
 ?>

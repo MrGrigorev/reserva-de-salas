@@ -20,10 +20,8 @@
 	<div id="headerContainer">
 		<div id="header">
 			<div id="title">
-				<h1>
-					<img src="/cadastrodepessoas/img/logo_ime.png" />
-					<?php echo $this->Html->link('Cadastro de Pessoas', array('controller' => 'Users', 'action' => 'index')); ?>
-				</h1>
+				<?php $logo = "logo.png"; ?>
+				<?php echo $this->Html->link($this->Html->Image($logo), array('controller' => 'Users', 'action' => 'index'), array('escape' => false)); ?>
 			</div>
 			<div id="menu">
 				<ul>
