@@ -10,6 +10,10 @@
 	foreach ($courses as $course)
 		$coursesList[$course['Course']['id']] = $course['Course']['name'];
 	
+	$categoriesList = array();
+	foreach ($categories as $category)
+		$categoriesList[$category['ProfessorCategory']['id']] = $category['ProfessorCategory']['name'];
+	
 	$userTypes = array('admin' => __('Administrador'), 'user' => __('Usuário Comum'));
 	
 	$possibleStatus = array('active' => __('Ativo'), 'waiting_activation' => __('Esperando Ativação'), 'waiting_validation' => __('Esperando Validação'));
@@ -49,6 +53,7 @@
 	<?php
 		echo $this->Form->Input('Professor.id', array('type' => 'hidden'));
 		echo $this->Form->Input('Professor.department_id', array('label' => __('Departamento'), 'type' => 'select', 'options' => $departmentsList));
+		echo $this->Form->Input('Professor.professor_category_id', array('label' => __('Categoria'), 'type' => 'select', 'options' => $categoriesList));
 	?>
 </div>
 	

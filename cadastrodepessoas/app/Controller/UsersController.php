@@ -4,6 +4,7 @@ App::uses('Professor', 'Model');
 App::uses('Employee', 'Model');
 App::uses('Department', 'Model');
 App::uses('Course', 'Model');
+App::uses('ProfessorCategory', 'Model');
 
 class UsersController extends AppController {
 	public $name = 'Users';
@@ -20,6 +21,7 @@ class UsersController extends AppController {
 		$this->Employee = ClassRegistry::init('Employee');
 		$this->Department = ClassRegistry::init('Department');
 		$this->Course = ClassRegistry::init('Course');
+		$this->ProfessorCategory = ClassRegistry::init('ProfessorCategory');
 	}
 
 	public function isAuthorized($user) {
@@ -149,13 +151,7 @@ class UsersController extends AppController {
 
 		$this->set('profile', $this->User->profile($user));
 
-		$this->Department->order = 'Department.name ASC';
-		$departments = $this->Department->find('all');
-		$this->set('departments', $departments);
-
-		$this->Course->order = 'Course.name ASC';
-		$courses = $this->Course->find('all');
-		$this->set('courses', $courses);
+		$this->setCoursesAndDepartments();
 	}
 
 	public function logout() {
@@ -392,9 +388,12 @@ class UsersController extends AppController {
 	private function setCoursesAndDepartments() {
 		$this->Department->order = 'Department.name ASC';
 		$this->Course->order = 'Course.name ASC';
+		$this->ProfessorCategory->order = 'ProfessorCategory.name ASC';
 
 		$this->set('departments', $this->Department->find('all'));
 		$this->set('courses', $this->Course->find('all'));
+		$this->set('categories', $this->ProfessorCategory->find('all'));
+		
 	}
 
 	private function getProfile($user) {

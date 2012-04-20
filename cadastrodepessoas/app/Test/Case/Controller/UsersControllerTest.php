@@ -6,7 +6,8 @@ App::uses('UsersController', 'Controller');
 
 class UsersControllerTest extends ControllerTestCase {
 	public $fixtures = array('app.user', 'app.student', 'app.professor',
-			'app.employee', 'app.course', 'app.department');
+			'app.employee', 'app.course', 'app.department',
+			'app.professorCategory');
 
 	public function setUp() {
 		parent::setUp();
@@ -370,7 +371,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$userBefore = $this->User->find('first');
 
 		$userProfile = 'Student';
-		$course_or_dep = "course_id"; 
+		$course_or_dep = "course_id";
 		if ($userProfile == $this->User->profile($userBefore)) {
 			$userProfile = 'Professor';
 			$course_or_dep = "department_id";
@@ -383,7 +384,8 @@ class UsersControllerTest extends ControllerTestCase {
 						'email' => $userBefore['User']['email'],
 						'profile' => $userProfile, 'lattes' => '',
 						'webpage' => ''),
-				$userProfile => array('user_id' => $userBefore['User']['id'], 'id' => 42, $course_or_dep => 1));
+				$userProfile => array('user_id' => $userBefore['User']['id'],
+						'id' => 42, $course_or_dep => 1));
 
 		$this
 				->testAction('Users/adminEdit/' . $userBefore['User']['id'],

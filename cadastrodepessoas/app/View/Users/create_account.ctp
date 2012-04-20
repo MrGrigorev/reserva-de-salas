@@ -9,6 +9,10 @@
 	$coursesList = array();
 	foreach ($courses as $course)
 		$coursesList[$course['Course']['id']] = $course['Course']['name'];
+	
+	$categoriesList = array();
+	foreach ($categories as $category)
+		$categoriesList[$category['ProfessorCategory']['id']] = $category['ProfessorCategory']['name'];
 ?>
 <h1><?php echo __('Criar conta'); ?></h1>
 
@@ -40,6 +44,7 @@
 <div id="Professor" class="profile">
 	<?php
 		echo $this->Form->Input('Professor.department_id', array('label' => __('Departamento'), 'type' => 'select', 'options' => $departmentsList));
+		echo $this->Form->Input('Professor.professor_category_id', array('label' => __('Categoria'), 'type' => 'select', 'options' => $categoriesList));
 	?>
 </div>
 	

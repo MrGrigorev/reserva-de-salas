@@ -26,12 +26,19 @@ CREATE TABLE students (
 	FOREIGN KEY (course_id) REFERENCES courses(id)
 );
 
+CREATE TABLE professor_categories (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(70) NOT NULL
+);
+
 CREATE TABLE professors (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_id INT NOT NULL,
 	department_id INT NOT NULL,
+	professor_category_id INT NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users(id),
-	FOREIGN KEY (department_id) REFERENCES departments(id)
+	FOREIGN KEY (department_id) REFERENCES departments(id),
+	FOREIGN KEY (professor_category_id) REFERENCES professor_categories(id)
 );
 
 CREATE TABLE employees (
