@@ -16,6 +16,7 @@
 ?>
 <h1><?php echo __('Editar conta'); ?></h1>
 
+
 <?php
 	echo $this->Form->Create('User', array('type' => 'file'));
 	echo $this->Form->Input('id', array('type' => 'hidden'));
@@ -53,4 +54,5 @@
 	
 <?php
 	echo $this->Form->End(__('Salvar'));
+	echo $this->element('back');
 ?>

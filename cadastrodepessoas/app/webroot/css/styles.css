@@ -382,6 +382,17 @@ p.error em {
 	max-width: 120px;
 	max-height: 120px;
 }
+
 .profileName {
 	color: #2D7BE1;
+}
+
+a.back {
+	margin-top: 15px;
+	margin-left: 5px;
+	display: block;
+}
+.arrowPosition {
+	float: left;
+	margin-right: 5px;
 }

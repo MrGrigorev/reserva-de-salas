@@ -40,4 +40,5 @@
 	} else if ($loggedUser['id'] == $user['User']['id']) {
 		echo $this->Html->link('Editar perfil', array('controller' => 'Users', 'action' => 'editProfile'), array('class' => 'linkStylized')); 
 	}
+	echo $this->element('back');
 ?>

@@ -72,3 +72,7 @@
 	echo $this->Html->tableCells($cells);
 ?>
 </table>
+
+<?php
+	echo $this->element('back');
+?>

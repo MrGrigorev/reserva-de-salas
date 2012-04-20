@@ -42,4 +42,5 @@
 	
 <?php
 	echo $this->Form->End(__('Salvar'));
+	echo $this->element('back');
 ?>

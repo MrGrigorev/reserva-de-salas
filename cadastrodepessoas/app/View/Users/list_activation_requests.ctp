@@ -73,3 +73,7 @@
 	echo $this->Form->End();
 ?>
 </table>
+
+<?php
+	echo $this->element('back');
+?>
