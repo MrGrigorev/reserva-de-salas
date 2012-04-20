@@ -76,56 +76,67 @@ class MeioUploadBehavior extends ModelBehavior {
 	var $defaultValidations = array(
 		'FieldName' => array(
 			'rule' => array('uploadCheckFieldName'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'Dir' => array(
 			'rule' => array('uploadCheckDir'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'UploadError' => array(
 			'rule' => array('uploadCheckUploadError'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'MaxSize' => array(
 			'rule' => array('uploadCheckMaxSize'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'InvalidMime' => array(
 			'rule' => array('uploadCheckInvalidMime'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'InvalidExt' => array(
 			'rule' => array('uploadCheckInvalidExt'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'MinWidth' => array(
 			'rule' => array('uploadCheckMinWidth'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'MaxWidth' => array(
 			'rule' => array('uploadCheckMaxWidth'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'MinHeight' => array(
 			'rule' => array('uploadCheckMinHeight'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'MaxHeight' => array(
 			'rule' => array('uploadCheckMaxHeight'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
 		'HttpPost' => array(
 			'rule' => array('uploadCheckHttpPost'),
+			'allowEmpty' => true,
 			'check' => true,
 			'last' => true
 		),
