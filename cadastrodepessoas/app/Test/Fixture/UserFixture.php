@@ -93,7 +93,7 @@ class UserFixture extends CakeTestFixture {
 					'modified' => '2012-03-23 15:48:25',
 					'activation_status' => 'waiting_activation'),
 			array('id' => 5, 'nusp' => '9999999',
-					'name' => 'Lorem ipsum dolor sit amet',
+					'name' => 'Roberto Hirata',
 					'email' => 'test5@cadastrodepessoas.com.br',
 					'password' => '5d4ec527e929f6b5d1715451f7b3d37f4da56326',
 					'photo' => 'Lorem ipsum dolor sit amet',

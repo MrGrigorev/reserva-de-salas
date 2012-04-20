@@ -11,15 +11,39 @@ class UsersControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		parent::setUp();
-
+		
 		$this->User = ClassRegistry::init('User');
 		$this->Student = ClassRegistry::init('Student');
 		$this->Professor = ClassRegistry::init('Professor');
 
 		$this->UsersController = new UsersController();
 		$this->UsersController->constructClasses();
+		$this->mockEmail();
+		
 	}
 
+	private function mockEmail() {
+		$Users = $this
+				->generate('Users',
+						array(
+								'components' => array('Session',
+										'Email' => array(
+												'sendConfirmationEmail',
+												'sendActivationReport',
+												'sendRejectionReport',
+												'sendEmail'))));
+
+		$Users->Email->expects($this->any())->method('sendEmail')
+				->will($this->returnValue(true));
+		$Users->Email->expects($this->any())->method('sendConfirmationEmail')
+				->will($this->returnValue(true));
+		$Users->Email->expects($this->any())->method('sendActivationReport')
+				->will($this->returnValue(true));
+		$Users->Email->expects($this->any())->method('sendRejectionReport')
+				->will($this->returnValue(true));
+
+	}
+	
 	public function testGetCreateAccount() {
 		$this->testAction('/Users/createAccount', array('method' => 'get'));
 	}
@@ -49,6 +73,7 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	public function testCreateAccount() {
+		
 		$data = array(
 				'User' => array('name' => 'User Test', 'nusp' => '1234567',
 						'email' => 'test@ime.usp.br', 'password' => '123456',
@@ -57,10 +82,11 @@ class UsersControllerTest extends ControllerTestCase {
 						'webpage' => ''));
 
 		$data['Student']['course_id'] = 1;
+				
 		$this
 				->testAction('Users/createAccount',
 						array('method' => 'post', 'data' => $data));
-
+		
 		$this->User->order = 'User.id DESC';
 		$user = $this->User->find('first');
 
@@ -72,7 +98,7 @@ class UsersControllerTest extends ControllerTestCase {
 						AuthComponent::password($data['User']['password']));
 		/* TODO: Test course */
 	}
-
+	
 	public function testConfirmEmail() {
 		$user_id = 2;
 		$user = $this->User->findById($user_id);
@@ -85,7 +111,7 @@ class UsersControllerTest extends ControllerTestCase {
 				->assertEqual($result['User']['activation_status'],
 						'waiting_activation');
 	}
-
+	
 	public function testEditProfile() {
 		$user_id = 6;
 		$user_before = $this->User->findById($user_id);
@@ -112,9 +138,9 @@ class UsersControllerTest extends ControllerTestCase {
 		$this
 				->assertEqual($user_after['Student']['course_id'],
 						$data['Student']['course_id']);
-		/* TODO: test photo */
+		// TODO: test photo
 	}
-
+	
 	public function testEditProfileInvalidURL() {
 		$user_id = 6;
 		$user_before = $this->User->findById($user_id);
@@ -298,6 +324,8 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	private function loginWithAdmin() {
+		$this->testAction('Users/logout');
+
 		$admin = $this->User->findByUser_type('admin');
 
 		$data = array(
@@ -308,7 +336,9 @@ class UsersControllerTest extends ControllerTestCase {
 				->testAction('Users/login',
 						array('method' => 'post', 'data' => $data));
 	}
-
+	
+	// BEGIN POBREMA
+	//
 	public function testActivateAccounts() {
 		$this->loginWithAdmin();
 
@@ -364,7 +394,8 @@ class UsersControllerTest extends ControllerTestCase {
 			$this->assertEqual($result, null);
 		}
 	}
-
+	/* END POBREMA*/
+	
 	public function testAdminEdit() {
 		$this->loginWithAdmin();
 
@@ -413,5 +444,35 @@ class UsersControllerTest extends ControllerTestCase {
 					->findById($userAfter['Professor']['id']);
 			$this->assertNotEqual($professor, null);
 		}
+	}
+
+	public function testFilterUsersByName() {
+		$this->loginWithAdmin();
+
+		$data = array('User' => array('name' => 'hirat'));
+
+		$this
+				->testAction('Users/listUsers',
+						array('method' => 'post', 'data' => $data));
+
+		$this->assertInternalType('array', $this->vars['users']);
+		$this->assertNotEqual($this->vars['users'], null);
+
+		$this->assertEqual(count($this->vars['users']), 1);
+	}
+
+	public function testFilterUsersByNonExistingEmail() {
+		$this->loginWithAdmin();
+
+		$data = array('User' => array('email' => 'gdghshgfdkahkhjk'));
+
+		$this
+				->testAction('Users/listUsers',
+						array('method' => 'post', 'data' => $data));
+
+		$this->assertInternalType('array', $this->vars['users']);
+		$this->assertNotEqual($this->vars['users'], null);
+
+		$this->assertEqual(count($this->vars['users']), 0);
 	}
 }

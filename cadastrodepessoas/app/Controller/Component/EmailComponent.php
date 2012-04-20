@@ -41,5 +41,7 @@ class EmailComponent extends Component {
 						array('name' => $user['User']['name'], 'link' => $link));
 
 		$email->send();
+		
+		return true;
 	}
 }
