@@ -41,5 +41,5 @@
 ?>
 	
 <?php
-	echo $this->Form->End(__('Editar conta'));
+	echo $this->Form->End(__('Salvar'));
 ?>
