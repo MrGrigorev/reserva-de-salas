@@ -27,21 +27,7 @@ class UsersControllerTest extends ControllerTestCase {
 				->generate('Users',
 						array(
 								'components' => array('Session',
-										'Email' => array(
-												'sendConfirmationEmail',
-												'sendActivationReport',
-												'sendRejectionReport',
-												'sendEmail'))));
-
-		$Users->Email->expects($this->any())->method('sendEmail')
-				->will($this->returnValue(true));
-		$Users->Email->expects($this->any())->method('sendConfirmationEmail')
-				->will($this->returnValue(true));
-		$Users->Email->expects($this->any())->method('sendActivationReport')
-				->will($this->returnValue(true));
-		$Users->Email->expects($this->any())->method('sendRejectionReport')
-				->will($this->returnValue(true));
-
+										'Email')));
 	}
 	
 	public function testGetCreateAccount() {
@@ -57,7 +43,7 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	public function testGetViewProfile() {
-		$this->testAction('/Users/viewProfile', array('method' => 'get'));
+		$this->testAction('/Users/viewProfile/' . 1, array('method' => 'get'));
 	}
 
 	public function testGetResendConfirmationEmail() {
@@ -73,6 +59,7 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	public function testCreateAccount() {
+		
 		
 		$data = array(
 				'User' => array('name' => 'User Test', 'nusp' => '1234567',
@@ -235,16 +222,15 @@ class UsersControllerTest extends ControllerTestCase {
 	}
 
 	public function testLogout() {
-		$user_id = 3;
-		$user = $this->User->findById($user_id);
-		$password = '12345';
+		$this->testAction('Users/logout');
 
 		$data = array(
-				'User' => array('nusp' => '12345678', 'password' => $password));
+				'User' => array('nusp' => '12345678', 'password' => '12345'));
 
 		$this
 				->testAction('Users/login',
 						array('method' => 'post', 'data' => $data));
+						
 
 		$this->assertNotEqual($this->UsersController->getLoggedUser(), null);
 
@@ -337,11 +323,7 @@ class UsersControllerTest extends ControllerTestCase {
 						array('method' => 'post', 'data' => $data));
 	}
 	
-	// BEGIN POBREMA
-	//
 	public function testActivateAccounts() {
-		$this->loginWithAdmin();
-
 		$users = $this->User
 				->find('all',
 						array(
@@ -366,10 +348,8 @@ class UsersControllerTest extends ControllerTestCase {
 			$this->assertEqual($result['User']['activation_status'], 'active');
 		}
 	}
-
+	
 	public function testRejectAccounts() {
-		$this->loginWithAdmin();
-
 		$users = $this->User
 				->find('all',
 						array(
@@ -394,7 +374,6 @@ class UsersControllerTest extends ControllerTestCase {
 			$this->assertEqual($result, null);
 		}
 	}
-	/* END POBREMA*/
 	
 	public function testAdminEdit() {
 		$this->loginWithAdmin();
