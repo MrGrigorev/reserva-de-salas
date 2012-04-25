@@ -25,10 +25,10 @@
 			</div>
 			<div id="menu">
 				<ul>
-					<?php if ($isLogged == false) {?>
-					<li>
-						<?php echo $this->Html->link(__('Criar conta'), array('controller' => 'Users', 'action' => 'createAccount') ); ?>
-					</li>
+					<?php 
+						//if ($isLogged == false) {
+						if (true) {
+					?>
 					<li>
 						<?php echo $this->Html->link(__('Entrar'), array('controller' => 'Users', 'action' => 'login') ); ?>
 					</li>

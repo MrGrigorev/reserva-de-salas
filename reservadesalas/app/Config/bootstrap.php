@@ -122,6 +122,3 @@ Cache::config('default', array('engine' => 'File'));
  * CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
  *
  */
-
-// Alteração das regras de inflections
-include dirname(__FILE__) . DS . 'inflections.php';
