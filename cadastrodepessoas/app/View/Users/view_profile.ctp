@@ -30,6 +30,15 @@
 	if($user['User']['lattes'] != null)
 		$cells[] = array(__('Lattes'), $this->Html->link($user['User']['lattes'], $user['User']['lattes'], array('target' => '_blank')));
 	
+	$userProfile = $user['User']['profile'];
+	
+	if($userProfile != 'Student') {
+		if ($user[$userProfile]['telephone'] != null)
+			$cells[] = array(__('Ramal'), $user[$userProfile]['telephone']);
+		if ($user[$userProfile]['room'] != null)
+			$cells[] = array(__('Sala'), $user[$userProfile]['room']);
+	}
+	
 	echo $this->Html->tableCells($cells);
 ?>
 </table>

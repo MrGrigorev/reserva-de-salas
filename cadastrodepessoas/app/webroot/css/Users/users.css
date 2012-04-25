@@ -4,6 +4,9 @@
 	width: 200px;
 	text-align: right;
 }
+.select {
+	margin-top: 5px;
+}
 .nonEditable {
 	margin-bottom: 8px;
 }

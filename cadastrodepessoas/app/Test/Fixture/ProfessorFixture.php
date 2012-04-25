@@ -13,6 +13,12 @@ class ProfessorFixture extends CakeTestFixture {
 	public $fields = array(
 			'id' => array('type' => 'integer', 'null' => false,
 					'default' => NULL, 'key' => 'primary'),
+			'telephone' => array('type' => 'string', 'null' => true,
+					'default' => NULL, 'length' => 9,
+					'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+			'room' => array('type' => 'string', 'null' => true,
+					'default' => NULL, 'length' => 10,
+					'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
 			'user_id' => array('type' => 'integer', 'null' => false,
 					'default' => NULL, 'key' => 'index'),
 			'department_id' => array('type' => 'integer', 'null' => false,
@@ -35,6 +41,7 @@ class ProfessorFixture extends CakeTestFixture {
 	 * @var array
 	 */
 	public $records = array(
-			array('id' => 1, 'user_id' => 1, 'department_id' => 1,
+			array('id' => 1, 'telephone' => 'Lorem i', 'room' => 'Lorem ip',
+					'user_id' => 1, 'department_id' => 1,
 					'professor_category_id' => 1),);
 }

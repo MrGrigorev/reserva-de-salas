@@ -391,6 +391,7 @@ a.back {
 	margin-top: 15px;
 	margin-left: 5px;
 	display: block;
+	width: 70px;
 }
 .arrowPosition {
 	float: left;

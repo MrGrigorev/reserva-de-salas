@@ -33,6 +33,8 @@ CREATE TABLE professor_categories (
 
 CREATE TABLE professors (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	telephone varchar(9) DEFAULT NULL,
+	room varchar(10) DEFAULT NULL,
 	user_id INT NOT NULL,
 	department_id INT NOT NULL,
 	professor_category_id INT NOT NULL,
@@ -44,6 +46,8 @@ CREATE TABLE professors (
 CREATE TABLE employees (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	occupation VARCHAR(70) NOT NULL,
+	telephone varchar(9) DEFAULT NULL,
+	room varchar(10) DEFAULT NULL,
 	user_id INT NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users(id)
 );

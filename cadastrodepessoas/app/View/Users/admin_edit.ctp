@@ -39,6 +39,8 @@
 	<?php
 		echo $this->Form->Input('Employee.id', array('type' => 'hidden'));
 		echo $this->Form->Input('Employee.occupation', array('label' => __('Cargo')));
+		echo $this->Form->Input('Employee.telephone', array('label' => __('Ramal')));
+		echo $this->Form->Input('Employee.room', array('label' => __('Sala')));
 	?>
 </div>
 
@@ -54,6 +56,8 @@
 		echo $this->Form->Input('Professor.id', array('type' => 'hidden'));
 		echo $this->Form->Input('Professor.department_id', array('label' => __('Departamento'), 'type' => 'select', 'options' => $departmentsList));
 		echo $this->Form->Input('Professor.professor_category_id', array('label' => __('Categoria'), 'type' => 'select', 'options' => $categoriesList));
+		echo $this->Form->Input('Professor.telephone', array('label' => __('Ramal')));
+		echo $this->Form->Input('Professor.room', array('label' => __('Sala')));
 	?>
 </div>
 	
