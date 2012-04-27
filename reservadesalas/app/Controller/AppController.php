@@ -51,17 +51,9 @@ class AppController extends Controller {
 		return true;
 	}
 
-	public function getLoggedUser() {
-		return $this->Auth->user();
-	}
-
 	public function beforeFilter() {
 		$this->set('isLogged', $this->Auth->loggedIn());
 		$this->set('loggedUser', $this->getLoggedUser());
-	}
-
-	public function isAuthorized($user) {
-		return true;
 	}
 
 	public function getLoggedUser() {
