@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
-.text label, .password label, .file label, .radio legend, .select label, .nonEditable {
+.text label, .password label, .file label, .radio legend, .select label, .number label, .textarea label, .nonEditable {
 	display: inline-block;
-	width: 200px;
+	width: 150px;
 	text-align: right;
 }
 .select {
