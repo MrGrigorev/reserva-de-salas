@@ -6,13 +6,11 @@
 	<?php
 		echo $this->Html->meta('icon');
 		echo $this->Html->css('styles');
-		echo $this->Html->css('blitzer/jquery-ui-1.8.18.custom');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 		echo $this->Html->script('lib/jquery-1.7.2.min');
 		echo $this->Html->script('lib/jquery-ui-1.8.18.custom.min');
-		echo $this->Html->script('general');
 	?>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans' rel='stylesheet' type='text/css' />
 </head>
@@ -26,8 +24,7 @@
 			<div id="menu">
 				<ul>
 					<?php 
-						//if ($isLogged == false) {
-						if (true) {
+						if ($isLogged == false) {
 					?>
 					<li>
 						<?php echo $this->Html->link(__('Entrar'), array('controller' => 'Users', 'action' => 'login') ); ?>

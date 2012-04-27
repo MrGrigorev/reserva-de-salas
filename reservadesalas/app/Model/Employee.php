@@ -2,7 +2,7 @@
 class Employee extends AppModel {
 	public $name = 'Employee';
 
-	public $useDBConfig = 'cadastrodepessoas';
+	public $useDbConfig = 'cadastrodepessoas';
 
 	public $belongsTo = array(
 			'User' => array('className' => 'User', 'foreignKey' => 'user_id'));

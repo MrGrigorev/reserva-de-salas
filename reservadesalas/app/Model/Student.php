@@ -2,7 +2,7 @@
 class Student extends AppModel {
 	public $name = 'Student';
 
-	public $useDBConfig = 'cadastrodepessoas';
+	public $useDbConfig = 'cadastrodepessoas';
 
 	public $belongsTo = array(
 			'User' => array('className' => 'User', 'foreignKey' => 'user_id'),

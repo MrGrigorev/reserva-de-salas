@@ -2,7 +2,7 @@
 class User extends AppModel {
 	public $name = 'User';
 
-	public $useDBConfig = 'cadastrodepessoas';
+	public $useDbConfig = 'cadastrodepessoas';
 
 	public $hasOne = array(
 			'Student' => array('className' => 'Student', 'dependent' => 'true'),

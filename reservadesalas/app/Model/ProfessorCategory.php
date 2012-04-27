@@ -2,7 +2,7 @@
 class ProfessorCategory extends AppModel {
 	public $name = 'ProfessorCategory';
 
-	public $useDBConfig = 'cadastrodepessoas';
+	public $useDbConfig = 'cadastrodepessoas';
 
 	public $hasMany = array(
 			'Professors' => array('className' => 'Professor',

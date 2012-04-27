@@ -1,0 +1,23 @@
+@CHARSET "UTF-8";
+.text label, .password label, .file label, .radio legend, .select label, .nonEditable {
+	display: inline-block;
+	width: 200px;
+	text-align: right;
+}
+.select {
+	margin-top: 5px;
+}
+.nonEditable {
+	margin-bottom: 8px;
+}
+.radio legend {
+	float: left;
+}
+select {
+	margin-left: 5px;
+	font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+	font-size: 1.0em;
+}
+.profile {
+	display: none;
+}

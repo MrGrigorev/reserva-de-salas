@@ -2,7 +2,7 @@
 class Professor extends AppModel {
 	public $name = 'Professor';
 
-	public $useDBConfig = 'cadastrodepessoas';
+	public $useDbConfig = 'cadastrodepessoas';
 
 	public $belongsTo = array(
 			'User' => array('className' => 'User', 'foreignKey' => 'user_id'),
