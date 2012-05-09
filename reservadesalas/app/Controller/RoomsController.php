@@ -1,20 +1,15 @@
 <?php
-
-App::uses('Room', 'Model');
 App::uses('Building', 'Model');
 
 class RoomsController extends AppController {
 	public $name = 'Rooms';
-	
-public function beforeFilter() {
+
+	public function beforeFilter() {
 		parent::beforeFilter();
 
-		$this->Auth->allow(array('createAccount', 'confirmEmail', 'login'));
-
-		$this->Room = ClassRegistry::init('Room');
 		$this->Building = ClassRegistry::init('Building');
 	}
-	
+
 	public function createRoom() {
 		if ($this->request->is('post')) {
 			if ($this->Room->save($this->request->data)) {
@@ -25,10 +20,17 @@ public function beforeFilter() {
 				$this->Session->setFlash(__('E#1: Erro ao cadastrar sala'));
 			}
 		}
-		
+
 		$this->setBuildingsAndFloors();
 	}
-	
+
+	public function listRooms($order = 'Room.number ASC') {
+		$rooms = $this->Room->order = $order;
+		$rooms = $this->Room->find('all');
+
+		$this->set('rooms', $rooms);
+	}
+
 	private function setBuildingsAndFloors() {
 		$this->Building->order = 'Building.name ASC';
 
