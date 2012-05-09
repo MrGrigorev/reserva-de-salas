@@ -17,7 +17,13 @@ public function beforeFilter() {
 	
 	public function createRoom() {
 		if ($this->request->is('post')) {
-			$this->Room->save($this->request->data);
+			if ($this->Room->save($this->request->data)) {
+				$this->Session->setFlash(__('Sala cadastrada com sucesso'));
+				$this->redirect(array('controller' => 'Users', 'action' => 'index'));
+			}
+			else {
+				$this->Session->setFlash(__('E#1: Erro ao cadastrar sala'));
+			}
 		}
 		
 		$this->setBuildingsAndFloors();

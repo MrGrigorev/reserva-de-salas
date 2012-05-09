@@ -9,3 +9,11 @@
 <?php
 	echo $welcomeMessage;
 ?>
+<br /><br />
+<?php 
+	if ($loggedUser['user_type'] == "admin") {
+		echo $this->Html->link(__('Cadastrar salas'), array('controller' => 'Rooms', 'action' => 'createRoom') );
+		echo "<br />";
+		echo $this->Html->link(__('Cadastrar recursos'), array('controller' => 'Resources', 'action' => 'createResource') ); 
+	}
+?>
