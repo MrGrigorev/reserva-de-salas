@@ -17,7 +17,7 @@ class RoomsController extends AppController {
 				$this->redirect(array('controller' => 'Users', 'action' => 'index'));
 			}
 			else {
-				$this->Session->setFlash(__('E#1: Erro ao cadastrar sala'));
+				$this->Session->setFlash(__('Erro ao cadastrar sala'));
 			}
 		}
 
@@ -30,6 +30,14 @@ class RoomsController extends AppController {
 
 		$this->set('rooms', $rooms);
 		$this->set('actualOrder', $order);
+	}
+	
+	public function viewRoom($roomId = null) {
+		$room = $this->Room->findById($roomId);
+		if (!$room) {
+			$this->Session->setFlash(__('Sala inexistente'));
+		}
+		$this->set('room', $room);
 	}
 
 	private function setBuildingsAndFloors() {
