@@ -12,10 +12,18 @@
 	echo __('Capacidade') . ": " . $room['Room']['capacity'];
 	
 	if ($room['Room']['description']) {
-		echo "<br />";
-		echo "<br />";
+		echo "<br /><br />";
 		echo __('Descrição') . ":<br />";
 		echo $room['Room']['description'];
+	}
+	
+	if ($room['Room']['resources']) {
+		echo "<br /><br />";
+		echo __('Recursos disponíveis') . ":<br />";
+		foreach($room['Room']['resources'] as $resource) {
+			echo $this->Html->link($resource['Resource']['name'], array('controller' => 'Resources', 'action' => 'viewResource', $resource['Resource']['id']));
+			echo "<br />";
+		}
 	}
 ?>
 

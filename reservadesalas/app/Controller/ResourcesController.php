@@ -26,6 +26,19 @@ public function beforeFilter() {
 		$this->setRooms();
 	}
 	
+	public function viewResource($resourceId = null) {
+		$resource = $this->Resource->findById($resourceId);
+		if (!$resource) {
+			$this->Session->setFlash(__('Recurso inexistente'));
+			$this->redirect(array('controller' => 'Resources', 'action' => 'listResources'));
+		}
+		
+		$room = $this->Room->findById($resource['Resource']['room_id']);
+		$resource['Resource']['room'] = $room['Room']['name'];
+		
+		$this->set('resource', $resource);
+	}
+	
 	private function setRooms() {
 		$this->Room->order = 'Room.name ASC';
 

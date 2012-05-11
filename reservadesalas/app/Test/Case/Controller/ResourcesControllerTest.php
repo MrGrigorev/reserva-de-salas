@@ -23,6 +23,7 @@ class ResourcesControllerTest extends ControllerTestCase {
 	public function testGetCreateResource() {
 		$this->testAction('/Resources/createResource/' . 1, array('method' => 'get'));
 	}
+	
 	public function testCreateResource() {
 		$data = array(
 				'Resource' => array(
@@ -67,6 +68,10 @@ class ResourcesControllerTest extends ControllerTestCase {
 		$this->assertEqual($resource['Resource']['serial_number'], $last_resource['Resource']['serial_number']);
 		$this->assertEqual($resource['Resource']['name'], $last_resource['Resource']['name']);
 		$this->assertEqual($resource['Resource']['description'], $last_resource['Resource']['description']);
+	}
+	
+	public function testGetViewResource() {
+		$this->testAction('/Resources/viewResource/' . 1, array('method' => 'get'));
 	}
 
 }

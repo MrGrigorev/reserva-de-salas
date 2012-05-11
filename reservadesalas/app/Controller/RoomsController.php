@@ -1,5 +1,6 @@
 <?php
 App::uses('Building', 'Model');
+App::uses('Resource', 'Model');
 
 class RoomsController extends AppController {
 	public $name = 'Rooms';
@@ -8,6 +9,7 @@ class RoomsController extends AppController {
 		parent::beforeFilter();
 
 		$this->Building = ClassRegistry::init('Building');
+		$this->Resource = ClassRegistry::init('Resource');
 	}
 
 	public function createRoom() {
@@ -39,9 +41,12 @@ class RoomsController extends AppController {
 			$this->redirect(array('controller' => 'Rooms', 'action' => 'listRooms'));
 		}
 		
-		 $building = $this->Building->findById($room['Room']['building_id']);
-		 $room['Room']['building'] = $building['Building']['name'];
+		$building = $this->Building->findById($room['Room']['building_id']);
+		$room['Room']['building'] = $building['Building']['name'];
 		
+		$resources = $this->Resource->find('all', array('conditions' => array('room_id' => $roomId) ) );
+		
+		$room['Room']['resources'] = $resources;
 		$this->set('room', $room);
 	}
 

@@ -11,6 +11,7 @@
 		echo $this->fetch('script');
 		echo $this->Html->script('lib/jquery-1.7.2.min');
 		echo $this->Html->script('lib/jquery-ui-1.8.18.custom.min');
+		echo $this->Html->script('general');
 	?>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans' rel='stylesheet' type='text/css' />
 </head>
