@@ -81,4 +81,7 @@ class RoomsControllerTest extends ControllerTestCase {
 			$this->assertEqual($room['Room']['capacity'], $last_room['Room']['capacity']);
 	}
 
+	public function testGetViewRoom() {
+		$this->testAction('/Rooms/viewRoom/' . 1, array('method' => 'get'));
+	}
 }

@@ -36,7 +36,12 @@ class RoomsController extends AppController {
 		$room = $this->Room->findById($roomId);
 		if (!$room) {
 			$this->Session->setFlash(__('Sala inexistente'));
+			$this->redirect(array('controller' => 'Rooms', 'action' => 'listRooms'));
 		}
+		
+		 $building = $this->Building->findById($room['Room']['building_id']);
+		 $room['Room']['building'] = $building['Building']['name'];
+		
 		$this->set('room', $room);
 	}
 
