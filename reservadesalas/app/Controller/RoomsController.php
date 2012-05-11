@@ -16,9 +16,11 @@ class RoomsController extends AppController {
 		if ($this->request->is('post')) {
 			if ($this->Room->save($this->request->data)) {
 				$this->Session->setFlash(__('Sala cadastrada com sucesso'));
-				$this->redirect(array('controller' => 'Users', 'action' => 'index'));
-			}
-			else {
+				$this
+						->redirect(
+								array('controller' => 'Users',
+										'action' => 'index'));
+			} else {
 				$this->Session->setFlash(__('Erro ao cadastrar sala'));
 			}
 		}
@@ -26,9 +28,56 @@ class RoomsController extends AppController {
 		$this->setBuildingsAndFloors();
 	}
 
+	private function parseFilter($key, $filter) {
+		$filterLowerCase = strtolower($filter);
+		$filterLowerCase = str_replace('é', 'e', $filterLowerCase);
+
+		if ($key == 'floor' && $filterLowerCase == 'terreo')
+			$filterLowerCase = 0;
+
+		return $filterLowerCase;
+	}
+
+	private function arrayFilter($rooms, $key, $filter) {
+		if ($filter == '' || $filter == 'all')
+			return $rooms;
+
+		$filter = $this->parseFilter($key, $filter);
+		
+		foreach ($rooms as $i => $room) {
+			if (strpos($room['Room'][$key], $filter) === false) {
+				//debug($rooms[$i]);
+				unset($rooms[$i]);
+			}
+		}
+
+		return $rooms;
+	}
+
+	private function filterRooms($rooms) {
+		$filteredRoomsByName = $this->arrayFilter($rooms, 'name', $this->request->data['Room']['name']);
+		$filteredRoomsByNumber = $this->arrayFilter($rooms, 'number', $this->request->data['Room']['name']);
+		
+		$filteredRooms = array_merge($filteredRoomsByName, $filteredRoomsByNumber);
+		
+		unset($this->request->data['Room']['name']);
+		
+		foreach ($this->request->data['Room'] as $key => $filter) {
+			$filteredRooms = $this->arrayFilter($filteredRooms, $key, $filter);
+		}
+
+		return $filteredRooms;
+	}
+
 	public function listRooms($order = 'Room.number ASC') {
 		$rooms = $this->Room->order = $order;
 		$rooms = $this->Room->find('all');
+		
+		debug($rooms[0]);
+
+		if ($this->request->is('post')) {
+			$rooms = $this->filterRooms($rooms);
+		}
 
 		$this->set('rooms', $rooms);
 		$this->set('actualOrder', $order);
