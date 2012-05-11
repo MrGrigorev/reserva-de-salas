@@ -10,7 +10,10 @@
 	echo $welcomeMessage;
 ?>
 <br /><br />
-<?php 
+<?php
+	echo $this->Html->link(__('Visualizar salas'), array('controller' => 'Rooms', 'action' => 'listRooms'));
+	echo "<br />";
+
 	if ($loggedUser['user_type'] == "admin") {
 		echo $this->Html->link(__('Cadastrar salas'), array('controller' => 'Rooms', 'action' => 'createRoom') );
 		echo "<br />";

@@ -29,6 +29,7 @@ class RoomsController extends AppController {
 		$rooms = $this->Room->find('all');
 
 		$this->set('rooms', $rooms);
+		$this->set('actualOrder', $order);
 	}
 
 	private function setBuildingsAndFloors() {
