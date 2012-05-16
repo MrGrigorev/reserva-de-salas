@@ -38,15 +38,56 @@ class RoomsController extends AppController {
 		return $filterLowerCase;
 	}
 
-	private function arrayFilter($rooms, $key, $filter) {
+	private function containsCaseInsensitive($value, $filter) {
+		$valueLowerCase = strtolower($value);
+		$filterLowerCase = strtolower($filter);
+
+		$position = strpos($valueLowerCase, $filterLowerCase);
+
+		if ($position === false)
+			return false;
+
+		return true;
+	}
+
+	private function arrayFilter($rooms, $key, $filter, $class) {
 		if ($filter == '' || $filter == 'all')
 			return $rooms;
 
 		$filter = $this->parseFilter($key, $filter);
-		
+
 		foreach ($rooms as $i => $room) {
-			if (strpos($room['Room'][$key], $filter) === false) {
-				//debug($rooms[$i]);
+			if ($this->containsCaseInsensitive($room[$class][$key], $filter)
+					== false) {
+				unset($rooms[$i]);
+			}
+		}
+
+		return $rooms;
+	}
+
+	private function arrayFilterCapacity($rooms, $filter) {
+		if ($filter == '' || $filter == 'all')
+			return $rooms;
+
+		foreach ($rooms as $i => $room) {
+			if ($room['Room']['capacity'] < $filter) {
+				unset($rooms[$i]);
+			}
+		}
+
+		return $rooms;
+	}
+
+	private function arrayFilterNameOrNumber($rooms, $filter) {
+		if ($filter == '' || $filter == 'all')
+			return $rooms;
+
+		$filter = $this->parseFilter('name', $filter);
+
+		foreach ($rooms as $i => $room) {
+			if (($this->containsCaseInsensitive($room['Room']['name'], $filter)
+					== false) && ($room['Room']['number'] != $filter)) {
 				unset($rooms[$i]);
 			}
 		}
@@ -55,46 +96,67 @@ class RoomsController extends AppController {
 	}
 
 	private function filterRooms($rooms) {
-		$filteredRoomsByName = $this->arrayFilter($rooms, 'name', $this->request->data['Room']['name']);
-		$filteredRoomsByNumber = $this->arrayFilter($rooms, 'number', $this->request->data['Room']['name']);
-		
-		$filteredRooms = array_merge($filteredRoomsByName, $filteredRoomsByNumber);
-		
-		unset($this->request->data['Room']['name']);
-		
+		$filteredRooms = $rooms;
+
 		foreach ($this->request->data['Room'] as $key => $filter) {
-			$filteredRooms = $this->arrayFilter($filteredRooms, $key, $filter);
+			if ($key == 'capacity') {
+				$filteredRooms = $this
+						->arrayFilterCapacity($filteredRooms, $filter);
+
+				continue;
+			}
+
+			if ($key == 'name') {
+				$filteredRooms = $this
+						->arrayFilterNameOrNumber($filteredRooms, $filter);
+
+				continue;
+			}
+
+			$filteredRooms = $this
+					->arrayFilter($filteredRooms, $key, $filter, 'Room');
 		}
+
+		$filteredRooms = $this
+				->arrayFilter($filteredRooms, 'id',
+						$this->request->data['Building']['id'], 'Building');
 
 		return $filteredRooms;
 	}
 
 	public function listRooms($order = 'Room.number ASC') {
-		$rooms = $this->Room->order = $order;
+		$this->Room->order = $order;
 		$rooms = $this->Room->find('all');
-		
-		debug($rooms[0]);
+
+		$this->Building->order = 'Building.name ASC';
+		$buildings = $this->Building->find('all');
 
 		if ($this->request->is('post')) {
 			$rooms = $this->filterRooms($rooms);
 		}
 
 		$this->set('rooms', $rooms);
+		$this->set('buildings', $buildings);
 		$this->set('actualOrder', $order);
 	}
-	
+
 	public function viewRoom($roomId = null) {
 		$room = $this->Room->findById($roomId);
 		if (!$room) {
 			$this->Session->setFlash(__('Sala inexistente'));
-			$this->redirect(array('controller' => 'Rooms', 'action' => 'listRooms'));
+			$this
+					->redirect(
+							array('controller' => 'Rooms',
+									'action' => 'listRooms'));
 		}
-		
+
 		$building = $this->Building->findById($room['Room']['building_id']);
 		$room['Room']['building'] = $building['Building']['name'];
-		
-		$resources = $this->Resource->find('all', array('conditions' => array('room_id' => $roomId) ) );
-		
+
+		$resources = $this->Resource
+				->find('all',
+						array('conditions' => array('room_id' => $roomId)));
+
 		$room['Room']['resources'] = $resources;
 		$this->set('room', $room);
 	}

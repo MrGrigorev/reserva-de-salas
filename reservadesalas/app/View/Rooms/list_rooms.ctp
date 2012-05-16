@@ -2,6 +2,12 @@
 	include_once 'sharedFunctions.php';
 	echo $this->Html->css('Rooms/list_rooms');
 	echo $this->Html->script('list_rooms');
+	
+	$buildingsList = array();
+	$buildingsList[] = array('' => __('Todos'));
+	foreach ($buildings as $building) {
+		$buildingsList[$building['Building']['id']] = $building['Building']['name'];
+	}
 ?>
 
 <h1><?php echo __('Salas'); ?></h1>
@@ -47,28 +53,38 @@
 	echo $this->Html->tableCells(array(
 			array(
 					array($this->Form->Input('name', array('label' => __(' '), 'placeholder' => 'Filtrar por nome/número...')), array()),
-					array($this->Form->Input('Building.name', array('label' => __(' '), 'placeholder' => 'Filtrar por bloco...')), array()),
+					array($this->Form->Input('Building.id', array('label' => __(' '), 'type' => 'select', 'options' => $buildingsList)), array()),
 					array($this->Form->Input('floor', array('label' => __(' '), 'placeholder' => 'Filtrar por andar...')), array()),
 					array($this->Form->Input('room_type', array('label' => __(' '), 'placeholder' => 'Filtrar por perfil...', 'type' => 'select',
 							'options' => array('all' => __('Todas'), 'auditorium' => __('Auditório'), 'normal' => __('Normal'), 'noble' => __('Sala nobre')))), array()),
-					array($this->Form->Input('capacity', array('label' => __(' '), 'placeholder' => 'Filtrar por capacidade...')), array()),
+					array($this->Form->Input('capacity', array('label' => __(' '), 'placeholder' => 'Capacidade mínima...')), array()),
 			)
 	));
 	$this->Form->End();
 
 	$cells = array();
 	foreach ($rooms as $room) {
-		$roomNumberOrName = $room['Room']['number'];
-		if ($roomNumberOrName == '')
-			$roomNumberOrName = $room['Room']['name'];
+		$roomName = $room['Room']['name'];
+		$roomNumber = $room['Room']['number'];
+		$roomTitle = "";
 		
-		$roomNumberOrName = $this->Html->link($roomNumberOrName, array('controller' => 'Rooms', 'action' => 'viewRoom', $room['Room']['id']));
+		if ($roomNumber) {
+			$roomTitle = $roomNumber;
+		}
+		if ($roomName) {
+			if ($roomNumber) {
+				$roomTitle .= " - ";				
+			}
+			$roomTitle .= $roomName;
+		}
+		
+		$roomLink = $this->Html->link($roomTitle, array('controller' => 'Rooms', 'action' => 'viewRoom', $room['Room']['id']));
 		
 		$floor = $room['Room']['floor'];
 		if ($floor == 0)
 			$floor = __('Térreo');
 		
-		$cells[] = array($roomNumberOrName, $room['Building']['name'], $floor, getTranslatedRoomType($room['Room']['room_type']), $room['Room']['capacity']);
+		$cells[] = array($roomLink, $room['Building']['name'], $floor, getTranslatedRoomType($room['Room']['room_type']), $room['Room']['capacity']);
 	}
 
 	echo $this->Html->tableCells($cells);
