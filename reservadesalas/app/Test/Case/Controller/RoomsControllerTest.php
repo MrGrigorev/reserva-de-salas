@@ -84,4 +84,46 @@ class RoomsControllerTest extends ControllerTestCase {
 	public function testGetViewRoom() {
 		$this->testAction('/Rooms/viewRoom/' . 1, array('method' => 'get'));
 	}
+	
+	public function testGetViewInvalidRoom() {
+		$this->assertEqual($this->testAction('/Rooms/viewRoom/' . null, array('method' => 'get')), $this->redirect(
+				array('controller' => 'Rooms',
+						'action' => 'listRoom')));
+	}
+	
+	public function testFilterRoomsByName() {
+		$data = array('Room' => array('name' => 'CE'), 'Building'=>array('id'=>''));
+	
+		$this
+		->testAction('Rooms/listRooms',
+				array('method' => 'post', 'data' => $data));
+	
+		$this->assertInternalType('array', $this->vars['rooms']);
+		$this->assertNotEqual($this->vars['rooms'], null);
+	
+		$this->assertEqual(count($this->vars['rooms']), 1);
+	}
+	
+	public function testListRooms() {
+		$this->testAction('Rooms/listRooms', array('method' => 'get'));
+	
+		$expected_rooms = $this->Room->find('all');
+		$listed_rooms = $this->vars['rooms'];
+		
+		$this->assertEqual(count($listed_rooms), count($expected_rooms));
+		
+		foreach ($expected_rooms as $room) {
+			$this->assertEqual(in_array($room, $listed_rooms), true);
+		}
+		
+		
+		$expected_buildings = $this->Building->find('all');
+		$listed_buildings = $this->vars['buildings'];
+		
+		$this->assertEqual(count($listed_buildings), count($expected_buildings));
+		
+		foreach ($expected_buildings as $building) {
+			$this->assertEqual(in_array($building, $listed_buildings), true);
+		}
+	}
 }
