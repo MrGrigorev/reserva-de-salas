@@ -11,7 +11,7 @@ class UsersControllerTest extends ControllerTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		
+
 		$this->User = ClassRegistry::init('User');
 		$this->Student = ClassRegistry::init('Student');
 		$this->Professor = ClassRegistry::init('Professor');
@@ -19,17 +19,15 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->UsersController = new UsersController();
 		$this->UsersController->constructClasses();
 		$this->mockEmail();
-		
+
 	}
 
 	private function mockEmail() {
 		$Users = $this
 				->generate('Users',
-						array(
-								'components' => array('Session',
-										'Email')));
+						array('components' => array('Session', 'Email')));
 	}
-	
+
 	public function testGetCreateAccount() {
 		$this->testAction('/Users/createAccount', array('method' => 'get'));
 	}
@@ -58,9 +56,12 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->testAction('Users/adminEdit', array('method' => 'get'));
 	}
 
-	public function testCreateAccount() {
-		
-		
+	public function testGetIndex() {
+		$this->testAction('Users/index', array('method' => 'get'));
+	}
+
+	public function testCreateAccountStudent() {
+
 		$data = array(
 				'User' => array('name' => 'User Test', 'nusp' => '1234567',
 						'email' => 'test@ime.usp.br', 'password' => '123456',
@@ -69,11 +70,11 @@ class UsersControllerTest extends ControllerTestCase {
 						'webpage' => ''));
 
 		$data['Student']['course_id'] = 1;
-				
+
 		$this
 				->testAction('Users/createAccount',
 						array('method' => 'post', 'data' => $data));
-		
+
 		$this->User->order = 'User.id DESC';
 		$user = $this->User->find('first');
 
@@ -83,9 +84,64 @@ class UsersControllerTest extends ControllerTestCase {
 		$this
 				->assertEqual($user['User']['password'],
 						AuthComponent::password($data['User']['password']));
-		/* TODO: Test course */
 	}
 	
+	public function testCreateAccountProfessor() {
+
+		$data = array(
+				'User' => array('name' => 'User Test', 'nusp' => '0384763',
+						'email' => 'test2superlegal@ime.usp.br', 'password' => '123456',
+						'passwordConfirmation' => '123456',
+						'profile' => 'Professor', 'lattes' => '',
+						'webpage' => ''));
+
+		$data['Professor']['professor_category_id'] = 1;
+		$data['Professor']['department_id'] = 1;
+
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+
+		$this->User->order = 'User.id DESC';
+		$user = $this->User->find('first');
+
+		$this->assertEqual($user['User']['name'], $data['User']['name']);
+		$this->assertEqual($user['User']['email'], $data['User']['email']);
+		$this->assertEqual($user['User']['nusp'], $data['User']['nusp']);
+		$this
+				->assertEqual($user['User']['password'],
+						AuthComponent::password($data['User']['password']));
+	}
+	
+	public function testCreateAccountEmployee() {
+
+		$data = array(
+				'User' => array('name' => 'User Test', 'nusp' => '0384763',
+						'email' => 'test2superlegal@ime.usp.br', 'password' => '123456',
+						'passwordConfirmation' => '123456',
+						'profile' => 'Employee', 'lattes' => '',
+						'webpage' => ''));
+
+		$occupation = "Faxineiro";
+		
+		$data['Employee']['occupation'] = $occupation;
+
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+
+		$this->User->order = 'User.id DESC';
+		$user = $this->User->find('first');
+
+		$this->assertEqual($user['User']['name'], $data['User']['name']);
+		$this->assertEqual($user['User']['email'], $data['User']['email']);
+		$this->assertEqual($user['User']['nusp'], $data['User']['nusp']);
+		$this
+				->assertEqual($user['User']['password'],
+						AuthComponent::password($data['User']['password']));
+		$this->assertEqual($user['Employee']['occupation'], $occupation);
+	}
+
 	public function testConfirmEmail() {
 		$user_id = 2;
 		$user = $this->User->findById($user_id);
@@ -98,7 +154,15 @@ class UsersControllerTest extends ControllerTestCase {
 				->assertEqual($result['User']['activation_status'],
 						'waiting_activation');
 	}
-	
+
+	public function testConfirmEmailWithInvalidHash() {
+		$this
+				->testAction('Users/confirmEmail/' . 'invalid_hash',
+						array('method' => 'get'));
+
+		$this->assertContains('Users/login', $this->headers['Location']);
+	}
+
 	public function testEditProfile() {
 		$user_id = 6;
 		$user_before = $this->User->findById($user_id);
@@ -125,9 +189,8 @@ class UsersControllerTest extends ControllerTestCase {
 		$this
 				->assertEqual($user_after['Student']['course_id'],
 						$data['Student']['course_id']);
-		// TODO: test photo
 	}
-	
+
 	public function testEditProfileInvalidURL() {
 		$user_id = 6;
 		$user_before = $this->User->findById($user_id);
@@ -221,6 +284,28 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEqual($this->UsersController->getLoggedUser(), null);
 	}
 
+	public function testLoginWithLoggedUser() {
+		$this->testAction('Users/logout');
+
+		$user_id = 3;
+		$user = $this->User->findById($user_id);
+		$password = '12345';
+
+		$data = array(
+				'User' => array('nusp' => $user['User']['nusp'],
+						'password' => $password));
+
+		$this
+				->testAction('Users/login',
+						array('method' => 'post', 'data' => $data));
+
+		$result = $this
+				->testAction('Users/login',
+						array('method' => 'get', 'return' => 'vars'));
+
+		$this->assertNotContains('login', $this->headers['Location']);
+	}
+
 	public function testLogout() {
 		$this->testAction('Users/logout');
 
@@ -230,7 +315,6 @@ class UsersControllerTest extends ControllerTestCase {
 		$this
 				->testAction('Users/login',
 						array('method' => 'post', 'data' => $data));
-						
 
 		$this->assertNotEqual($this->UsersController->getLoggedUser(), null);
 
@@ -245,17 +329,129 @@ class UsersControllerTest extends ControllerTestCase {
 						'password' => '', 'passwordConfirmation' => '',
 						'profile' => ''));
 
-		$this->User->order = 'User.id DESC';
-		$userBefore = $this->User->find('first');
+		$userBefore = $this->getLastCreatedAccount();
 
 		$this
 				->testAction('Users/createAccount',
 						array('method' => 'post', 'data' => $data));
 
-		$this->User->order = 'User.id DESC';
-		$userAfter = $this->User->find('first');
+		$userAfter = $this->getLastCreatedAccount();
 
 		$this->assertEqual($userBefore, $userAfter);
+	}
+
+	public function testCreateAccountWithBlankName() {
+		$data = array(
+				'User' => array('name' => '', 'nusp' => '9873456',
+						'email' => 'invalidName@ime.usp.br',
+						'password' => '123456',
+						'passwordConfirmation' => '123456',
+						'profile' => 'Student', 'lattes' => '',
+						'webpage' => ''));
+
+		$data['Student']['course_id'] = 1;
+
+		$userBefore = $this->getLastCreatedAccount();
+
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+
+		$userAfter = $this->getLastCreatedAccount();
+
+		$this->assertEqual($userBefore, $userAfter);
+	}
+
+	public function testCreateAccountWithBlankNusp() {
+		$data = array(
+				'User' => array('name' => 'Teste', 'nusp' => '',
+						'email' => 'invalidNusp@ime.usp.br',
+						'password' => '123456',
+						'passwordConfirmation' => '123456',
+						'profile' => 'Student', 'lattes' => '',
+						'webpage' => ''));
+
+		$data['Student']['course_id'] = 1;
+
+		$userBefore = $this->getLastCreatedAccount();
+
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+
+		$userAfter = $this->getLastCreatedAccount();
+
+		$this->assertEqual($userBefore, $userAfter);
+	}
+
+	public function testCreateAccountWithInvalidEmail() {
+		$data = array(
+				'User' => array('name' => 'Teste', 'nusp' => '4769807604',
+						'email' => 'invalidEmail', 'password' => '123456',
+						'passwordConfirmation' => '123456',
+						'profile' => 'Student', 'lattes' => '',
+						'webpage' => ''));
+
+		$data['Student']['course_id'] = 1;
+
+		$userBefore = $this->getLastCreatedAccount();
+
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+
+		$userAfter = $this->getLastCreatedAccount();
+
+		$this->assertEqual($userBefore, $userAfter);
+	}
+
+	public function testCreateAccountWithDifferentPasswords() {
+		$data = array(
+				'User' => array('name' => 'Teste', 'nusp' => '476907604',
+						'email' => 'invalidPassword@gmail.com',
+						'password' => '123456',
+						'passwordConfirmation' => '12357658',
+						'profile' => 'Student', 'lattes' => '',
+						'webpage' => ''));
+
+		$data['Student']['course_id'] = 1;
+
+		$userBefore = $this->getLastCreatedAccount();
+
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+
+		$userAfter = $this->getLastCreatedAccount();
+
+		$this->assertEqual($userBefore, $userAfter);
+	}
+
+	public function testCreateAccountWithBlankPassword() {
+		$data = array(
+				'User' => array('name' => 'Teste', 'nusp' => '476907604',
+						'email' => 'invalidPassword@gmail.com',
+						'password' => '', 'passwordConfirmation' => '12357658',
+						'profile' => 'Student', 'lattes' => '',
+						'webpage' => ''));
+
+		$data['Student']['course_id'] = 1;
+
+		$userBefore = $this->getLastCreatedAccount();
+
+		$this
+				->testAction('Users/createAccount',
+						array('method' => 'post', 'data' => $data));
+
+		$userAfter = $this->getLastCreatedAccount();
+
+		$this->assertEqual($userBefore, $userAfter);
+	}
+
+	private function getLastCreatedAccount() {
+		$this->User->order = 'User.id DESC';
+
+		return $this->User->find('first');
 	}
 
 	public function testCreateAccountWithExistingNusp() {
@@ -322,7 +518,7 @@ class UsersControllerTest extends ControllerTestCase {
 				->testAction('Users/login',
 						array('method' => 'post', 'data' => $data));
 	}
-	
+
 	public function testActivateAccounts() {
 		$users = $this->User
 				->find('all',
@@ -348,7 +544,7 @@ class UsersControllerTest extends ControllerTestCase {
 			$this->assertEqual($result['User']['activation_status'], 'active');
 		}
 	}
-	
+
 	public function testRejectAccounts() {
 		$users = $this->User
 				->find('all',
@@ -374,7 +570,7 @@ class UsersControllerTest extends ControllerTestCase {
 			$this->assertEqual($result, null);
 		}
 	}
-	
+
 	public function testAdminEdit() {
 		$this->loginWithAdmin();
 
