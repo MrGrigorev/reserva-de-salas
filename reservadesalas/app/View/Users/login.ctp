@@ -1,4 +1,5 @@
-<?php 
+<?php
+	echo $this->Html->css('Rooms/rooms');
 	echo $this->Html->css('Users/users');
 ?>
 

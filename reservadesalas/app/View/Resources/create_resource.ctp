@@ -1,5 +1,7 @@
 <?php
-	$roomList = array();
+	echo $this->Html->css('Rooms/rooms');
+
+	$roomList = array();	
 	$roomList[] = array("" => "-------");
 	foreach ($rooms as $room) {
 		$roomList[$room['Room']['id']] = $room['Room']['name'];
