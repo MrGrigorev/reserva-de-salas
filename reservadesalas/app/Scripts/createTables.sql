@@ -25,7 +25,7 @@ CREATE TABLE rooms (
 CREATE TABLE resources (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	room_id INT DEFAULT NULL,
-	serial_number VARCHAR(50) NOT NULL,
+	serial_number VARCHAR(50) UNIQUE NOT NULL,
 	name VARCHAR(50) NOT NULL,
 	description TEXT DEFAULT NULL,
 	FOREIGN KEY (room_id) REFERENCES rooms(id)

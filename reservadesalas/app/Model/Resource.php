@@ -4,7 +4,7 @@ class Resource extends AppModel {
 
 	public $belongsTo = array(
 			'Room' => array('className' => 'Room', 'foreignKey' => 'room_id'));
-	
+
 	public $validate = array(
 			'name' => array(
 					'not empty' => array('required' => true,
@@ -13,5 +13,8 @@ class Resource extends AppModel {
 			'serial_number' => array(
 					'not empty' => array('required' => true,
 							'rule' => 'notEmpty',
-							'message' => 'Não deve ser vazio.')));
+							'message' => 'Não deve ser vazio.'),
+					'is unique' => array('required' => true,
+							'rule' => 'isUnique',
+							'message' => 'Número de série já cadastrado.')));
 }
