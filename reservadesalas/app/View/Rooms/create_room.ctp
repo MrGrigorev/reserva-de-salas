@@ -12,7 +12,7 @@
 
 <?php
 	echo $this->Form->Create('Room');
-	echo $this->Form->Input('name', array('label' => __('Título')));
+	echo $this->Form->Input('name', array('label' => __('Nome')));
 	echo $this->Form->Input('building_id', array('label' => __('Bloco'), 'type' => 'select', 'options' => $buildingsList));
 	echo $this->Form->Input('floor', array('label' => __('Andar')));
 	echo $this->Form->Input('number', array('label' => __('Número')));
