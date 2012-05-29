@@ -30,3 +30,23 @@ CREATE TABLE resources (
 	description TEXT DEFAULT NULL,
 	FOREIGN KEY (room_id) REFERENCES rooms(id)
 );
+
+CREATE TABLE reservations (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	start_time DATETIME NOT NULL,
+	end_time DATETIME NOT NULL,
+	room_id INT NOT NULL,
+	user_id INT NOT NULL,
+	description TEXT DEFAULT NULL,
+	is_activated BIT NOT NULL DEFAULT 0,
+	created DATETIME DEFAULT NULL,
+	FOREIGN KEY (room_id) REFERENCES rooms(id)
+);
+
+CREATE TABLE reservations_resources (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	reservation_id INT NOT NULL,
+	resource_id INT NOT NULL,
+	FOREIGN KEY (reservation_id) REFERENCES reservations(id),
+	FOREIGN KEY (resource_id) REFERENCES resources(id)
+);
