@@ -5,6 +5,8 @@ App::uses('Room', 'Model');
 
 class ResourcesController extends AppController {
 	public $name = 'Resources';
+	
+	public $components = array('RequestHandler');
 
 	public function beforeFilter() {
 		parent::beforeFilter();
@@ -138,5 +140,13 @@ class ResourcesController extends AppController {
 
 		$this->set('resources', $resources);
 		$this->set('actualOrder', $order);
+	}
+	
+	public function getAvailableResources($startDatetime = null, $endDatetime = null) {
+		$this->RequestHandler->respondAs('json');
+		$this->autoRender = false;
+
+		echo json_encode($this->Resource->find('all') );
+		exit();
 	}
 }

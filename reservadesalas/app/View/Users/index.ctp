@@ -11,6 +11,11 @@
 ?>
 <br /><br />
 <?php
+	echo $this->Html->link(__('Criar reserva'), array('controller' => 'Reservations', 'action' => 'createReservation'));
+	echo "<br />";
+	echo "<br />";
+	echo "<br />";
+
 	echo $this->Html->link(__('Reservar Sala'), array('controller' => 'Reservations', 'action' => 'chooseDate'));
 	echo "<br /><br />";
 	echo $this->Html->link(__('Visualizar salas'), array('controller' => 'Rooms', 'action' => 'listRooms'));
