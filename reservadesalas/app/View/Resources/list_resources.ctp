@@ -7,7 +7,7 @@
 <br />
 <table id="roomsTable">
 <?php
-	function orderParameter($class, $attribute, $actualOrder) {
+	function orderParameterResources($class, $attribute, $actualOrder) {
 		$parameter = $class . '.' . $attribute . ' ASC';
 
 		if ($parameter != $actualOrder)
@@ -16,13 +16,13 @@
 		return $class . '.' . $attribute . ' DESC';
 	}
 
-	$parameter = orderParameter('Resource', 'name', $actualOrder);
+	$parameter = orderParameterResources('Resource', 'name', $actualOrder);
 	$linkName = $this->Html->link(__('Nome'), array('controller' => 'Resources', 'action' => 'listResources', $parameter));
 
-	$parameter = orderParameter('Resource', 'serial_number', $actualOrder);
+	$parameter = orderParameterResources('Resource', 'serial_number', $actualOrder);
 	$linkSerial = $this->Html->link(__('Número de série'), array('controller' => 'Resources', 'action' => 'listResources', $parameter));
 	
-	$parameter = orderParameter('Resource', 'room_id', $actualOrder);
+	$parameter = orderParameterResources('Resource', 'room_id', $actualOrder);
 	$linkFixedResource = $this->Html->link(__('Recurso fixo'), array('controller' => 'Resources', 'action' => 'listResources', $parameter));
 	
 	$header = array(

@@ -17,6 +17,10 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->UsersController = new UsersController();
 		$this->UsersController->constructClasses();
 	}
+	
+	public function testGetIndex() {
+		$this->testAction('/Users/index', array('method' => 'get'));
+	}
 
 	public function testLogin() {
 		$this->testAction('Users/logout');
@@ -77,5 +81,39 @@ class UsersControllerTest extends ControllerTestCase {
 		$loggedUser = $this->UsersController->getLoggedUser();
 
 		$this->assertEqual($loggedUser['id'], null);
+	}
+	
+	public function testLoginWithLoggedUser() {
+		$this->loginAsActiveUser();
+		
+		$result = $this
+				->testAction('Users/login',
+						array('method' => 'get', 'return' => 'vars'));
+
+		$this->assertNotContains('login', $this->headers['Location']);
+	}
+	
+	public function loginAsActiveUser() {
+		$this->testAction('Users/logout');
+		
+		$password = '12345';
+		$user = UsersControllerTest::getActiveUser($password);
+		$data = array(
+				'User' => array('nusp' => $user['User']['nusp'],
+						'password' => $password));
+		$this
+				->testAction('Users/login',
+						array('method' => 'post', 'data' => $data));
+	}
+	
+	public function getActiveUser($password) {
+		$hash = AuthComponent::password($password);
+		$users = $this->User->find("all");
+		foreach($users as $user) {
+			if ($user['User']['activation_status'] == "active" && $user['User']['password'] == $hash) {
+				return $user;
+			}
+		}
+		return null;
 	}
 }

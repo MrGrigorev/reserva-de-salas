@@ -1,12 +1,19 @@
 <?php
 App::uses('User', 'Model');
+App::uses('Student', 'Model');
+App::uses('Professor', 'Model');
+App::uses('Employee', 'Model');
 App::uses('Building', 'Model');
 App::uses('Room', 'Model');
 App::uses('Resource', 'Model');
 App::uses('ResourcesController', 'Controller');
+App::uses('RoomsController', 'Controller');
+App::uses('UsersControllerTest', 'Test/Case/Controller');
 
 class ResourcesControllerTest extends ControllerTestCase {
-	public $fixtures = array('app.user', 'app.resource', 'app.room', 'app.building');
+	public $fixtures = array('app.user', 'app.student', 'app.professor',
+			'app.employee', 'app.course', 'app.department',
+			'app.professorCategory', 'app.building', 'app.room', 'app.resource');
 
 	public function setUp() {
 		parent::setUp();
@@ -73,5 +80,59 @@ class ResourcesControllerTest extends ControllerTestCase {
 	public function testGetViewResource() {
 		$this->testAction('/Resources/viewResource/' . 1, array('method' => 'get'));
 	}
+	
+	public function testGetViewInvalidResource() {
+		$result = $this->testAction('/Resources/viewResource/' . 19782, array('method' => 'get', 'return' => 'vars'));
+		$this->assertContains('/Resources/listResources', $this->headers['Location']);
+	}
+	
+	public function testListResources() {
+		$this->testAction('Resources/listResources', array('method' => 'get'));
+	
+		$expected_resources = $this->Resource->find('all');
+		$listed_resources = $this->vars['resources'];
+		
+		$this->assertEqual(count($listed_resources), count($expected_resources));
+		
+		foreach ($expected_resources as $resource) {
+			$this->assertEqual(in_array($resource, $listed_resources), true);
+		}
+	}
+	
+	public function testGetListResourcesLogged() {
+		UsersControllerTest::loginAsActiveUser();
+		$result = $this->testAction('/Resources/listResources', array('method' => 'get', 'return' => 'vars'));
+		$this->assertFalse(isset($this->headers['Location']));
+	}
+	
+	public function testGetListResourcesNotLogged() {
+		$result = $this->testAction('/Resources/listResources', array('method' => 'get', 'return' => 'vars'));
+		$this->assertContains("/Users/login", $this->headers['Location']);
+	}
+	
+	public function testFilterResourcesByNameFixed() {
+		$data = array('Resource' => array('is_fixed_resource' => 'yes', 'name' => 'HP'));
 
+		$this
+				->testAction('Resources/listResources',
+						array('method' => 'post', 'data' => $data));
+
+		$this->assertInternalType('array', $this->vars['resources']);
+		$this->assertNotEqual($this->vars['resources'], null);
+
+		$this->assertEqual(count($this->vars['resources']), 1);
+	}
+	
+	public function testFilterResourcesByNameNotFixed() {
+		$data = array('Resource' => array('is_fixed_resource' => 'no'));
+
+		$this
+				->testAction('Resources/listResources',
+						array('method' => 'post', 'data' => $data));
+
+		$this->assertInternalType('array', $this->vars['resources']);
+		$this->assertNotEqual($this->vars['resources'], null);
+
+		$this->assertEqual(count($this->vars['resources']), 1);
+	}
 }
