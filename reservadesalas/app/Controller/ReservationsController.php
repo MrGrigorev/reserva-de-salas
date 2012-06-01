@@ -1,5 +1,6 @@
 <?php
 App::uses('Room', 'Model');
+App::uses('Reservation', 'Model');
 
 class ReservationsController extends AppController {
 	public $name = 'Reservations';
@@ -10,6 +11,7 @@ class ReservationsController extends AppController {
 		parent::beforeFilter();
 
 		$this->Room = ClassRegistry::init('Room');
+		$this->Reservation = ClassRegistry::init('Reservation');
 	}
 
 	public function isAuthorized($user) {
@@ -26,12 +28,19 @@ class ReservationsController extends AppController {
 	}
 
 	public function loadAvailableRooms() {
+		$result = json_decode($this->params['data']);
+		$date = $result->date;
+		$begin_time = $result->begin_time;
+		$end_time = $result->end_time;
+		
 		$this->RequestHandler->respondAs('json');
 		$this->autoRender = false;
+		
 
 		$rooms = $this->Room->find('all');
+		/*$rooms = $this->Room->find('all', array('conditions'=>array('Room.id >='=> 'aquilo'))); */
 
-		echo json_encode($rooms);
+		echo json_encode($result);
 		exit();
 	}
 }

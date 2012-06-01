@@ -15,6 +15,7 @@
 		echo $this->Html->script('lib/jquery-ui-1.8.18.custom.min');
 		echo $this->Html->script('general');
 		echo $this->Html->script('lib/jquery-ui-timepicker-addon');
+		echo $this->Html->script('lib/jquery.json');
 	?>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans' rel='stylesheet' type='text/css' />
 </head>
