@@ -23,23 +23,26 @@ class ReservationsController extends AppController {
 	public function chooseDate() {
 	}
 
-	public function createReservation($roomId, $startDatetime, $endDatetime) {
+	public function createReservation() {
+		
 		// DATETIME FORMAT: yyyy-mm-dd hh:mm:ss
 		$startDatetime = "2012-06-01 12:00:00";
 		$endDatetime = "2012-06-01 16:00:00";
-		
+
 		$roomId = 1;
 		$roomResources = $this->Resource
 				->find('all',
 						array(
 								'conditions' => array(
-										'Resource.room_id' => $roomId), 'fields' => array('Resource.id', 'Resource.serial_number', 'Resource.name')));
-		
+										'Resource.room_id' => $roomId),
+								'fields' => array('Resource.id',
+										'Resource.serial_number',
+										'Resource.name')));
+
 		$this->set('fixedResources', $roomResources);
 		$this->set('start_time', $startDatetime);
 		$this->set('end_time', $endDatetime);
 		$this->set('room_id', $roomId);
-		
 	}
 
 	public function loadAvailableRooms() {
@@ -47,10 +50,9 @@ class ReservationsController extends AppController {
 		$date = $result->date;
 		$begin_time = $result->begin_time;
 		$end_time = $result->end_time;
-		
+
 		$this->RequestHandler->respondAs('json');
 		$this->autoRender = false;
-		
 
 		$rooms = $this->Room->find('all');
 		/*$rooms = $this->Room->find('all', array('conditions'=>array('Room.id >='=> 'aquilo'))); */

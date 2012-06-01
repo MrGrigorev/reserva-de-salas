@@ -22,7 +22,8 @@
 		
 		$cells = array();
 		foreach($fixedResources as $fixedResource) {
-			$cells[] = array($fixedResource['Resource']['name'], $fixedResource['Resource']['serial_number'], '');
+			$link = $this->Html->link($fixedResource['Resource']['name'], array('controller' => 'Resources', 'action' => 'viewResource', $fixedResource['Resource']['id']), array('target' => '_blank'));
+			$cells[] = array($link, $fixedResource['Resource']['serial_number'], '');
 		}
 		echo $this->Html->tableCells($cells);
 		?>

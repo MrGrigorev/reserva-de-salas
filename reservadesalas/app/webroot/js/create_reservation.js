@@ -19,7 +19,8 @@ $(document).ready(function() {
             	   var name = value['Resource']['name'];
             	   var serial_number = value['Resource']['serial_number'];
             	   var resourceId = value['Resource']['id'];
-            	   var row = $("<tr><td><input type='hidden' value='" + value['Resource']['id'] + "' />" + name + "</td><td>" + serial_number + "</td><td class='center'><button type='button' class='select'>Adicionar</button></td></tr>");
+            	   var link = "<a href='/reservadesalas/Resources/viewResource/" + resourceId + "' target='_blank'>" + name + "</a>";
+            	   var row = $("<tr><td><input type='hidden' value='" + value['Resource']['id'] + "' />" + link + "</td><td>" + serial_number + "</td><td class='center'><button type='button' class='select'>Adicionar</button></td></tr>");
             	   row.find(".select").click(function() {
             		   var addButton = $(this);
             		   var line = $("<tr></tr>");
@@ -30,7 +31,7 @@ $(document).ready(function() {
             			  line.remove();
             			  addButton.show();
             		   });
-            		   line.append("<td>" + name + "</td><td>" + serial_number + "</td>");
+            		   line.append("<td>" + link + "</td><td>" + serial_number + "</td>");
             		   var cell = $("<td class='center'></td>");
             		   cell.append(closeButton);
             		   line.append(cell);
