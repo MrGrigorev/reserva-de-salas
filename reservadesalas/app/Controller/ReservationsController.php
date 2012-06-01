@@ -2,6 +2,7 @@
 App::uses('Room', 'Model');
 App::uses('Resource', 'Model');
 App::uses('Reservation', 'Model');
+App::uses('ReservationsResource', 'Model');
 
 class ReservationsController extends AppController {
 	public $name = 'Reservations';
@@ -14,6 +15,7 @@ class ReservationsController extends AppController {
 		$this->Room = ClassRegistry::init('Room');
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->Reservation = ClassRegistry::init('Reservation');
+		$this->ReservationsResource = ClassRegistry::init('ReservationsResource');
 	}
 
 	public function isAuthorized($user) {
@@ -23,13 +25,19 @@ class ReservationsController extends AppController {
 	public function chooseDate() {
 	}
 
-	public function createReservation() {
+	public function createReservation($roomId, $startDatetime, $endDatetime) {
+		if ($this->request->is('post')) {
+			$user = $this->getLoggedUser();
+			$this->request->data['Reservation']['user_id'] = $user['id'];
+			// TODO: Verificar se é usuário comum ou não
+			$this->request->data['Reservation']['is_activated'] = 1;
+			
+			if ($this->Reservation->save($this->request->data)) {
+				$this->Session->setFlash(__('Reserva realizada com sucesso'));
+				$this->redirect(array('controller' => 'Rooms', 'action' => 'viewRoom', $roomId));
+			}
+		}
 		
-		// DATETIME FORMAT: yyyy-mm-dd hh:mm:ss
-		$startDatetime = "2012-06-01 12:00:00";
-		$endDatetime = "2012-06-01 16:00:00";
-
-		$roomId = 1;
 		$roomResources = $this->Resource
 				->find('all',
 						array(

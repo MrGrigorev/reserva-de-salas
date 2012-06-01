@@ -24,7 +24,7 @@ $(document).ready(function() {
             	   row.find(".select").click(function() {
             		   var addButton = $(this);
             		   var line = $("<tr></tr>");
-            		   var input = $("<input type='hidden' name='data[Reservation][resources][]' value='" + resourceId + "' />");
+            		   var input = $("<input type='hidden' name='data[Resources][]' value='" + resourceId + "' />");
             		   line.append(input);
             		   var closeButton = $("<button>Remover</button>");
             		   closeButton.click(function() {
