@@ -1,16 +1,18 @@
 $(document).ready(function() {
 	$("#addResource").click(function() {
 		var addResourceButton = $(this);
+		var start_time = $('#ReservationStartTime').attr('value');
+		var end_time = $('#ReservationEndTime').attr('value');
 		$.ajax({
            type: 'POST',
            dataType: 'json',
            url: '/reservadesalas/Resources/getAvailableResources',
-           data: {startDatetime: "lala", endDatetime: "lala"},
+           data: {startDatetime: start_time, endDatetime: end_time},
            success: function(data) {
                $('#availableResources').html("");
                var resources = $("#resources").find('table');
                var table = $("<table id='roomsTable'></table>");
-               var header = $("<tr><td class='header'>Nome</td><td class='header'>Número de Série</td><td class='header'></td></tr>");
+               var header = $("<tr><td class='header'>Nome</td><td class='header'>Número de Patrimônio</td><td class='header'></td></tr>");
                table.append(header);
                
                $.each(data, function(i, value) {

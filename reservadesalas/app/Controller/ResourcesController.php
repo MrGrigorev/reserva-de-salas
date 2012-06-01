@@ -5,7 +5,7 @@ App::uses('Room', 'Model');
 
 class ResourcesController extends AppController {
 	public $name = 'Resources';
-	
+
 	public $components = array('RequestHandler');
 
 	public function beforeFilter() {
@@ -89,7 +89,7 @@ class ResourcesController extends AppController {
 
 	private function arrayFIlterIsFixedResource($filteredResources, $filter) {
 		$resources = $filteredResources;
-		
+
 		if ($filter == '' || $filter == 'all')
 			return $resources;
 
@@ -119,7 +119,8 @@ class ResourcesController extends AppController {
 		foreach ($this->request->data['Resource'] as $key => $filter) {
 			if ($key == 'is_fixed_resource') {
 				$filteredResources = $this
-						->arrayFilterIsFixedResource($filteredResources, $filter);
+						->arrayFilterIsFixedResource($filteredResources,
+								$filter);
 				continue;
 			}
 
@@ -141,12 +142,50 @@ class ResourcesController extends AppController {
 		$this->set('resources', $resources);
 		$this->set('actualOrder', $order);
 	}
-	
-	public function getAvailableResources($startDatetime = null, $endDatetime = null) {
+
+	public function getAvailableResources() {
+				
+		$startDatetime = $this->request->data['startDatetime'];
+		$endDatetime = $this->request->data['endDatetime'];
+				
 		$this->RequestHandler->respondAs('json');
 		$this->autoRender = false;
 
-		echo json_encode($this->Resource->find('all') );
+		$options['joins'] = array(
+				array('table' => 'reservations_resources',
+						'alias' => 'ReservationsResource', 'type' => 'LEFT',
+						'conditions' => array(
+								'ReservationsResource.resource_id = Resource.id')),
+				array('table' => 'reservations', 'alias' => 'Reservations',
+						'type' => 'LEFT',
+						'conditions' => array(
+								'Reservations.id = ReservationsResource.reservation_id',
+								'Reservations.is_activated = 1'
+						)));
+
+		$options['conditions'] = array(
+			'or' => array(
+				'Resource.room_id !=' => null,
+				'and' => array('Reservations.start_time < ' => $endDatetime,
+								'Reservations.end_time > ' => $startDatetime)
+			));
+							 
+		$options['fields'] = array('DISTINCT (Resource.id)');
+		
+
+		$unavailableResources = $this->Resource->find('all', $options);
+		
+		$notIn = array();
+		foreach($unavailableResources as $unavailableResource) {
+			$notIn[] = $unavailableResource['Resource']['id'];
+		}
+		
+		$availableOptions['conditions'] = array('NOT' => array('Resource.id' => $notIn));
+		$availableOptions['fields'] = array('Resource.id', 'Resource.name', 'Resource.serial_number');
+		
+		$availableResources = $this->Resource->find('all', $availableOptions);
+
+		echo json_encode($availableResources);
 		exit();
 	}
 }

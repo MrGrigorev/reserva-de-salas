@@ -19,6 +19,11 @@ h1 {
 	font-size: 1.5em;
 	margin-bottom: 30px;
 }
+h2 {
+	font-size: 1.3em;
+	color: #444444;
+	margin-bottom: 15px;
+}
 a {
 	color: #2D7BE1;
 	text-decoration: none;
