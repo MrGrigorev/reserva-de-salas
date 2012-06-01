@@ -25,7 +25,12 @@ class ReservationsController extends AppController {
 	public function chooseDate() {
 	}
 
-	public function createReservation($roomId, $startDatetime, $endDatetime) {
+	public function createReservation($roomId, $date, $startTime, $endTime) {
+		$startDatetime = DateTime::createFromFormat('d-m-Y G-i', $date.' '.$startTime);
+		$startDatetime = $startDatetime->format('Y-m-d G:i:s');
+		$endDatetime = DateTime::createFromFormat('d-m-Y G-i', $date.' '.$endTime);
+		$endDatetime = $endDatetime->format('Y-m-d G:i:s');
+		
 		if ($this->request->is('post')) {
 			$user = $this->getLoggedUser();
 			$this->request->data['Reservation']['user_id'] = $user['id'];
@@ -54,19 +59,58 @@ class ReservationsController extends AppController {
 	}
 
 	public function loadAvailableRooms() {
-		$result = json_decode($this->params['data']);
-		$date = $result->date;
-		$begin_time = $result->begin_time;
-		$end_time = $result->end_time;
+		$param = json_decode($this->params['data']);
+		$date = $param->date;
+		$begin_time = $param->begin_time;
+		$end_time = $param->end_time;
+		
+		$datetime_begin = DateTime::createFromFormat('d/m/Y G:i', $date.' '.$begin_time);
+		$datetime_end = DateTime::createFromFormat('d/m/Y G:i', $date.' '.$end_time);
 
 		$this->RequestHandler->respondAs('json');
 		$this->autoRender = false;
 
-		$rooms = $this->Room->find('all');
-		/*$rooms = $this->Room->find('all', array('conditions'=>array('Room.id >='=> 'aquilo'))); */
+		$allRooms = $this->Room->find('all');
+		
+		$intersectionTime = array('Reservation.end_time >=' => $datetime_begin->format('Y-m-d G:i:s'),
+								  'Reservation.start_time <=' => $datetime_end->format('Y-m-d G:i:s'),
+								  'Reservation.is_activated' => true);
+		$reservations = $this->Reservation->find('all', array('conditions'=>$intersectionTime));
+		
+		/* Filter available Rooms */
+		foreach ($allRooms as $i=>$room) {
+			foreach($reservations as $reservation) {
+				if ($reservation['Reservation']['room_id'] == $room['Room']['id']) {
+					unset($allRooms[$i]);
+					break;
+				}
+			}
+		}
 
-		echo json_encode($result);
+		echo json_encode($allRooms);
 		exit();
+		
 	}
+	
+	public function test() {
+		$agora = new DateTime('now');
+		$intersectionTime = array('Reservation.end_time >=' => $agora->format('Y-m-d G:i:s'), 'Reservation.start_time <=' => $agora->format('Y-m-d G:i:s'));
+		$reservedRooms = $this->Reservation->find('all', array('conditions'=>$intersectionTime));
+		
+		$allRooms = $this->Room->find('all');
+		$reservations = $this->Reservation->find('all', array('conditions'=>$intersectionTime));
+		
+		foreach ($allRooms as $i=>$room) {
+			debug($room);
+			foreach($reservations as $reservation) {
+				debug($reservation);
+				if ($reservation['Reservation']['room_id'] == $room['Room']['id']) {
+					unset($allRooms[i]);
+					break;
+				}
+			}
+		}
+	}
+	
 }
 ?>
