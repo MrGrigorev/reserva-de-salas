@@ -37,10 +37,19 @@ class ReservationsController extends AppController {
 			// TODO: Verificar se é usuário comum ou não
 			$this->request->data['Reservation']['is_activated'] = 1;
 			
+			if (! $this->Room->isAvailable($roomId, $startDatetime, $endDatetime) ) {
+				$this->Session->setFlash(__('Sala não disponível. Selecione outra sala.'), 'default', array('class' => 'message errorMessage roundedBorders'));
+				$this->redirect(array('controller' => 'Reservations', 'action' => 'chooseDate'));
+			}
+			
 			if ($this->Reservation->save($this->request->data)) {
-				$this->Session->setFlash(__('Reserva realizada com sucesso'));
+				$this->Session->setFlash(__('Reserva realizada com sucesso'), 'default', array('class' => 'message success roundedBorders'));
 				$this->redirect(array('controller' => 'Rooms', 'action' => 'viewRoom', $roomId));
 			}
+			else {
+				$this->Session->setFlash(__('Erro ao reservar sala'), 'default', array('class' => 'message errorMessage roundedBorders'));
+			}
+			
 		}
 		
 		$roomResources = $this->Resource
@@ -89,28 +98,6 @@ class ReservationsController extends AppController {
 
 		echo json_encode($allRooms);
 		exit();
-		
 	}
-	
-	public function test() {
-		$agora = new DateTime('now');
-		$intersectionTime = array('Reservation.end_time >=' => $agora->format('Y-m-d G:i:s'), 'Reservation.start_time <=' => $agora->format('Y-m-d G:i:s'));
-		$reservedRooms = $this->Reservation->find('all', array('conditions'=>$intersectionTime));
-		
-		$allRooms = $this->Room->find('all');
-		$reservations = $this->Reservation->find('all', array('conditions'=>$intersectionTime));
-		
-		foreach ($allRooms as $i=>$room) {
-			debug($room);
-			foreach($reservations as $reservation) {
-				debug($reservation);
-				if ($reservation['Reservation']['room_id'] == $room['Room']['id']) {
-					unset($allRooms[i]);
-					break;
-				}
-			}
-		}
-	}
-	
 }
 ?>
