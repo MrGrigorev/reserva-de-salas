@@ -74,6 +74,7 @@ class RoomsController extends AppController {
 			if ($room['Room']['capacity'] < $filter) {
 				unset($rooms[$i]);
 			}
+			
 		}
 
 		return $rooms;
