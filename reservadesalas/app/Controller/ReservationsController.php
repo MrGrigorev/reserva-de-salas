@@ -27,8 +27,11 @@ class ReservationsController extends AppController {
 
 	public function createReservation($roomId, $date, $startTime, $endTime) {
 		$startDatetime = DateTime::createFromFormat('d-m-Y G-i', $date.' '.$startTime);
+		$displayStart = $startDatetime->format('d/m/Y' .  __(' à\s ') . 'G:i');
 		$startDatetime = $startDatetime->format('Y-m-d G:i:s');
+		
 		$endDatetime = DateTime::createFromFormat('d-m-Y G-i', $date.' '.$endTime);
+		$displayEnd = $endDatetime->format('d/m/Y' .  __(' à\s ') . 'G:i');
 		$endDatetime = $endDatetime->format('Y-m-d G:i:s');
 		
 		if ($this->request->is('post')) {
@@ -51,6 +54,12 @@ class ReservationsController extends AppController {
 			}
 			
 		}
+		
+		$this->set('displayStart', $displayStart);
+		$this->set('displayEnd', $displayEnd);
+		
+		$room = $this->Room->findById($roomId);
+		$this->set('room', $room);
 		
 		$roomResources = $this->Resource
 				->find('all',

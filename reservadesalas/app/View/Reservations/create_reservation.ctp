@@ -1,4 +1,25 @@
-<h1>Criação da Reserva</h1>
+<?php 
+	$roomName = $room['Room']['name'];
+	$roomNumber = $room['Room']['number'];
+	$roomTitle = "";
+	
+	if ($roomNumber) {
+		$roomTitle = $roomNumber;
+	}
+	if ($roomName) {
+		if ($roomNumber) {
+			$roomTitle .= " - ";				
+		}
+		$roomTitle .= $roomName;
+	}
+?>
+<h1>Reserva da sala <?php echo $this->Html->link($roomTitle, array('controller' => 'Rooms', 'action' => 'viewRoom', $room['Room']['id']), array('target' => '_blank')); ?></h1>
+
+<?php
+	echo __('Intevalo escolhido') . ": " . __('de ') . '<b>' . $displayStart . '</b>' . __(' até ') . '<b>' . $displayEnd . '</b>';
+?>
+<br />
+<br />
 <?php
 	echo $this->Html->script('create_reservation');
 	echo $this->Form->Create('Reservation');
