@@ -18,11 +18,11 @@ $(document).ready(function() {
 		return true;
 	}
 	
-	function validateReservationDateHour(date, hour) {
+	function validateReservationDateHour(date, begin_time, end_time) {
 		
 			var pieces_date = date.split('/');
-			var pieces_hour = hour.split(':');
-			rdate = new Date(pieces_date[2], parseInt(pieces_date[1]) - 1, pieces_date[0], pieces_hour[0], pieces_hour[1]);
+			var pieces_hour_begin = begin_time.split(':');
+			rdate = new Date(pieces_date[2], parseInt(pieces_date[1]) - 1, pieces_date[0], pieces_hour_begin[0], pieces_hour_begin[1]);
 			
 			tday = new Date().getDate();
 			tmonth = new Date().getMonth();
@@ -38,6 +38,15 @@ $(document).ready(function() {
 				$('#DateDate').parent().append('<div class=\'error-message\'>Data/horário inválidos.</div>');
 				return false;
 			}
+			
+			$('#DateEndTime').parent().removeClass('error');
+			$('#DateEndTime').next('.error-message').remove();
+			if (begin_time > end_time) {
+				$('#DateEndTime').parent().addClass('error');
+				$('#DateEndTime').parent().append('<div class=\'error-message\'>Horário final menor que inicial.</div>');
+				return false;
+			}
+			
 			return true;
 	}
 	
@@ -51,7 +60,7 @@ $(document).ready(function() {
 			validateInputItem('#DateEndTime', end_time) == false)
 			return false;
 		
-		if (validateReservationDateHour(date, begin_time) ==  false) {
+		if (validateReservationDateHour(date, begin_time, end_time) ==  false) {
 			return false;
 		}
 		
