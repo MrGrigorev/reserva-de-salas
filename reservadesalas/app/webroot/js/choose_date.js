@@ -18,8 +18,30 @@ $(document).ready(function() {
 		return true;
 	}
 	
+	function validateReservationDateHour(date, hour) {
+		
+			var pieces_date = date.split('/');
+			var pieces_hour = hour.split(':');
+			rdate = new Date(pieces_date[2], parseInt(pieces_date[1]) - 1, pieces_date[0], pieces_hour[0], pieces_hour[1]);
+			
+			tday = new Date().getDate();
+			tmonth = new Date().getMonth();
+			tyear = new Date().getFullYear();
+			thour = new Date().getHours();
+			tminute = new Date().getMinutes();
+			today = new Date(tyear, tmonth, tday, thour, tminute);
+			
+			$('#DateDate').parent().removeClass('error');
+			$('#DateDate').next('.error-message').remove();
+			if (rdate.valueOf() < today.valueOf()) {
+				$('#DateDate').parent().addClass('error');
+				$('#DateDate').parent().append('<div class=\'error-message\'>Data/horário inválidos.</div>');
+				return false;
+			}
+			return true;
+	}
+	
 	$("#loadAvailableRooms").click(function(){
-		/* TODO: make controller */
 		var date = $("#DateDate").val();
 		var begin_time = $("#DateBeginTime").val();
 		var end_time = $("#DateEndTime").val();
@@ -28,6 +50,10 @@ $(document).ready(function() {
 			validateInputItem('#DateBeginTime', begin_time) == false |
 			validateInputItem('#DateEndTime', end_time) == false)
 			return false;
+		
+		if (validateReservationDateHour(date, begin_time) ==  false) {
+			return false;
+		}
 		
 		var json = $.toJSON({'date': date, 'begin_time': begin_time, 'end_time': end_time});
 		$.ajax({
