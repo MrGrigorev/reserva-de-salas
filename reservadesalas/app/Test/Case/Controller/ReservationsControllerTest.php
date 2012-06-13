@@ -37,10 +37,8 @@ class ReservationsControllerTest extends ControllerTestCase {
 				->testAction('Users/login',
 						array('method' => 'post', 'data' => $data));
 	}
-
-	/*TODO: teste com bug
+	/* FIXME: BUG
 	public function testCreateReservation() {
-		$this->login();
 
 		$roomId = 1;
 		$description = 'test';
@@ -48,17 +46,17 @@ class ReservationsControllerTest extends ControllerTestCase {
 		$data = array(
 				'Reservation' => array('room_id' => 1,
 						'description' => $description));
-
 		$this
 				->testAction(
 						'/Reservations/createReservation/1/1-1-2012/1-00/1-00',
-						array('method' => 'get', 'data' => $data));
-
+						array('method' => 'post', 'data' => $data));
+		
 		$this->Reservation->order = 'Reservation.id DESC';
 		$reservation = $this->Reservation->find();
 
 		$this
-				->assertEqual($reservation['Reservation']['room_id'],
+				->assertEqual($data['Reservation']['room_id'],
 						$reservation['Reservation']['room_id']);
-	}*/
+	}
+	*/
 }

@@ -87,7 +87,7 @@ $(document).ready(function() {
                $('#availableRooms').html(options);
            },
            error: function(jqXHR, textStatus, errorThrown){
-        	   alert ('Something very bad went wrong: ' + textStatus);
+        	   alert ('Erro. Tente novamente: ' + textStatus);
            }
         });
 		return false;

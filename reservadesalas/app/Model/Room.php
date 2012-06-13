@@ -17,6 +17,14 @@ class Room extends AppModel {
 					'not empty' => array('required' => true,
 							'rule' => 'notEmpty',
 							'message' => 'Não deve ser vazio.')),
+			'name' => array(
+					 'name number' => array('required' => true,
+							'rule' => 'notBothEmpty',
+							'message' => 'Nome e número não devem ser ambos vazios.')),
+			'number' => array(
+					'number name' => array('required' => true,
+							'rule' => 'notBothEmpty',
+							'message' => 'Nome e número não devem ser ambos vazios.')),
 			'capacity' => array(
 					'not empty' => array('required' => true,
 							'rule' => 'notEmpty',
@@ -25,6 +33,13 @@ class Room extends AppModel {
 	public $hasMany = array(
 			'Resources' => array('className' => 'Resource', 'dependent' => true));
 
+	public function notBothEmpty() {
+		if (!$this->data['Room']['name'] && !$this->data['Room']['number']) {
+			return false;
+		}
+		return true;
+	}
+	
 	public function isAvailable($roomId, $startDatetime, $endDatetime) {
 		$reservation = ClassRegistry::init('Reservation');
 
