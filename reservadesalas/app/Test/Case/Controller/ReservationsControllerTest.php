@@ -37,9 +37,9 @@ class ReservationsControllerTest extends ControllerTestCase {
 				->testAction('Users/login',
 						array('method' => 'post', 'data' => $data));
 	}
-	/* FIXME: BUG
+	
 	public function testCreateReservation() {
-
+		$this->login();
 		$roomId = 1;
 		$description = 'test';
 
@@ -58,5 +58,5 @@ class ReservationsControllerTest extends ControllerTestCase {
 				->assertEqual($data['Reservation']['room_id'],
 						$reservation['Reservation']['room_id']);
 	}
-	*/
+	
 }

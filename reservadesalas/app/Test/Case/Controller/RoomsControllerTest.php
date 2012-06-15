@@ -13,7 +13,7 @@ class RoomsControllerTest extends ControllerTestCase {
 	public $fixtures = array('app.user', 'app.student', 'app.professor',
 			'app.employee', 'app.course', 'app.department',
 			'app.professorCategory', 'app.building', 'app.room',
-			'app.resource');
+			'app.resource', 'app.reservation', 'app.reservationsResource');
 
 	public function setUp() {
 		parent::setUp();
@@ -150,7 +150,7 @@ class RoomsControllerTest extends ControllerTestCase {
 						array('method' => 'get', 'return' => 'vars'));
 		$this->assertContains("/Users/login", $this->headers['Location']);
 	}
-	
+
 	public function testFilterRoomsByName() {
 		$data = array('Room' => array('name' => 'CE'),
 				'Building' => array('id' => ''));

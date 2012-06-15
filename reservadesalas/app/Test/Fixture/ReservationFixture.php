@@ -24,8 +24,8 @@ class ReservationFixture extends CakeTestFixture {
 			'description' => array('type' => 'text', 'null' => true,
 					'default' => NULL, 'collate' => 'latin1_swedish_ci',
 					'charset' => 'latin1'),
-			'is_activated' => array('type' => 'text', 'null' => false,
-					'default' => 'b\'0\'', 'length' => 1),
+			'is_activated' => array('type' => 'integer', 'null' => false,
+					'default' => 0, 'length' => 1),
 			'created' => array('type' => 'datetime', 'null' => true,
 					'default' => NULL),
 			'indexes' => array(
@@ -33,4 +33,10 @@ class ReservationFixture extends CakeTestFixture {
 					'room_id' => array('column' => 'room_id', 'unique' => 0)),
 			'tableParameters' => array('charset' => 'latin1',
 					'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB'));
+
+	public $records = array(
+			array('id' => 1, 'start_time' => '2012-06-01 17:00:00',
+					'end_time' => '2012-06-01 18:00:00', 'room_id' => 1,
+					'user_id' => 1, 'description' => 'test',
+					'is_activated' => 1));
 }
