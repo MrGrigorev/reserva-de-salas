@@ -14,7 +14,7 @@ class UsersController extends AppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 
-		$this->Auth->allow(array('createAccount', 'confirmEmail', 'login'));
+		$this->Auth->allow(array('createAccount', 'confirmEmail', 'login', 'loginService'));
 
 		$this->Student = ClassRegistry::init('Student');
 		$this->Professor = ClassRegistry::init('Professor');
@@ -124,6 +124,39 @@ class UsersController extends AppController {
 				unset($this->request->data['User']['password']);
 			}
 		}
+	}
+	
+	public function loginService() {
+		$nusp = null;
+		if (isset($this->request->data['nusp'])) {
+			$nusp = $this->request->data['nusp'];
+		}
+		$password = null;
+		if (isset($this->request->data['password'])) {
+			$password = $this->request->data['password'];
+		}
+		$password = $this->Auth->password($password);
+		
+		$options['fields'] = array('User.id, User.name, User.activation_status, User.user_type');
+		$options['conditions'] = array('User.nusp = ' => $nusp, 'User.password = ' => $password);
+		$results = $this->User->find('all', $options);
+		if ($results) {
+			$user = $results[0];
+			if ($user['User']['activation_status'] == "active") {
+				$array = array('id' => $user['User']['id'], 'name' => $user['User']['name'], 'user_type' => $user['User']['user_type']);
+				echo json_encode($array);
+			}
+			else {
+				$errorMessage = "Usuário inativo";
+				echo json_encode(array('id' => -1, 'error' => $errorMessage));
+			}
+		}
+		else {
+			$errorMessage = "Usuário e senha não combinam";
+			echo json_encode(array('id' => -1, 'error' => $errorMessage));			
+		}
+		exit;
+		
 	}
 
 	public function editProfile() {
