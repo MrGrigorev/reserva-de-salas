@@ -13,6 +13,8 @@
     
     $timeNow += 60 * 60;
     echo $this->Form->Input('end_time', array('label' => __('Hora de término'), 'value' => date('G:i', $timeNow)));
+    
+    echo $this->Form->Input('capacity', array('label' => __('Capacidade mínima')));
 
     echo $this->Form->Submit(__('Carregar Salas Disponíveis'), array('id'=>'loadAvailableRooms'));
 	$this->Form->End();

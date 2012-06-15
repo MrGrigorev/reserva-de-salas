@@ -18,6 +18,7 @@
 		echo $this->Html->script('lib/jquery.json');
 		echo $this->Html->script('lib/development-bundle/ui/i18n/jquery.ui.datepicker-pt-BR');
 		echo $this->Html->script('lib/development-bundle/ui/i18n/jquery.ui.timepicker-pt-BR');
+		echo $this->Html->script('lib/jquery.numeric');
 	?>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans' rel='stylesheet' type='text/css' />
 </head>

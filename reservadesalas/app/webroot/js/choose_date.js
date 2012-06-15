@@ -5,6 +5,8 @@ $(document).ready(function() {
 	
 	$("#DateEndTime").timepicker({});
 	
+	$("#DateCapacity").numeric();
+	
 	function validateInputItem(inputID, value) {
 		$(inputID).parent().removeClass('error');
 		$(inputID).next('.error-message').remove();
@@ -54,6 +56,7 @@ $(document).ready(function() {
 		var date = $("#DateDate").val();
 		var begin_time = $("#DateBeginTime").val();
 		var end_time = $("#DateEndTime").val();
+		var capacity = $("#DateCapacity").val();
 		
 		if (validateInputItem('#DateDate', date) == false |
 			validateInputItem('#DateBeginTime', begin_time) == false |
@@ -64,7 +67,7 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		var json = $.toJSON({'date': date, 'begin_time': begin_time, 'end_time': end_time});
+		var json = $.toJSON({'date': date, 'begin_time': begin_time, 'end_time': end_time, 'capacity': capacity});
 		$.ajax({
            type: 'POST',
            dataType: 'json',
@@ -74,14 +77,15 @@ $(document).ready(function() {
                $('#availableRooms').html('');
                options = '<br />\
             	   			<table id=\'roomsTable\'>\
-            	   		      <tr><td class=\'header\'>Nome/Número</td></td><td class=\'header\'>Bloco</td></tr>';
+            	   		      <tr><td class=\'header\'>Nome/Número</td></td><td class=\'header\'>Bloco</td><td class=\'header\'>Capacidade</td></tr>';
                for (i in data) {
             	   idRoom = data[i]['Room']['id'];
             	   name = (data[i]['Room']['name'] == null) ? '': data[i]['Room']['name'];
                    number = (data[i]['Room']['number'] == null) ? '' : data[i]['Room']['number'];
                    var link = '<a href=\'/reservadesalas/Reservations/createReservation/'+ idRoom +'/'+ date.replace(/\//g, '-') +'/'+ begin_time.replace(':', '-') +'/'+ end_time.replace(':', '-') + '\' >' + name + ' - ' + number + '</a>';
                    building = data[i]['Building']['name'];
-                   options += '<tr><td>'+ link + '</td><td>' + building + '</td><tr>';
+                   capacity = data[i]['Room']['capacity'];
+                   options += '<tr><td>'+ link + '</td><td>' + building + '</td><td>' + capacity + '</td></tr>';
                }
                options += '</table>';
                $('#availableRooms').html(options);

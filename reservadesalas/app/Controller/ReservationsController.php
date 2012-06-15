@@ -104,6 +104,10 @@ class ReservationsController extends AppController {
 		$date = $param->date;
 		$begin_time = $param->begin_time;
 		$end_time = $param->end_time;
+		$capacity = $param->capacity;
+
+		if ($capacity == null || $capacity == '')
+			$capacity = 0;
 
 		$datetime_begin = DateTime::createFromFormat('d/m/Y G:i',
 				$date . ' ' . $begin_time);
@@ -113,6 +117,7 @@ class ReservationsController extends AppController {
 		$this->RequestHandler->respondAs('json');
 		$this->autoRender = false;
 
+		$this->Room->order = 'Room.capacity ASC';
 		$allRooms = $this->Room->find('all');
 
 		$intersectionTime = array(
@@ -121,11 +126,17 @@ class ReservationsController extends AppController {
 				'Reservation.start_time <=' => $datetime_end
 						->format('Y-m-d G:i:s'),
 				'Reservation.is_activated' => true);
+
 		$reservations = $this->Reservation
 				->find('all', array('conditions' => $intersectionTime));
 
 		/* Filter available Rooms */
 		foreach ($allRooms as $i => $room) {
+			if ($room['Room']['capacity'] < $capacity) {
+				unset($allRooms[$i]);
+				continue;
+			}
+
 			foreach ($reservations as $reservation) {
 				if ($reservation['Reservation']['room_id']
 						== $room['Room']['id']) {
