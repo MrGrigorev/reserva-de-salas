@@ -50,3 +50,9 @@ CREATE TABLE reservations_resources (
 	FOREIGN KEY (reservation_id) REFERENCES reservations(id),
 	FOREIGN KEY (resource_id) REFERENCES resources(id)
 );
+
+CREATE TABLE reservation_types (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(50) NOT NULL
+);
+);
