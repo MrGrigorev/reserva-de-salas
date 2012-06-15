@@ -32,8 +32,8 @@ App::uses('Controller', 'Controller');
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-	public $components = array('Session',
-			'Auth' => array(
+	public $components = array('Session');
+			/*'Auth' => array(
 					'loginAction' => array('controller' => 'Users',
 							'action' => 'login'),
 					'loginRedirect' => array('controller' => 'Users',
@@ -45,18 +45,32 @@ class AppController extends Controller {
 					'authenticate' => array(
 							'Form' => array('userModel' => 'User',
 									'fields' => array('username' => 'nusp',
-											'password' => 'password')))));
+											'password' => 'password')))));*/
 
 	public function isAuthorized($user) {
 		return true;
 	}
 
 	public function beforeFilter() {
-		$this->set('isLogged', $this->Auth->loggedIn());
+		$this->set('isLogged', $this->isLogged());
 		$this->set('loggedUser', $this->getLoggedUser());
 	}
 
+	public function isLogged() {
+		if ($this->Session->read('user') ) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	public function getLoggedUser() {
-		return $this->Auth->user();
+		if ($this->isLogged()) {
+			return $this->Session->read('user');
+		}
+		else {
+			return null;
+		}
 	}
 }

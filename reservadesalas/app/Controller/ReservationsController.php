@@ -11,6 +11,10 @@ class ReservationsController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
+		
+		if (!$this->isLogged()) {
+			$this->redirect(array('controller' => 'Users', 'action' => 'login'));
+		}
 
 		$this->Room = ClassRegistry::init('Room');
 		$this->Resource = ClassRegistry::init('Resource');

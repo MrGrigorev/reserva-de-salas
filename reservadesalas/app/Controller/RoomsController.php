@@ -7,6 +7,10 @@ class RoomsController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
+		
+		if (!$this->isLogged()) {
+			$this->redirect(array('controller' => 'Users', 'action' => 'login'));
+		}
 
 		$this->Building = ClassRegistry::init('Building');
 		$this->Resource = ClassRegistry::init('Resource');
