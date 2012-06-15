@@ -1,9 +1,7 @@
 <?php
 	echo "<h1>" . $room['Room']['name'] . "</h1>"; 
-?>
-<br />
-<?php
-	echo __('Localização') . ": " . __('Bloco') . $room['Room']['building'];
+
+	echo __('Localização') . ': ' . __('Bloco') . ' ' . $room['Room']['building'];
 	if ($room['Room']['number']) {
 		echo ", " . __('Sala') . " " . $room['Room']['number'];
 	}

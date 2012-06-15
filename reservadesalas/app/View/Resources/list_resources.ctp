@@ -4,7 +4,7 @@
 ?>
 
 <h1><?php echo __('Recursos'); ?></h1>
-<br />
+
 <table id="roomsTable">
 <?php
 	function orderParameterResources($class, $attribute, $actualOrder) {
@@ -59,7 +59,7 @@
 			$resourceFixed = __('Não');
 		}
 		
-		$resourceLink = $this->Html->link($resourceName, array('controller' => 'Resource', 'action' => 'viewResource', $resource['Resource']['id']));
+		$resourceLink = $this->Html->link($resourceName, array('controller' => 'Resources', 'action' => 'viewResource', $resource['Resource']['id']));
 				
 		$cells[] = array($resourceLink, $resourceSerialNumber, $resourceFixed);
 	}

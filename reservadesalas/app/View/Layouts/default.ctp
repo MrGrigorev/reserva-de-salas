@@ -38,7 +38,7 @@
 					</li>
 					<?php } else {?>
 					<li>
-						<?php echo $this->Html->link($loggedUser['name'], array('controller' => 'Users', 'action' => 'viewProfile') ); ?>
+						<?php echo $this->Html->link($loggedUser['name'], array('controller' => 'Users', 'action' => 'index') ); ?>
 					</li>
 					<li>
 						<?php echo $this->Html->link(__('Sair'), array('controller' => 'Users', 'action' => 'logout') ); ?>

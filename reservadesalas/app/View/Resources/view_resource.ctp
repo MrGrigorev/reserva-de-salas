@@ -1,8 +1,6 @@
 <?php
 	echo "<h1>" . $resource['Resource']['name'] . "</h1>"; 
-?>
-<br />
-<?php
+	
 	if ($resource['Resource']['room']) {
 		echo __('Sala') . ": " . $this->Html->link($resource['Resource']['room'], array('controller' => 'Rooms', 'action' => 'viewRoom', $resource['Resource']['room_id']));
 		echo "<br /><br />";
