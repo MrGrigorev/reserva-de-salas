@@ -1,10 +1,17 @@
 $(document).ready(function() {
-	$("#DateDate").datepicker();
+	var dateIndex = 0;
 	
-	$("#DateBeginTime").timepicker({});
+	var reservationDate = $("#reservationDate").html();
 	
-	$("#DateEndTime").timepicker({});
+	function addDateAndTimePickers() {
+		$("#Date" + dateIndex + "Date").datepicker();
+		$("#Date" + dateIndex + "BeginTime").timepicker({});
+		$("#Date" + dateIndex + "EndTime").timepicker({});
+	}
 	
+	addDateAndTimePickers();
+	
+	$("#DateUntil").datepicker();
 	$("#DateCapacity").numeric();
 	
 	function validateInputItem(inputID, value) {
@@ -20,7 +27,7 @@ $(document).ready(function() {
 		return true;
 	}
 	
-	function validateReservationDateHour(date, begin_time, end_time) {
+	function validateReservationDateHour(date, begin_time, end_time, i) {
 		
 			var pieces_date = date.split('/');
 			var pieces_hour_begin = begin_time.split(':');
@@ -33,39 +40,73 @@ $(document).ready(function() {
 			tminute = new Date().getMinutes();
 			today = new Date(tyear, tmonth, tday, thour, tminute);
 			
-			$('#DateDate').parent().removeClass('error');
-			$('#DateDate').next('.error-message').remove();
+			$('#Date' + i + 'Date').parent().removeClass('error');
+			$('#Date' + i + 'Date').next('.error-message').remove();
 			if (rdate.valueOf() < today.valueOf()) {
-				$('#DateDate').parent().addClass('error');
-				$('#DateDate').parent().append('<div class=\'error-message\'>Data/horário inválidos.</div>');
+				$('#Date' + i + 'Date').parent().addClass('error');
+				$('#Date' + i + 'Date').parent().append('<div class=\'error-message\'>Data/horário inválidos.</div>');
 				return false;
 			}
 			
-			$('#DateEndTime').parent().removeClass('error');
-			$('#DateEndTime').next('.error-message').remove();
+			$('#Date' + i + 'EndTime').parent().removeClass('error');
+			$('#Date' + i + 'EndTime').next('.error-message').remove();
 			if (begin_time > end_time) {
-				$('#DateEndTime').parent().addClass('error');
-				$('#DateEndTime').parent().append('<div class=\'error-message\'>Horário final menor que inicial.</div>');
+				$('#Date' + i + 'EndTime').parent().addClass('error');
+				$('#Date' + i + 'EndTime').parent().append('<div class=\'error-message\'>Horário final menor que inicial.</div>');
 				return false;
 			}
 			
 			return true;
 	}
 	
+	$('.reservationRadio').change(function() {
+		if (this.value == 'none')
+			$("#reservationUntil").hide();
+		else
+			$("#reservationUntil").show();
+	})
+	
+	$("#addDatetime").click(function() {
+		dateIndex++;
+		var newReservationDate = reservationDate.replace(/\[0\]/g, '[' + dateIndex + ']');
+		newReservationDate = newReservationDate.replace(/Date0/g, 'Date' + dateIndex);
+	
+		$("#reservationDates").append(newReservationDate);
+		addDateAndTimePickers();
+	
+		return false;
+	})
+	
 	$("#loadAvailableRooms").click(function(){
-		var date = $("#DateDate").val();
-		var begin_time = $("#DateBeginTime").val();
-		var end_time = $("#DateEndTime").val();
-		var capacity = $("#DateCapacity").val();
+		var date = [];
+		var begin_time = [];
+		var end_time = [];
 		
-		if (validateInputItem('#DateDate', date) == false |
-			validateInputItem('#DateBeginTime', begin_time) == false |
-			validateInputItem('#DateEndTime', end_time) == false)
-			return false;
+		var invalidData = true;
+		for (var i = 0; i <= dateIndex; i++) {
+			var dateId = "#Date" + i + "Date";
+			var beginTimeId = "#Date" + i + "BeginTime";
+			var endTimeId = "#Date" + i + "EndTime";
+			
+			date[i] = $(dateId).val();
+			begin_time[i] = $(beginTimeId).val();
+			end_time[i] = $(endTimeId).val();
 		
-		if (validateReservationDateHour(date, begin_time, end_time) ==  false) {
-			return false;
+			if (validateInputItem(dateId, date[i]) == false |
+				validateInputItem(beginTimeId, begin_time[i]) == false |
+				validateInputItem(endTimeId, end_time[i]) == false) {
+				invalidData = false;
+				continue;
+			}
+			
+			if (validateReservationDateHour(date[i], begin_time[i], end_time[i], i) ==  false)
+				invalidData = false;
 		}
+		
+		if (invalidData == false)
+			return false;
+		
+		capacity = $("#DateCapacity").val();	
 		
 		var json = $.toJSON({'date': date, 'begin_time': begin_time, 'end_time': end_time, 'capacity': capacity});
 		$.ajax({
