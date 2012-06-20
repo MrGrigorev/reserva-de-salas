@@ -137,7 +137,7 @@ class UsersController extends AppController {
 		}
 		$password = $this->Auth->password($password);
 		
-		$options['fields'] = array('User.id, User.name, User.activation_status, User.user_type, Student.id, Professor.id, Employee.id');
+		$options['fields'] = array('User.id, User.name, User.activation_status, Student.id, Professor.id, Employee.id');
 		$options['conditions'] = array('User.nusp = ' => $nusp, 'User.password = ' => $password);
 		
 		$results = $this->User->find('all', $options);
@@ -159,7 +159,6 @@ class UsersController extends AppController {
 				$array = array(
 					'id' => $user['User']['id'],
 					'name' => $user['User']['name'],
-					'user_type' => $user['User']['user_type'],
 					'occupation' => $occupation
 				);
 				echo json_encode($array);
