@@ -137,13 +137,31 @@ class UsersController extends AppController {
 		}
 		$password = $this->Auth->password($password);
 		
-		$options['fields'] = array('User.id, User.name, User.activation_status, User.user_type');
+		$options['fields'] = array('User.id, User.name, User.activation_status, User.user_type, Student.id, Professor.id, Employee.id');
 		$options['conditions'] = array('User.nusp = ' => $nusp, 'User.password = ' => $password);
+		
 		$results = $this->User->find('all', $options);
 		if ($results) {
 			$user = $results[0];
 			if ($user['User']['activation_status'] == "active") {
-				$array = array('id' => $user['User']['id'], 'name' => $user['User']['name'], 'user_type' => $user['User']['user_type']);
+				$occupation = 'undefined';
+				if ($user['Student']['id'] != null) {
+					$occupation = "student";
+				}
+				else if ($user['Employee']['id'] != null) {
+					$occupation = "employee";
+					
+				}
+				else if ($user['Professor']['id'] != null) {
+					$occupation = "professor";
+				}
+				
+				$array = array(
+					'id' => $user['User']['id'],
+					'name' => $user['User']['name'],
+					'user_type' => $user['User']['user_type'],
+					'occupation' => $occupation
+				);
 				echo json_encode($array);
 			}
 			else {
@@ -156,7 +174,6 @@ class UsersController extends AppController {
 			echo json_encode(array('id' => -1, 'error' => $errorMessage));			
 		}
 		exit;
-		
 	}
 
 	public function editProfile() {
