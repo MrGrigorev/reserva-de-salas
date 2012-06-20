@@ -1,6 +1,5 @@
 <?php
 	echo $this->Html->css('Rooms/rooms');
-	echo $this->Html->css('Users/users');
 	echo $this->Html->script('login');
 ?>
 
@@ -15,5 +14,3 @@
 
 	echo $this->Form->End(__('Login'));
 ?>
-
-<input id="loginUrl" type="hidden" value="<?php echo $loginUrl; ?>" />

@@ -33,23 +33,6 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 	public $components = array('Session');
-			/*'Auth' => array(
-					'loginAction' => array('controller' => 'Users',
-							'action' => 'login'),
-					'loginRedirect' => array('controller' => 'Users',
-							'action' => 'index'),
-					'logoutRedirect' => array('controller' => 'Users',
-							'action' => 'login'),
-					'authError' => 'Você não pode acessar essa página.',
-					'authorize' => array('Controller'),
-					'authenticate' => array(
-							'Form' => array('userModel' => 'User',
-									'fields' => array('username' => 'nusp',
-											'password' => 'password')))));*/
-
-	public function isAuthorized($user) {
-		return true;
-	}
 
 	public function beforeFilter() {
 		$this->set('isLogged', $this->isLogged());

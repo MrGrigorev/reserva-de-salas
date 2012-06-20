@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	var error = $("#error");
 	
-	$("#UserLoginForm").submit(function(e) {
+	/*$("#UserLoginForm").submit(function(e) {
 		error.hide();
 		e.preventDefault();
 		var nusp = $('#UserNusp').val();
@@ -27,5 +27,5 @@ $(document).ready(function() {
 	        	   error.show();
 	           }
 	        });
-	});
+	});*/
 });

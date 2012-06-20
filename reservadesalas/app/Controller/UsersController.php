@@ -1,15 +1,68 @@
 <?php
+
+App::uses('Admin', 'Model');
+
 class UsersController extends AppController {
 	public $name = 'Users';
+	
+	public function beforeFilter() {
+		parent::beforeFilter();
+		
+		$this->Admin = ClassRegistry::init('Admin');
+	}
 
 	public function login() {
-		$this->set('loginUrl', "http://localhost/cadastrodepessoas/Users/loginService");
+		if ($this->request->is('post')) {
+			$nusp = $this->request->data['User']['nusp'];
+			$password = $this->request->data['User']['password'];
+			
+			$url = "http://localhost/cadastrodepessoas/Users/loginService";
+			$data = array('nusp' => $nusp, 'password' => $password);
+			
+			$ch = curl_init($url);
+			 
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			 
+			$response = curl_exec($ch);
+			
+			if ($response) {
+				$response = json_decode($response);
+				
+				if ($response->id > 0) {
+					$user = array(
+						'id' => $response->id,
+						'name' => $response->name,
+						'occupation' => $response->occupation,
+						'isAdmin' => false
+					);
+					
+					$admin = $this->Admin->findByUserId($user['id']);
+					if ($admin) {
+						$user['isAdmin'] = true;
+					}
+					
+					$this->Session->write('user', $user);
+					$this->redirect(array('controller' => 'Users', 'action' => 'index'));
+				}
+				else {
+					$this->Session->setFlash($response->error, 'default',
+									array(
+											'class' => 'message errorMessage roundedBorders'));
+				}
+			}
+			else {
+				$this->Session->setFlash(__('Erro na comunicação com o sistema de cadastro de pessoas'), 'default',
+									array(
+											'class' => 'message errorMessage roundedBorders'));
+			}
+			
+		}
 	}
 	
 	public function authorize($userId, $name, $userType) {
-		$user = array('id' => $userId, 'name' => $name, 'user_type' => $userType);
-		$this->Session->write('user', $user);
-		$this->redirect(array('controller' => 'Users', 'action' => 'index'));
+		
 	}
 
 	public function logout() {
