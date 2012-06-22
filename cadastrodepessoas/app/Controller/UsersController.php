@@ -9,8 +9,6 @@ App::uses('ProfessorCategory', 'Model');
 class UsersController extends AppController {
 	public $name = 'Users';
 
-	public $components = array('Email');
-
 	public function beforeFilter() {
 		parent::beforeFilter();
 
