@@ -47,15 +47,11 @@ class UsersController extends AppController {
 					$this->redirect(array('controller' => 'Users', 'action' => 'index'));
 				}
 				else {
-					$this->Session->setFlash($response->error, 'default',
-									array(
-											'class' => 'message errorMessage roundedBorders'));
+					$this->showErrorMessage($response->error);
 				}
 			}
 			else {
-				$this->Session->setFlash(__('Erro na comunicação com o sistema de cadastro de pessoas'), 'default',
-									array(
-											'class' => 'message errorMessage roundedBorders'));
+				$this->showErrorMessage(__('Erro na comunicação com o sistema de cadastro de pessoas'));
 			}
 			
 		}

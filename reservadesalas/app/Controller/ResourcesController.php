@@ -21,13 +21,13 @@ class ResourcesController extends AppController {
 	public function createResource() {
 		if ($this->request->is('post')) {
 			if ($this->Resource->save($this->request->data)) {
-				$this->Session->setFlash(__('Recurso cadastrado com sucesso'));
+				$this->showSuccessMessage(__('Recurso cadastrado com sucesso'));
 				$this
 						->redirect(
 								array('controller' => 'Users',
 										'action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('E#1: Erro ao cadastrar recurso'));
+				$this->showErrorMessage(__('Erro ao cadastrar recurso'));
 			}
 		}
 
@@ -37,7 +37,7 @@ class ResourcesController extends AppController {
 	public function viewResource($resourceId = null) {
 		$resource = $this->Resource->findById($resourceId);
 		if (!$resource) {
-			$this->Session->setFlash(__('Recurso inexistente'));
+			$this->showErrorMessage(__('Recurso inexistente'));
 			$this
 					->redirect(
 							array('controller' => 'Resources',

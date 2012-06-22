@@ -56,4 +56,18 @@ class AppController extends Controller {
 			return null;
 		}
 	}
+	
+	public function showSuccessMessage($msg) {
+		$this->Session->setFlash($msg, 'default', array('class' => 'message success roundedBorders'));
+	}
+	
+	public function showWarningMessage($msg) {
+		$this->Session->setFlash($msg, 'default', array('class' => 'message warning roundedBorders'));
+		
+	}
+	
+	public function showErrorMessage($msg) {
+		$this->Session->setFlash($msg, 'default', array('class' => 'message errorMessage roundedBorders'));
+	}
+	
 }

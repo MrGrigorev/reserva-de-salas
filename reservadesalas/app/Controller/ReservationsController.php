@@ -49,32 +49,20 @@ class ReservationsController extends AppController {
 
 			if (!$this->Room
 					->isAvailable($roomId, $startDatetime, $endDatetime)) {
-				$this->Session
-						->setFlash(
-								__('Sala não disponível. Selecione outra sala.'),
-								'default',
-								array(
-										'class' => 'message errorMessage roundedBorders'));
+				$this->showErrorMessage(__('Sala não disponível. Selecione outra sala.'));
 				$this
 						->redirect(
 								array('controller' => 'Reservations',
 										'action' => 'chooseDate'));
 			}
 			if ($this->Reservation->save($this->request->data)) {
-				$this->Session
-						->setFlash(__('Reserva realizada com sucesso'),
-								'default',
-								array(
-										'class' => 'message success roundedBorders'));
+				$this->showSuccessMessage(__('Reserva realizada com sucesso'));
 				$this
 						->redirect(
 								array('controller' => 'Rooms',
 										'action' => 'viewRoom', $roomId));
 			} else {
-				$this->Session
-						->setFlash(__('Erro ao reservar sala'), 'default',
-								array(
-										'class' => 'message errorMessage roundedBorders'));
+				$this->showErrorMessage(__('Erro ao reservar sala'));
 			}
 		}
 

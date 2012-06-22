@@ -5,8 +5,6 @@
 
 <h1><?php echo __('Login'); ?></h1>
 
-<div id="error" class="message errorMessage"></div>
-
 <?php 
 	echo $this->Form->Create('User');
 	echo $this->Form->Input('nusp', array('label' => __('Número USP')));

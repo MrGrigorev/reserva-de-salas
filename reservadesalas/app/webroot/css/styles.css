@@ -321,7 +321,7 @@ form .error,form .error-message {
 	background: linear-gradient(top, #e54444 0%,#d80000 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e54444', endColorstr='#d80000',GradientType=0 ); /* IE6-9 */
 }
-.notice {
+.warning {
 	border: 1px solid #BFB500;
 	background: #ffcc00;
 	background-repeat: repeat-x;
