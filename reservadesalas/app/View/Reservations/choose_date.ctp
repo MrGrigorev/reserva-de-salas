@@ -21,15 +21,15 @@
 	</div>
 </div>
 <button id="addDatetime">Adicionar horário</button>
+<button id="removeDatetime" style="display: none">Remover horário</button>
 <?php
-    
     echo $this->Form->Input('capacity', array('label' => __('Capacidade mínima')));
     
     echo $this->Form->Input('repetitions', array('legend' => __('Repetir'), 'options' => array('none' => __('Reserva única'), 'daily' => __('Diariamente'), 'weekly' => __('Semanalmente'), 'monthly' => __('Mensalmente')), 'type' => 'radio', 'class' => 'reservationRadio', 'default' => 'none'));
 ?>
 <div id="reservationUntil" style="display:none">
 <?php
-    echo $this->Form->Input('until', array('label' => __('Até')));
+    echo $this->Form->Input('until', array('label' => __('Até'), 'value' => $untilDate));
 ?> 
 </div>
 <?php
