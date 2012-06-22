@@ -137,7 +137,7 @@ class UsersController extends AppController {
 		}
 		$password = $this->Auth->password($password);
 		
-		$options['fields'] = array('User.id, User.nusp, User.name, User.activation_status, Student.id, Professor.id, Employee.id');
+		$options['fields'] = array('User.nusp, User.name, User.activation_status, Student.id, Professor.id, Employee.id');
 		$options['conditions'] = array('User.nusp = ' => $nusp, 'User.password = ' => $password);
 		
 		$results = $this->User->find('all', $options);
@@ -157,21 +157,20 @@ class UsersController extends AppController {
 				}
 				
 				$array = array(
-					'id' => $user['User']['id'],
-					'name' => $user['User']['name'],
 					'nusp' => $user['User']['nusp'],
+					'name' => $user['User']['name'],
 					'occupation' => $occupation
 				);
 				echo json_encode($array);
 			}
 			else {
 				$errorMessage = "Usuário inativo";
-				echo json_encode(array('id' => -1, 'error' => $errorMessage));
+				echo json_encode(array('nusp' => -1, 'error' => $errorMessage));
 			}
 		}
 		else {
 			$errorMessage = "Usuário e senha não combinam";
-			echo json_encode(array('id' => -1, 'error' => $errorMessage));			
+			echo json_encode(array('nusp' => -1, 'error' => $errorMessage));			
 		}
 		exit;
 	}
