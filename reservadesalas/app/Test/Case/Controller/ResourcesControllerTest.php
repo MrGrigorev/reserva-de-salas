@@ -1,8 +1,5 @@
 <?php
-App::uses('User', 'Model');
-App::uses('Student', 'Model');
-App::uses('Professor', 'Model');
-App::uses('Employee', 'Model');
+
 App::uses('Building', 'Model');
 App::uses('Room', 'Model');
 App::uses('Resource', 'Model');
@@ -11,14 +8,11 @@ App::uses('RoomsController', 'Controller');
 App::uses('UsersControllerTest', 'Test/Case/Controller');
 
 class ResourcesControllerTest extends ControllerTestCase {
-	public $fixtures = array('app.user', 'app.student', 'app.professor',
-			'app.employee', 'app.course', 'app.department',
-			'app.professorCategory', 'app.building', 'app.room', 'app.resource');
+	public $fixtures = array('app.building', 'app.room', 'app.resource');
 
 	public function setUp() {
 		parent::setUp();
 
-		$this->User = ClassRegistry::init('User');
 		$this->Building = ClassRegistry::init('Building');
 		$this->Room = ClassRegistry::init('Room');
 		$this->Resource = ClassRegistry::init('Resource');
@@ -97,17 +91,6 @@ class ResourcesControllerTest extends ControllerTestCase {
 		foreach ($expected_resources as $resource) {
 			$this->assertEqual(in_array($resource, $listed_resources), true);
 		}
-	}
-	
-	public function testGetListResourcesLogged() {
-		UsersControllerTest::loginAsActiveUser();
-		$result = $this->testAction('/Resources/listResources', array('method' => 'get', 'return' => 'vars'));
-		$this->assertFalse(isset($this->headers['Location']));
-	}
-	
-	public function testGetListResourcesNotLogged() {
-		$result = $this->testAction('/Resources/listResources', array('method' => 'get', 'return' => 'vars'));
-		$this->assertContains("/Users/login", $this->headers['Location']);
 	}
 	
 	public function testFilterResourcesByNameFixed() {

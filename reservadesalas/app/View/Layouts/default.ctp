@@ -32,7 +32,7 @@
 			<div id="menu">
 				<ul>
 					<?php 
-						if ($isLogged == false) {
+						if (!isset($isLogged) || $isLogged == false) {
 					?>
 					<li>
 						<?php echo $this->Html->link(__('Entrar'), array('controller' => 'Users', 'action' => 'login') ); ?>

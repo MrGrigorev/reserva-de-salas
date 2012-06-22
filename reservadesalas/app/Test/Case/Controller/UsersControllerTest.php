@@ -1,18 +1,14 @@
 <?php
-App::uses('User', 'Model');
-App::uses('Student', 'Model');
-App::uses('Professor', 'Model');
+App::uses('Admin', 'Model');
 App::uses('UsersController', 'Controller');
 
 class UsersControllerTest extends ControllerTestCase {
-	public $fixtures = array('app.user', 'app.student', 'app.professor',
-			'app.employee', 'app.course', 'app.department',
-			'app.professorCategory');
+	public $fixtures = array('app.admin');
 
 	public function setUp() {
 		parent::setUp();
 
-		$this->User = ClassRegistry::init('User');
+		$this->Admin = ClassRegistry::init('Admin');
 
 		$this->UsersController = new UsersController();
 		$this->UsersController->constructClasses();
@@ -22,69 +18,53 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->testAction('/Users/index', array('method' => 'get'));
 	}
 
-	public function testLogin() {
-		$this->testAction('Users/logout');
+	public function doLogin($nusp, $password) {
+		$url = "http://localhost/cadastrodepessoas/Users/loginService";
+		$data = array('nusp' => $nusp, 'password' => $password);
 		
-		$user_id = 3;
-		$user = $this->User->findById($user_id);
+		$ch = curl_init($url);
+		 
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		 
+		$response = curl_exec($ch);
+		
+		if ($response) {
+			$response = json_decode($response);
+			if ($response->nusp > 0) return true;
+		}
+		
+		return false;
+	}
+	
+	public function testLogin() {
+		$nusp = '12345678';
 		$password = '12345';
-
-		$data = array(
-				'User' => array('nusp' => $user['User']['nusp'],
-						'password' => $password));
-
-		$this
-				->testAction('Users/login',
-						array('method' => 'post', 'data' => $data));
-
-		$loggedUser = $this->UsersController->getLoggedUser();
-
-		$this->assertNotEqual($loggedUser, null);
-		$this->assertEqual($loggedUser['id'], $user_id);
+		
+		$this->assertTrue($this->doLogin($nusp, $password));
 	}
 
 	public function testLoginUserNotActive() {
-		$this->testAction('Users/logout');
-		
-		$user_id = 1;
-		$user = $this->User->findById($user_id);
+		$nusp = '222222';
 		$password = '12345';
-
-		$data = array(
-				'User' => array('nusp' => $user['User']['nusp'],
-						'password' => $password));
-
-		$this
-				->testAction('Users/login',
-						array('method' => 'post', 'data' => $data));
-
-		$loggedUser = $this->UsersController->getLoggedUser();
-
-		$this->assertEqual($loggedUser, null);
+		
+		$this->assertFalse($this->doLogin($nusp, $password));
 	}
 
+	
 	public function testLoginWrongPassword() {
-		$this->testAction('Users/logout');
+		$nusp = '12345678';
+		$password = '123456666';
 		
-		$user_id = 3;
-		$user = $this->User->findById($user_id);
-		$password = '4thtuehtreahgl	';
-
-		$data = array(
-				'User' => array('nusp' => $user['User']['nusp'],
-						'password' => $password));
-
-		$this
-				->testAction('Users/login',
-						array('method' => 'post', 'data' => $data));
-
-		$loggedUser = $this->UsersController->getLoggedUser();
-
-		$this->assertEqual($loggedUser['id'], null);
+		$this->assertFalse($this->doLogin($nusp, $password));
 	}
 	
+	
 	public function testLoginWithLoggedUser() {
-		$this->loginAsActiveUser();
+		$nusp = '12345678';
+		$password = '12345';
+		$this->doLogin($nusp, $password);
 		
 		$result = $this
 				->testAction('Users/login',
@@ -93,6 +73,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertNotContains('login', $this->headers['Location']);
 	}
 	
+	/*
 	public function loginAsActiveUser() {
 		$this->testAction('Users/logout');
 		
@@ -115,5 +96,5 @@ class UsersControllerTest extends ControllerTestCase {
 			}
 		}
 		return null;
-	}
+	}*/
 }

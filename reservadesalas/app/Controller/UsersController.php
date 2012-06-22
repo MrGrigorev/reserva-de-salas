@@ -12,6 +12,10 @@ class UsersController extends AppController {
 	}
 
 	public function login() {
+		if ($this->isLogged()) {
+			$this->redirect(array('controller' => 'Users', 'action' => 'index'));
+		}
+		
 		if ($this->request->is('post')) {
 			$nusp = $this->request->data['User']['nusp'];
 			$password = $this->request->data['User']['password'];

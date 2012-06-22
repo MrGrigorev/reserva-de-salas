@@ -32,5 +32,5 @@ class ReservationsResourceFixture extends CakeTestFixture {
 	 * @var array
 	 */
 	public $records = array(
-			array('id' => 1, 'reservation_id' => 1, 'resource_id' => 1),);
+			array('id' => 1, 'reservation_id' => 1, 'resource_id' => 1));
 }
