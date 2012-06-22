@@ -2,6 +2,10 @@ DROP SCHEMA IF EXISTS `reservadesalas`;
 CREATE SCHEMA `reservadesalas`;
 USE reservadesalas;
 
+CREATE TABLE admins (
+	nusp VARCHAR(10) NOT NULL PRIMARY KEY
+);
+
 CREATE TABLE buildings (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
@@ -36,7 +40,7 @@ CREATE TABLE reservations (
 	start_time DATETIME NOT NULL,
 	end_time DATETIME NOT NULL,
 	room_id INT NOT NULL,
-	user_id INT NOT NULL,
+	nusp VARCHAR(10) NOT NULL,
 	description TEXT DEFAULT NULL,
 	is_activated BIT NOT NULL DEFAULT 0,
 	created DATETIME DEFAULT NULL,
@@ -54,5 +58,4 @@ CREATE TABLE reservations_resources (
 CREATE TABLE reservation_types (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(50) NOT NULL
-);
 );

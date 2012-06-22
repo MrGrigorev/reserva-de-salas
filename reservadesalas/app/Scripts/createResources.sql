@@ -1,4 +1,4 @@
-USE reservadesalas
+USE reservadesalas;
 
 INSERT INTO resources(room_id, serial_number, name, description) VALUES
 (NULL, '111111', 'Projetor HP', 'Projetor 1'),

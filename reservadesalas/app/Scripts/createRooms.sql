@@ -1,4 +1,4 @@
-USE reservadesalas
+USE reservadesalas;
 
 INSERT INTO rooms(id, building_id, name, number, floor, room_type, description, capacity) VALUES
 (1, 1, 'Antonio Gilioli', 120, 1, 'auditorium', 'Sala bonita', 100),

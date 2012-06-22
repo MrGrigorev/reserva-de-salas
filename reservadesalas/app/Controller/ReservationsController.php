@@ -43,7 +43,7 @@ class ReservationsController extends AppController {
 
 		if ($this->request->is('post')) {
 			$user = $this->getLoggedUser();
-			$this->request->data['Reservation']['user_id'] = $user['id'];
+			$this->request->data['Reservation']['nusp'] = $user['nusp'];
 			// TODO: Verificar se é usuário comum ou não
 			$this->request->data['Reservation']['is_activated'] = 1;
 

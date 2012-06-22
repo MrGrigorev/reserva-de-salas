@@ -30,15 +30,15 @@ class UsersController extends AppController {
 			if ($response) {
 				$response = json_decode($response);
 				
-				if ($response->id > 0) {
+				if ($response->nusp > 0) {
 					$user = array(
-						'id' => $response->id,
+						'nusp' => $response->nusp,
 						'name' => $response->name,
 						'occupation' => $response->occupation,
 						'isAdmin' => false
 					);
 					
-					$admin = $this->Admin->findByUserId($user['id']);
+					$admin = $this->Admin->findByNusp($user['nusp']);
 					if ($admin) {
 						$user['isAdmin'] = true;
 					}
