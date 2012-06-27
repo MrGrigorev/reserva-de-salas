@@ -12,6 +12,10 @@
 <br /><br />
 <?php
 	
+	if ($loggedUser['isAdmin']) {
+		echo $this->Html->link(__('Listar requisições de reserva'), array('controller' => 'Reservations', 'action' => 'listReservationRequests'));
+		echo "<br />";	
+	}
 	echo $this->Html->link(__('Reservar Sala'), array('controller' => 'Reservations', 'action' => 'chooseDate'));
 	echo "<br />";
 	echo $this->Html->link(__('Visualizar salas'), array('controller' => 'Rooms', 'action' => 'listRooms'));

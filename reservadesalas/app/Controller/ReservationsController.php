@@ -200,5 +200,71 @@ class ReservationsController extends AppController {
 		echo json_encode($allRooms);
 		exit();
 	}
+	
+	public function activateReservation($reservationId, &$message) {
+		$this->Reservation->id = $reservationId;
+		
+		if (!$this->Reservation) {
+			return;
+		}
+			
+		$rightNow = date("Y-m-d H:i:s");
+		$endTime = $this->Reservation->field('end_time');
+		if ($endTime < $rightNow) {
+			$reservation = $this->Reservation->findById($reservationId);
+			$roomName = $reservation['Room']['name'];
+			$startTime = $reservation['Reservation']['start_time'];
+			$message .= "Reserva não ativada: $roomName no período de $startTime até $endTime<br />";
+			return;
+		}
+
+		$this->Reservation->saveField('is_activated', true);
+		
+		$reservation = $this->Reservation->findById($reservationId);
+		$roomName = $reservation['Room']['name'];
+		$startTime = $reservation['Reservation']['start_time'];
+		$message .= "Reserva ativada: $roomName no período de $startTime até $endTime<br />";
+	}
+	
+	public function rejectReservation($reservationId, &$message) {
+		$this->Reservation->id = $reservationId;
+
+		if ($this->Reservation->exists() == false)
+			return;
+
+		$this->Reservation->delete();
+		
+		$reservation = $this->Reservation->findById($reservationId);
+		$roomName = $reservation['Room']['name'];
+		$startTime = $reservation['Reservation']['start_time'];
+		$endTime = $reservation['Reservation']['end_time'];
+		$message .= "Reserva rejeitada: $roomName no período de $startTime até $endTime<br />";
+	}
+	
+	public function listReservationRequests() {
+		if ($this->request->is('post')) {
+			$message = "";
+			if ($this->request->data['action'] == 'Aceita') {
+				foreach ($this->request->data['Reservation'] as $id => $reservation)
+					if ($reservation['isChecked'])
+						$this->activateReservation($id, $message);
+			} else if ($this->request->data['action'] == 'Rejeita') {
+				foreach ($this->request->data['Reservation'] as $id => $reservation)
+					if ($reservation['isChecked'])
+						$this->rejectReservation($id, $message);
+			}
+			
+			$this->showSuccessMessage($message);
+		}
+		
+		$options['fields'] = array('Reservation.id, Reservation.start_time, Reservation.end_time,
+			Reservation.nusp, Reservation.description, Room.name');
+		$options['conditions'] = array('Reservation.is_activated' => false);
+		$options['order'] = array('Reservation.start_time');
+		$inactiveReservations = $this->Reservation->find('all', $options);
+		
+		$this->set('inactiveReservations', $inactiveReservations);
+	}
+	
 }
 ?>
