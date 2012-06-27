@@ -69,6 +69,10 @@ $(document).ready(function() {
 			return true;
 	}
 	
+	function goToCreateReservation(idRoom) {
+		
+	}
+	
 	addDateAndTimePickers();
 	
 	$("#DateUntil").datepicker();
@@ -171,10 +175,11 @@ $(document).ready(function() {
             	   			<table id=\'roomsTable\'>\
             	   		      <tr><td class=\'header\'>Nome/Número</td></td><td class=\'header\'>Bloco</td><td class=\'header\'>Capacidade</td></tr>';
                for (i in data) {
-            	   idRoom = data[i]['Room']['id'];
-            	   name = (data[i]['Room']['name'] == null) ? '': data[i]['Room']['name'];
-                   number = (data[i]['Room']['number'] == null) ? '' : data[i]['Room']['number'];
-                   var link = 'link aqui';//'<a href=\'/reservadesalas/Reservations/createReservation/'+ idRoom +'/'+ date.replace(/\//g, '-') +'/'+ begin_time.replace(':', '-') +'/'+ end_time.replace(':', '-') + '\' >' + name + ' - ' + number + '</a>';
+            	   var idRoom = data[i]['Room']['id'];
+            	   var name = (data[i]['Room']['name'] == null) ? '' : data[i]['Room']['name'];
+                   var number = (data[i]['Room']['number'] == null) ? '' : data[i]['Room']['number'];
+                   var nameNumber = (name != '' && number != '') ? name + ' - ' + number : ((name != '') ? name : number); 
+                   var link = '<a href=# onclick=goToCreateReservation(' + idRoom + ')>' + nameNumber + '</a>';
                    building = data[i]['Building']['name'];
                    capacity = data[i]['Room']['capacity'];
                    options += '<tr><td>'+ link + '</td><td>' + building + '</td><td>' + capacity + '</td></tr>';

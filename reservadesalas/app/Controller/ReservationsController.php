@@ -135,7 +135,7 @@ class ReservationsController extends AppController {
 		$datetimeEnd = array();
 		$intersectionTime = array();
 
-		$addDate = '-1 day';
+		$addDate = '';
 		switch ($repetition) {
 		case 'daily':
 			$addDate = '+1 day';
@@ -166,6 +166,9 @@ class ReservationsController extends AppController {
 						'Reservation.start_time <=' => $datetimeEnd
 								->format('Y-m-d G:i:s'),
 						'Reservation.is_activated' => true);
+				
+				if ($repetition == 'none')
+					break;
 
 				$dateIterator = strtotime($addDate,
 						$dateIterator->getTimestamp());
