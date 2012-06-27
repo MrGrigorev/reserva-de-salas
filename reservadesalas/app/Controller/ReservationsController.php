@@ -119,6 +119,9 @@ class ReservationsController extends AppController {
 		$repetition = $param->repetition;
 		$untilDate = $param->until_date;
 
+		if ($untilDate != null || $untilDate != '')
+			$untilDate = DateTime::createFromFormat('d/m/Y', $untilDate);
+
 		if ($capacity == null || $capacity == '')
 			$capacity = 0;
 
@@ -132,7 +135,7 @@ class ReservationsController extends AppController {
 		$datetimeEnd = array();
 		$intersectionTime = array();
 
-		$addDate = '';
+		$addDate = '-1 day';
 		switch ($repetition) {
 		case 'daily':
 			$addDate = '+1 day';
@@ -146,38 +149,51 @@ class ReservationsController extends AppController {
 		}
 
 		for ($i = 0; $i < count($date); $i++) {
-			$datetimeBegin[] = DateTime::createFromFormat('d/m/Y G:i',
-					$date[$i] . ' ' . $beginTimes[$i]);
-			$datetimeEnd[] = DateTime::createFromFormat('d/m/Y G:i',
-					$date[$i] . ' ' . $endTimes[$i]);
+			$dateIterator = DateTime::createFromFormat('d/m/Y', $date[$i]);
 
-			$intersectionTime[] = array(
-					'Reservation.end_time >=' => $datetimeBegin[$i]
-							->format('Y-m-d G:i:s'),
-					'Reservation.start_time <=' => $datetimeEnd[$i]
-							->format('Y-m-d G:i:s'),
-					'Reservation.is_activated' => true);
+			if ($repetition == 'none')
+				$untilDate = $dateIterator;
+
+			while ($dateIterator <= $untilDate) {
+				$datetimeBegin = DateTime::createFromFormat('d/m/Y G:i',
+						$dateIterator->format('d/m/Y') . ' ' . $beginTimes[$i]);
+				$datetimeEnd = DateTime::createFromFormat('d/m/Y G:i',
+						$dateIterator->format('d/m/Y') . ' ' . $endTimes[$i]);
+
+				$intersectionTime[] = array(
+						'Reservation.end_time >=' => $datetimeBegin
+								->format('Y-m-d G:i:s'),
+						'Reservation.start_time <=' => $datetimeEnd
+								->format('Y-m-d G:i:s'),
+						'Reservation.is_activated' => true);
+
+				$dateIterator = strtotime($addDate,
+						$dateIterator->getTimestamp());
+				$dateIterator = date('d/m/Y', $dateIterator);
+				$dateIterator = DateTime::createFromFormat('d/m/Y',
+						$dateIterator);
+			}
 		}
 
 		$reservations = $this->Reservation
-				->find('all',
-						array('conditions' => array('or' => $intersectionTime)));
-
+		        ->find('all',
+		                array('conditions' => array('or' => $intersectionTime)));
+		
 		foreach ($allRooms as $i => $room) {
-			if ($room['Room']['capacity'] < $capacity) {
-				unset($allRooms[$i]);
-				continue;
-			}
-
-			foreach ($reservations as $reservation) {
-				if ($reservation['Reservation']['room_id']
-						== $room['Room']['id']) {
-					unset($allRooms[$i]);
-					break;
-				}
-			}
+		    if ($room['Room']['capacity'] < $capacity) {
+		        unset($allRooms[$i]);
+		        continue;
+		    }
+		
+		    foreach ($reservations as $reservation) {
+		        if ($reservation['Reservation']['room_id']
+		                == $room['Room']['id']) {
+		            unset($allRooms[$i]);
+		            break;
+		        }
+		    }
 		}
-
+		
 		echo json_encode($allRooms);
 		exit();
 	}

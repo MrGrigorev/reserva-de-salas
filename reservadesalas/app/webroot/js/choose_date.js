@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function() {	
 	var dateIndex = 0;
 	
 	var reservationDate = $("#reservationDate").html();
@@ -138,8 +138,8 @@ $(document).ready(function() {
 				invalidData = false;
 				continue;
 			}
-			
-			if (repetition != 'none' && date[i] > end_date) {
+
+			if (repetition != 'none' && $.datepicker.parseDate('dd/mm/yy', date[i]) > $.datepicker.parseDate('dd/mm/yy', end_date)) {
 				$('#Date' + i + 'Date').parent().addClass('error');
 				$('#Date' + i + 'Date').parent().append('<div class=\'error-message\'>Deve ser antes da data limite.</div>');
 				invalidData = false;
