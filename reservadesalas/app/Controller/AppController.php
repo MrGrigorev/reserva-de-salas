@@ -48,6 +48,14 @@ class AppController extends Controller {
 		}
 	}
 	
+	public function isAdmin() {
+		$loggedUser = $this->getLoggedUser();
+		if ($loggedUser['isAdmin']) {
+			return true;
+		}
+		return false;
+	}
+	
 	public function getLoggedUser() {
 		if ($this->isLogged()) {
 			return $this->Session->read('user');

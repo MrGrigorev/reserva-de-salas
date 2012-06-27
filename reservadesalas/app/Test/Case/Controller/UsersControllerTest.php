@@ -18,50 +18,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->testAction('/Users/index', array('method' => 'get'));
 	}
 
-	public function doLogin($nusp, $password) {
-		$url = "http://localhost/cadastrodepessoas/Users/loginService";
-		$data = array('nusp' => $nusp, 'password' => $password);
-		
-		$ch = curl_init($url);
-		 
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		 
-		$response = curl_exec($ch);
-		
-		if ($response) {
-			$response = json_decode($response);
-			if ($response->nusp > 0) return true;
-		}
-		
-		return false;
-	}
-	
-	public function testLogin() {
-		$nusp = '12345678';
-		$password = '12345';
-		
-		$this->assertTrue($this->doLogin($nusp, $password));
-	}
-
-	public function testLoginUserNotActive() {
-		$nusp = '222222';
-		$password = '12345';
-		
-		$this->assertFalse($this->doLogin($nusp, $password));
-	}
-
-	
-	public function testLoginWrongPassword() {
-		$nusp = '12345678';
-		$password = '123456666';
-		
-		$this->assertFalse($this->doLogin($nusp, $password));
-	}
-	
-	
-	public function testLoginWithLoggedUser() {
+	/*public function testLoginWithLoggedUser() {
 		$nusp = '12345678';
 		$password = '12345';
 		$this->doLogin($nusp, $password);

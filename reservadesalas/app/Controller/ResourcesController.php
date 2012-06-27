@@ -14,6 +14,14 @@ class ResourcesController extends AppController {
 		if (!$this->isLogged()) {
 			$this->redirect(array('controller' => 'Users', 'action' => 'login'));
 		}
+		
+		$params = $this->params;
+		$restrictedActions = array('createResource');
+		if (in_array($params['action'], $restrictedActions)) {
+			if (!$this->isAdmin()) {
+				$this->redirect(array('controller' => 'Users', 'action' => 'index'));
+			}
+		}
 
 		$this->Room = ClassRegistry::init('Room');
 	}

@@ -61,10 +61,6 @@ class UsersController extends AppController {
 		}
 	}
 	
-	public function authorize($userId, $name, $userType) {
-		
-	}
-
 	public function logout() {
 		$this->Session->destroy();
 		$this->redirect(array('controller' => 'Users', 'action' => 'login'));

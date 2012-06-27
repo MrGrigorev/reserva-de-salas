@@ -17,6 +17,14 @@ class ReservationsController extends AppController {
 					->redirect(
 							array('controller' => 'Users', 'action' => 'login'));
 		}
+		
+		$params = $this->params;
+		$restrictedActions = array();
+		if (in_array($params['action'], $restrictedActions)) {
+			if (!$this->isAdmin()) {
+				$this->redirect(array('controller' => 'Users', 'action' => 'index'));
+			}
+		}
 
 		$this->Room = ClassRegistry::init('Room');
 		$this->Resource = ClassRegistry::init('Resource');

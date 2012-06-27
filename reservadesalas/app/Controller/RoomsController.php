@@ -11,11 +11,19 @@ class RoomsController extends AppController {
 		if (!$this->isLogged()) {
 			$this->redirect(array('controller' => 'Users', 'action' => 'login'));
 		}
+		
+		$params = $this->params;
+		$restrictedActions = array('createRoom');
+		if (in_array($params['action'], $restrictedActions)) {
+			if (!$this->isAdmin()) {
+				$this->redirect(array('controller' => 'Users', 'action' => 'index'));
+			}
+		}
 
 		$this->Building = ClassRegistry::init('Building');
 		$this->Resource = ClassRegistry::init('Resource');
 	}
-
+	
 	public function createRoom() {
 		if ($this->request->is('post')) {
 			if ($this->Room->save($this->request->data)) {
