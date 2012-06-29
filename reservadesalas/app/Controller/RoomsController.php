@@ -1,6 +1,7 @@
 <?php
 App::uses('Building', 'Model');
 App::uses('Resource', 'Model');
+App::uses('Reservation', 'Model');
 
 class RoomsController extends AppController {
 	public $name = 'Rooms';
@@ -22,6 +23,7 @@ class RoomsController extends AppController {
 
 		$this->Building = ClassRegistry::init('Building');
 		$this->Resource = ClassRegistry::init('Resource');
+		$this->Reservation = ClassRegistry::init('Reservation');
 	}
 	
 	public function createRoom() {
@@ -178,5 +180,30 @@ class RoomsController extends AppController {
 		$this->Building->order = 'Building.name ASC';
 
 		$this->set('buildings', $this->Building->find('all'));
+	}
+	public function getRoomReservations() {
+		
+		$room_id = $this->request['data']['room_id'];
+		$month = $this->request['data']['month'];
+		$year = $this->request['data']['year'];
+
+		$this->autoRender = false;
+		$options['conditions'] = array ('Reservation.room_id' => $room_id,
+								'Reservation.is_activated' => true, 
+								'OR' => array('AND' => array('MONTH(Reservation.start_time)' => $month,
+								'YEAR(Reservation.start_time)' => $year), 'AND' => array('MONTH(Reservation.end_time)' => $month,
+								'YEAR(Reservation.end_time)' => $year) )
+								);
+		$options['fields'] = array ('Reservation.start_time, Reservation.end_time, Reservation.description, Reservation.nusp');
+		
+		$results = $this->Reservation->find('all', $options);
+		
+		$response = array();
+		foreach ($results as $result) {
+			$result['Reservation']['info'] = $result['Reservation']['nusp'] . " - " . substr($result['Reservation']['description'], 0, 20) . "...";
+			$response[] = $result['Reservation'];
+		}
+		echo json_encode($response);
+		exit;
 	}
 }

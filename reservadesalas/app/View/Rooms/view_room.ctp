@@ -1,4 +1,9 @@
 <?php
+
+	echo $this->Html->css('calendar/fullcalendar');
+	echo $this->Html->script('lib/fullcalendar.min');
+	echo $this->Html->script('show_calendar_room');
+
 	echo "<h1>" . $room['Room']['name'] . "</h1>"; 
 
 	echo __('Localização') . ': ' . __('Bloco') . ' ' . $room['Room']['building'];
@@ -25,6 +30,10 @@
 	}
 ?>
 
+<br />
+<br />
+<div id='calendar'></div>
+<input type='hidden' id='room_id' value='<?php echo $room['Room']['id']; ?>' />
 <?php
 	echo $this->element('back');
 ?>
