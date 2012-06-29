@@ -1,3 +1,15 @@
+var date;
+var begin_time;
+var end_time;
+
+function goToCreateReservation(idRoom) {
+	$("#ReservationRoomId").val(idRoom);
+	$("#ReservationDates").val(date)
+	$("#ReservationBeginTimes").val(begin_time);
+	$("#ReservationEndTimes").val(end_time);
+	$("#ReservationCreateReservationForm").submit();
+}
+
 $(document).ready(function() {	
 	var dateIndex = 0;
 	
@@ -69,10 +81,6 @@ $(document).ready(function() {
 			return true;
 	}
 	
-	function goToCreateReservation(idRoom) {
-		
-	}
-	
 	addDateAndTimePickers();
 	
 	$("#DateUntil").datepicker();
@@ -112,9 +120,9 @@ $(document).ready(function() {
 	})
 	
 	$("#loadAvailableRooms").click(function(){
-		var date = [];
-		var begin_time = [];
-		var end_time = [];
+		date = [];
+		begin_time = [];
+		end_time = [];
 		var repetition = getRepetitionValue();
 		var end_date = $('#DateUntil').val();
 		
@@ -179,7 +187,7 @@ $(document).ready(function() {
             	   var name = (data[i]['Room']['name'] == null) ? '' : data[i]['Room']['name'];
                    var number = (data[i]['Room']['number'] == null) ? '' : data[i]['Room']['number'];
                    var nameNumber = (name != '' && number != '') ? name + ' - ' + number : ((name != '') ? name : number); 
-                   var link = '<a href=# onclick=goToCreateReservation(' + idRoom + ')>' + nameNumber + '</a>';
+                   var link = '<a href=# onclick="goToCreateReservation(' + idRoom + ')">' + nameNumber + '</a>';
                    building = data[i]['Building']['name'];
                    capacity = data[i]['Room']['capacity'];
                    options += '<tr><td>'+ link + '</td><td>' + building + '</td><td>' + capacity + '</td></tr>';

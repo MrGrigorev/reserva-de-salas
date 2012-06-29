@@ -34,7 +34,17 @@
 </div>
 <?php
     echo $this->Form->Submit(__('Carregar Salas Disponíveis'), array('id'=>'loadAvailableRooms'));
-	$this->Form->End();
+	echo $this->Form->End();
 ?>
 <div id="availableRooms">
+</div>
+<div>
+<?php
+	echo $this->Form->Create('Reservation', array('action' => 'createReservation'));
+	echo $this->Form->Input('roomId', array('type' => 'hidden'));
+	echo $this->Form->Input('dates', array('type' => 'hidden'));
+	echo $this->Form->Input('beginTimes', array('type' => 'hidden'));
+	echo $this->Form->Input('endTimes', array('type' => 'hidden'));
+	echo $this->Form->End();
+?>
 </div>

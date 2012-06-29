@@ -1,4 +1,6 @@
 <?php 
+	echo $this->Html->script('create_reservation');
+	
 	$roomName = $room['Room']['name'];
 	$roomNumber = $room['Room']['number'];
 	$roomTitle = "";
@@ -16,17 +18,20 @@
 <h1>Reserva da sala <?php echo $this->Html->link($roomTitle, array('controller' => 'Rooms', 'action' => 'viewRoom', $room['Room']['id']), array('target' => '_blank')); ?></h1>
 
 <?php
-	echo __('Intevalo escolhido') . ": " . __('de ') . '<b>' . $displayStart . '</b>' . __(' até ') . '<b>' . $displayEnd . '</b>';
+	foreach ($chosenDates as $date)
+		echo $date . "<br />";
 ?>
 <br />
 <br />
 <?php
-	echo $this->Html->script('create_reservation');
 	echo $this->Form->Create('Reservation');
 	echo $this->Form->Input('description', array('label' => __('Motivo da reserva')));
 	echo $this->Form->Input('room_id', array('type' => 'hidden', 'value' => $room_id));
-	echo $this->Form->Input('start_time', array('type' => 'hidden', 'value' => $start_time));
-	echo $this->Form->Input('end_time', array('type' => 'hidden', 'value' => $end_time));
+	
+	for ($i = 0; $i < count($beginDatetimes); $i++) {
+		echo $this->Form->Input($i . '.start_time', array('type' => 'hidden', 'value' => $beginDatetimes[$i]));
+		echo $this->Form->Input($i . '.end_time', array('type' => 'hidden', 'value' => $endDatetimes[$i]));
+	}
 ?>
 <h2>Recursos utilizados</h2>
 <div id="resources">
