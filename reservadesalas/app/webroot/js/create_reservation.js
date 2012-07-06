@@ -1,13 +1,14 @@
 $(document).ready(function() {
 	$("#addResource").click(function() {
 		var addResourceButton = $(this);
-		var start_time = $('#ReservationStartTime').attr('value');
-		var end_time = $('#ReservationEndTime').attr('value');
+		var dates = $("#ReservationDates").val();
+		var beginTimes = $('#ReservationBeginTimes').val();
+		var endTimes = $('#ReservationEndTimes').val();
 		$.ajax({
            type: 'POST',
            dataType: 'json',
            url: '/reservadesalas/Resources/getAvailableResources',
-           data: {startDatetime: start_time, endDatetime: end_time},
+           data: {dates: dates, beginTimes: beginTimes, endTimes: endTimes},
            success: function(data) {
                $('#availableResources').html("");
                var resources = $("#resources").find('table');

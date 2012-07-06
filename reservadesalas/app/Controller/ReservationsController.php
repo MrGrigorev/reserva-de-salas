@@ -60,6 +60,7 @@ class ReservationsController extends AppController {
 				$this->request->data['Reservation']['beginTimes']);
 		$endTimes = split(',', $this->request->data['Reservation']['endTimes']);
 		$roomId = $this->request->data['Reservation']['roomId'];
+		$room = $this->Room->findById($roomId);
 
 		$chosenDatetimes = array();
 		$beginDatetimes = array();
@@ -68,43 +69,78 @@ class ReservationsController extends AppController {
 			$chosenDatetimes[] = $dates[$i] . __(' das ') . $beginTimes[$i]
 					. __(' às ') . $endTimes[$i];
 
-			$beginDatetimes[] =	$dates[$i] . ' ' . $beginTimes[$i];
+			$beginDatetimes[] = $dates[$i] . ' ' . $beginTimes[$i];
 			$endDatetimes[] = $dates[$i] . ' ' . $endTimes[$i];
 		}
 
-		/*if ($this->request->is('post')) {
-		    $user = $this->getLoggedUser();
-		    $this->request->data['Reservation']['nusp'] = $user['nusp'];
-		    // TODO: Verificar se é usuário comum ou não
-		    $this->request->data['Reservation']['is_activated'] = 1;
-		
-		    if (!$this->Room
-		            ->isAvailable($roomId, $startDatetime, $endDatetime)) {
-		        $this
-		                ->showErrorMessage(
-		                        __('Sala não disponível. Selecione outra sala.'));
-		        $this
-		                ->redirect(
-		                        array('controller' => 'Reservations',
-		                                'action' => 'chooseDate'));
-		    }
-		    if ($this->Reservation->save($this->request->data)) {
-		        $this->showSuccessMessage(__('Reserva realizada com sucesso'));
-		        $this
-		                ->redirect(
-		                        array('controller' => 'Rooms',
-		                                'action' => 'viewRoom', $roomId));
-		    } else {
-		        $this->showErrorMessage(__('Erro ao reservar sala'));
-		    }
-		}*/
+		if (isset($this->request->data['Reservation']['save'])) {
+			$user = $this->getLoggedUser();
+
+			$reservation = array();
+			$reservation['Reservation']['description'] = $this->request
+					->data['Reservation']['description'];
+			$reservation['Reservation']['nusp'] = $user['nusp'];
+
+			$reservation['Reservation']['is_activated'] = 0;
+			if ($user['occupation'] != 'student'
+					&& $room['Room']['room_type'] == 'normal')
+				$reservation['Reservation']['is_activated'] = true;
+
+			$reservation['Reservation']['room_id'] = $roomId;
+
+			for ($i = 0; $i < count($beginDatetimes); $i++) {
+				if (!$this->Room
+						->isAvailable($roomId, $beginDatetimes[$i],
+								$endDatetimes[$i])) {
+					$this
+							->showErrorMessage(
+									__(
+											'Sala não disponível. Selecione outra sala.'));
+					$this
+							->redirect(
+									array('controller' => 'Reservations',
+											'action' => 'chooseDate'));
+				}
+			}
+
+			for ($i = 0; $i < count($beginDatetimes); $i++) {
+				$date = DateTime::createFromFormat('d/m/Y G:i',
+						$beginDatetimes[$i]);
+				$date = $date->format('Y-m-d G:i');
+
+				$reservation['Reservation']['start_time'] = $date;
+
+				$date = DateTime::createFromFormat('d/m/Y G:i',
+						$endDatetimes[$i]);
+				$date = $date->format('Y-m-d G:i');
+
+				$reservation['Reservation']['end_time'] = $date;
+
+				if ($this->Reservation->save($reservation)) {
+					$this
+							->showSuccessMessage(
+									__('Reserva realizada com sucesso'));
+					$this
+							->redirect(
+									array('controller' => 'Rooms',
+											'action' => 'viewRoom', $roomId));
+				} else {
+					$this->showErrorMessage(__('Erro ao reservar sala'));
+					break;
+				}
+			}
+		}
+
+		$this->set('room', $room);
+		$this->set('dates', $this->request->data['Reservation']['dates']);
+		$this
+				->set('beginTimes',
+						$this->request->data['Reservation']['beginTimes']);
+		$this
+				->set('endTimes',
+						$this->request->data['Reservation']['endTimes']);
 
 		$this->set('chosenDates', $chosenDatetimes);
-		$this->set('beginDatetimes', $beginDatetimes);
-		$this->set('endDatetimes', $endDatetimes);
-
-		$room = $this->Room->findById($roomId);
-		$this->set('room', $room);
 
 		$roomResources = $this->Resource
 				->find('all',

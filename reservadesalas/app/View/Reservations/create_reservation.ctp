@@ -26,12 +26,12 @@
 <?php
 	echo $this->Form->Create('Reservation');
 	echo $this->Form->Input('description', array('label' => __('Motivo da reserva')));
-	echo $this->Form->Input('room_id', array('type' => 'hidden', 'value' => $room_id));
+	echo $this->Form->Input('roomId', array('type' => 'hidden', 'value' => $room_id));
+	echo $this->Form->Input('dates', array('type' => 'hidden', 'value' => $dates));
+	echo $this->Form->Input('beginTimes', array('type' => 'hidden', 'value' => $beginTimes));
+	echo $this->Form->Input('endTimes', array('type' => 'hidden', 'value' => $endTimes));
 	
-	for ($i = 0; $i < count($beginDatetimes); $i++) {
-		echo $this->Form->Input($i . '.start_time', array('type' => 'hidden', 'value' => $beginDatetimes[$i]));
-		echo $this->Form->Input($i . '.end_time', array('type' => 'hidden', 'value' => $endDatetimes[$i]));
-	}
+	echo $this->Form->Input('save', array('type' => 'hidden', 'value' => true));
 ?>
 <h2>Recursos utilizados</h2>
 <div id="resources">
