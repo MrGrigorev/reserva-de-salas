@@ -20,7 +20,7 @@ class UsersController extends AppController {
 			$nusp = $this->request->data['User']['nusp'];
 			$password = $this->request->data['User']['password'];
 			
-			$url = "http://localhost/cadastrodepessoas/Users/loginService";
+			$url = Configure::read('linkCadastroDePessoas') . '/Users/loginService';
 			$data = array('nusp' => $nusp, 'password' => $password);
 			
 			$ch = curl_init($url);

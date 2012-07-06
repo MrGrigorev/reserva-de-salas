@@ -116,6 +116,7 @@ class ReservationsController extends AppController {
 
 				$reservation['Reservation']['end_time'] = $date;
 
+				$this->Reservation->Create();
 				if ($this->Reservation->save($reservation)) {
 					$this
 							->showSuccessMessage(

@@ -1,4 +1,10 @@
 <?php
+
+//adicione o endereco do sistema Cadastro de Pessoas
+$link = "http://localhost/cadastrodepessoas";
+
+Configure::write('linkCadastroDePessoas', $link);
+
 /**
  * This is core configuration file.
  *
