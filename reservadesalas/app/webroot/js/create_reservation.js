@@ -4,12 +4,17 @@ $(document).ready(function() {
 		var dates = $("#ReservationDates").val();
 		var beginTimes = $('#ReservationBeginTimes').val();
 		var endTimes = $('#ReservationEndTimes').val();
+		
+		var json = $.toJSON({'dates': dates, 'beginTimes': beginTimes, 'endTimes': endTimes});
 		$.ajax({
            type: 'POST',
            dataType: 'json',
            url: '/reservadesalas/Resources/getAvailableResources',
-           data: {dates: dates, beginTimes: beginTimes, endTimes: endTimes},
+           data: {data: json},
            success: function(data) {
+        	   alert(data);
+        	   return false;
+        	   
                $('#availableResources').html("");
                var resources = $("#resources").find('table');
                var table = $("<table id='roomsTable'></table>");
@@ -44,6 +49,9 @@ $(document).ready(function() {
                addResourceButton.remove();
                $("#availableResources").append("<h2>Recursos disponíveis</h2>")
                $('#availableResources').append(table);
+           },
+           error: function(jqXHR, textStatus, errorThrown){
+        	   alert ('Erro. Tente novamente: ' + textStatus);
            }
         });
 		return false;

@@ -13,8 +13,8 @@ class ResourcesController extends AppController {
 
 		if (!$this->isLogged()) {
 			$this
-					->redirect(
-							array('controller' => 'Users', 'action' => 'login'));
+			->redirect(
+					array('controller' => 'Users', 'action' => 'login'));
 		}
 
 		$params = $this->params;
@@ -22,9 +22,9 @@ class ResourcesController extends AppController {
 		if (in_array($params['action'], $restrictedActions)) {
 			if (!$this->isAdmin()) {
 				$this
-						->redirect(
-								array('controller' => 'Users',
-										'action' => 'index'));
+				->redirect(
+						array('controller' => 'Users',
+								'action' => 'index'));
 			}
 		}
 
@@ -36,9 +36,9 @@ class ResourcesController extends AppController {
 			if ($this->Resource->save($this->request->data)) {
 				$this->showSuccessMessage(__('Recurso cadastrado com sucesso'));
 				$this
-						->redirect(
-								array('controller' => 'Users',
-										'action' => 'index'));
+				->redirect(
+						array('controller' => 'Users',
+								'action' => 'index'));
 			} else {
 				$this->showErrorMessage(__('Erro ao cadastrar recurso'));
 			}
@@ -52,9 +52,9 @@ class ResourcesController extends AppController {
 		if (!$resource) {
 			$this->showErrorMessage(__('Recurso inexistente'));
 			$this
-					->redirect(
-							array('controller' => 'Resources',
-									'action' => 'listResources'));
+			->redirect(
+					array('controller' => 'Resources',
+							'action' => 'listResources'));
 		}
 
 		$room = $this->Room->findById($resource['Resource']['room_id']);
@@ -136,13 +136,13 @@ class ResourcesController extends AppController {
 		foreach ($this->request->data['Resource'] as $key => $filter) {
 			if ($key == 'is_fixed_resource') {
 				$filteredResources = $this
-						->arrayFilterIsFixedResource($filteredResources,
-								$filter);
+				->arrayFilterIsFixedResource($filteredResources,
+						$filter);
 				continue;
 			}
 
 			$filteredResources = $this
-					->arrayFilter($filteredResources, $key, $filter);
+			->arrayFilter($filteredResources, $key, $filter);
 		}
 
 		return $filteredResources;
@@ -161,20 +161,21 @@ class ResourcesController extends AppController {
 	}
 
 	public function getAvailableResources() {
-		$dates = split(',', $this->request->data['Reservation']['dates']);
-		$beginTimes = split(',',
-				$this->request->data['Reservation']['beginTimes']);
-		$endTimes = split(',', $this->request->data['Reservation']['endTimes']);
-		
+		$param = json_decode($this->params['data']);
+
+		$this->RequestHandler->respondAs('json');
+		$this->autoRender = false;
+			
+		$dates = split(',', $param->dates);
+		$beginTimes = split(',', $param->beginTimes);
+		$endTimes = split(',', $param->endTimes);
+
 		$beginDatetimes = array();
 		$endDatetimes = array();
-		for ($i = 0; $i < count($dates); $i++) {		
+		for ($i = 0; $i < count($dates); $i++) {
 			$beginDatetimes[] = $dates[$i] . ' ' . $beginTimes[$i];
 			$endDatetimes[] = $dates[$i] . ' ' . $endTimes[$i];
 		}
-
-		/*$this->RequestHandler->respondAs('json');
-		$this->autoRender = false;
 
 		$options['joins'] = array(
 				array('table' => 'reservations_resources',
@@ -188,42 +189,42 @@ class ResourcesController extends AppController {
 								'Reservations.is_activated = 1')));
 
 		$aux = array();
-		for ($i = 0; $i < count($dates); $i++) {
-			$startDatetime = DateTime::createFromFormat('d/m/Y G:i',
-					$beginDatetimes[$i]);
-			$startDatetime = $date->format('Y-m-d G:i');
+		// 		for ($i = 0; $i < count($dates); $i++) {
+		// 			$startDatetime = DateTime::createFromFormat('d/m/Y G:i',
+		// 					$beginDatetimes[$i]);
+		// 			$startDatetime = $date->format('Y-m-d G:i');
 			
-			$endTimetime = DateTime::createFromFormat('d/m/Y G:i',
-					$endDatetimes[$i]);
-			$endDatetime = $date->format('Y-m-d G:i');
+		// 			$endTimetime = DateTime::createFromFormat('d/m/Y G:i',
+		// 					$endDatetimes[$i]);
+		// 			$endDatetime = $date->format('Y-m-d G:i');
 			
-			$aux[] = array(
-					'or' => array('Resource.room_id !=' => null,
-							'and' => array(
-									'Reservations.start_time < ' => $endDatetime,
-									'Reservations.end_time > ' => $startDatetime)));
-		}
+		// 			$aux[] = array(
+		// 					'or' => array('Resource.room_id !=' => null,
+		// 							'and' => array(
+		// 									'Reservations.start_time < ' => $endDatetime,
+		// 									'Reservations.end_time > ' => $startDatetime)));
+		// 		}
 
-		$options['conditions'] = array(
-				'and' => $aux);
+		// 		$options['conditions'] = array(
+		// 				'and' => $aux);
 
-		$options['fields'] = array('DISTINCT (Resource.id)');
+		// 		$options['fields'] = array('DISTINCT (Resource.id)');
 
-		$unavailableResources = $this->Resource->find('all', $options);
+		// 		$unavailableResources = $this->Resource->find('all', $options);
 
-		$notIn = array();
-		foreach ($unavailableResources as $unavailableResource) {
-			$notIn[] = $unavailableResource['Resource']['id'];
-		}
+		// 		$notIn = array();
+		// 		foreach ($unavailableResources as $unavailableResource) {
+		// 			$notIn[] = $unavailableResource['Resource']['id'];
+		// 		}
 
-		$availableOptions['conditions'] = array(
-				'NOT' => array('Resource.id' => $notIn));
-		$availableOptions['fields'] = array('Resource.id', 'Resource.name',
-				'Resource.serial_number');
+		// 		$availableOptions['conditions'] = array(
+		// 				'NOT' => array('Resource.id' => $notIn));
+		// 		$availableOptions['fields'] = array('Resource.id', 'Resource.name',
+		// 				'Resource.serial_number');
 
-		$availableResources = $this->Resource->find('all', $availableOptions);
+		// 		$availableResources = $this->Resource->find('all', $availableOptions);
 
-		echo json_encode($availableResources);*/
+		// 		echo json_encode($availableResources);
 		exit();
 	}
 }

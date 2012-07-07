@@ -54,8 +54,8 @@ class Room extends AppModel {
 						array(
 								'conditions' => array(
 										'Reservation.room_id' => $roomId,
-										'Reservation.end_time >' => $startDatetime,
-										'Reservation.start_time <' => $endDatetime,
+										'Reservation.end_time >' => $startDatetime->format('Y/m/d G:i'),
+										'Reservation.start_time <' => $endDatetime->format('Y/m/d G:i'),
 										'Reservation.is_activated' => true)));
 		if ($results) {
 			return false;

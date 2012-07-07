@@ -61,7 +61,7 @@ class ReservationsController extends AppController {
 		$endTimes = split(',', $this->request->data['Reservation']['endTimes']);
 		$roomId = $this->request->data['Reservation']['roomId'];
 		$room = $this->Room->findById($roomId);
-		
+
 		$untilDate = $this->request->data['Reservation']['until'];
 		$repetitions = $this->request->data['Reservation']['repetitions'];
 
@@ -92,7 +92,7 @@ class ReservationsController extends AppController {
 		$this->set('chosenDates', $chosenDatetimes);
 
 		$roomResources = $this->Resource
-		->find('all',
+			->find('all',
 				array(
 						'conditions' => array(
 								'Resource.room_id' => $roomId),
@@ -130,20 +130,20 @@ class ReservationsController extends AppController {
 		$beginDatetimes = $returnValues['datetimeBegin'];
 		$endDatetimes = $returnValues['datetimeEnd'];
 
-// 		for ($i = 0; $i < count($beginDatetimes); $i++) {
-// 			if (!$this->Room
-// 					->isAvailable($room['Room']['id'], $beginDatetimes[$i],
-// 							$endDatetimes[$i])) {
-// 				$this
-// 				->showErrorMessage(
-// 						__(
-// 								'Sala não disponível. Selecione outra sala.'));
-// 				$this
-// 				->redirect(
-// 						array('controller' => 'Reservations',
-// 								'action' => 'chooseDate'));
-// 			}
-// 		}
+		for ($i = 0; $i < count($beginDatetimes); $i++) {
+			if (!$this->Room
+					->isAvailable($room['Room']['id'], $beginDatetimes[$i],
+							$endDatetimes[$i])) {
+				$this
+				->showErrorMessage(
+						__(
+								'Sala não disponível. Selecione outra sala.'));
+				$this
+				->redirect(
+						array('controller' => 'Reservations',
+								'action' => 'chooseDate'));
+			}
+		}
 
 		for ($i = 0; $i < count($beginDatetimes); $i++) {
 			$reservation['Reservation']['start_time'] = $this->formatDate($beginDatetimes[$i]);
