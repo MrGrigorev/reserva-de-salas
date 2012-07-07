@@ -42,6 +42,12 @@ class Room extends AppModel {
 	
 	public function isAvailable($roomId, $startDatetime, $endDatetime) {
 		$reservation = ClassRegistry::init('Reservation');
+		
+		if (isset($startDatetime->date))
+			$startDatetime = $startDatetime->date;
+		
+		if (isset($endDatetime->date))
+			$endDatetime = $endDatetime->date;
 
 		$results = $reservation
 				->find('count',
@@ -50,7 +56,7 @@ class Room extends AppModel {
 										'Reservation.room_id' => $roomId,
 										'Reservation.end_time >' => $startDatetime,
 										'Reservation.start_time <' => $endDatetime,
-										'Reservation.is_activated' => 1)));
+										'Reservation.is_activated' => true)));
 		if ($results) {
 			return false;
 		}

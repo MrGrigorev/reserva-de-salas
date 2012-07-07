@@ -30,6 +30,8 @@
 	echo $this->Form->Input('dates', array('type' => 'hidden', 'value' => $dates));
 	echo $this->Form->Input('beginTimes', array('type' => 'hidden', 'value' => $beginTimes));
 	echo $this->Form->Input('endTimes', array('type' => 'hidden', 'value' => $endTimes));
+	echo $this->Form->Input('until', array('type' => 'hidden', 'value' => $untilDate));
+	echo $this->Form->Input('repetitions', array('type' => 'hidden', 'value' => $repetitions));
 	
 	echo $this->Form->Input('save', array('type' => 'hidden', 'value' => true));
 ?>

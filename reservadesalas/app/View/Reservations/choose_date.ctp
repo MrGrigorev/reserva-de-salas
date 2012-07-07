@@ -30,7 +30,7 @@
 <div id="reservationUntil" style="display:none">
 <?php
     echo $this->Form->Input('until', array('label' => __('Até'), 'value' => $untilDate));
-?> 
+?>
 </div>
 <?php
     echo $this->Form->Submit(__('Carregar Salas Disponíveis'), array('id'=>'loadAvailableRooms'));
@@ -45,6 +45,8 @@
 	echo $this->Form->Input('dates', array('type' => 'hidden'));
 	echo $this->Form->Input('beginTimes', array('type' => 'hidden'));
 	echo $this->Form->Input('endTimes', array('type' => 'hidden'));
+	echo $this->Form->Input('repetitions', array('type' => 'hidden'));
+	echo $this->Form->Input('until', array('type' => 'hidden'));
 	echo $this->Form->End();
 ?>
 </div>

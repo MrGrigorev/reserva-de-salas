@@ -14,8 +14,8 @@ class ReservationsController extends AppController {
 
 		if (!$this->isLogged()) {
 			$this
-					->redirect(
-							array('controller' => 'Users', 'action' => 'login'));
+			->redirect(
+					array('controller' => 'Users', 'action' => 'login'));
 		}
 
 		$params = $this->params;
@@ -23,9 +23,9 @@ class ReservationsController extends AppController {
 		if (in_array($params['action'], $restrictedActions)) {
 			if (!$this->isAdmin()) {
 				$this
-						->redirect(
-								array('controller' => 'Users',
-										'action' => 'index'));
+				->redirect(
+						array('controller' => 'Users',
+								'action' => 'index'));
 			}
 		}
 
@@ -50,8 +50,8 @@ class ReservationsController extends AppController {
 			$this->set('untilDate', date('d/m/Y', $firstSemesterFinalTime));
 		else
 			$this
-					->set('untilDate',
-							date('d/m/Y', mktime(0, 0, 0, 12, 15, $currentYear)));
+			->set('untilDate',
+					date('d/m/Y', mktime(0, 0, 0, 12, 15, $currentYear)));
 	}
 
 	public function createReservation() {
@@ -61,99 +61,176 @@ class ReservationsController extends AppController {
 		$endTimes = split(',', $this->request->data['Reservation']['endTimes']);
 		$roomId = $this->request->data['Reservation']['roomId'];
 		$room = $this->Room->findById($roomId);
+		
+		$untilDate = $this->request->data['Reservation']['until'];
+		$repetitions = $this->request->data['Reservation']['repetitions'];
 
 		$chosenDatetimes = array();
 		$beginDatetimes = array();
 		$endDatetimes = array();
 		for ($i = 0; $i < count($dates); $i++) {
 			$chosenDatetimes[] = $dates[$i] . __(' das ') . $beginTimes[$i]
-					. __(' às ') . $endTimes[$i];
+			. __(' às ') . $endTimes[$i];
 
 			$beginDatetimes[] = $dates[$i] . ' ' . $beginTimes[$i];
 			$endDatetimes[] = $dates[$i] . ' ' . $endTimes[$i];
 		}
 
 		if (isset($this->request->data['Reservation']['save'])) {
-			$user = $this->getLoggedUser();
-
-			$reservation = array();
-			$reservation['Reservation']['description'] = $this->request
-					->data['Reservation']['description'];
-			$reservation['Reservation']['nusp'] = $user['nusp'];
-
-			$reservation['Reservation']['is_activated'] = 0;
-			if ($user['occupation'] != 'student'
-					&& $room['Room']['room_type'] == 'normal')
-				$reservation['Reservation']['is_activated'] = true;
-
-			$reservation['Reservation']['room_id'] = $roomId;
-
-			for ($i = 0; $i < count($beginDatetimes); $i++) {
-				if (!$this->Room
-						->isAvailable($roomId, $beginDatetimes[$i],
-								$endDatetimes[$i])) {
-					$this
-							->showErrorMessage(
-									__(
-											'Sala não disponível. Selecione outra sala.'));
-					$this
-							->redirect(
-									array('controller' => 'Reservations',
-											'action' => 'chooseDate'));
-				}
-			}
-
-			for ($i = 0; $i < count($beginDatetimes); $i++) {
-				$date = DateTime::createFromFormat('d/m/Y G:i',
-						$beginDatetimes[$i]);
-				$date = $date->format('Y-m-d G:i');
-
-				$reservation['Reservation']['start_time'] = $date;
-
-				$date = DateTime::createFromFormat('d/m/Y G:i',
-						$endDatetimes[$i]);
-				$date = $date->format('Y-m-d G:i');
-
-				$reservation['Reservation']['end_time'] = $date;
-
-				$this->Reservation->Create();
-				if ($this->Reservation->save($reservation)) {
-					$this
-							->showSuccessMessage(
-									__('Reserva realizada com sucesso'));
-					$this
-							->redirect(
-									array('controller' => 'Rooms',
-											'action' => 'viewRoom', $roomId));
-				} else {
-					$this->showErrorMessage(__('Erro ao reservar sala'));
-					break;
-				}
-			}
+			$this->saveReservations($dates, $beginTimes, $endTimes, $room);
 		}
 
 		$this->set('room', $room);
 		$this->set('dates', $this->request->data['Reservation']['dates']);
 		$this
-				->set('beginTimes',
-						$this->request->data['Reservation']['beginTimes']);
+			->set('beginTimes',
+				$this->request->data['Reservation']['beginTimes']);
 		$this
-				->set('endTimes',
-						$this->request->data['Reservation']['endTimes']);
+			->set('endTimes',
+				$this->request->data['Reservation']['endTimes']);
 
 		$this->set('chosenDates', $chosenDatetimes);
 
 		$roomResources = $this->Resource
-				->find('all',
-						array(
-								'conditions' => array(
-										'Resource.room_id' => $roomId),
-								'fields' => array('Resource.id',
-										'Resource.serial_number',
-										'Resource.name')));
+		->find('all',
+				array(
+						'conditions' => array(
+								'Resource.room_id' => $roomId),
+						'fields' => array('Resource.id',
+								'Resource.serial_number',
+								'Resource.name')));
 
 		$this->set('fixedResources', $roomResources);
 		$this->set('room_id', $roomId);
+		$this->set('untilDate', $untilDate);
+		$this->set('repetitions', $repetitions);
+	}
+
+	private function saveReservations($dates, $beginTimes, $endTimes, $room) {
+		$user = $this->getLoggedUser();
+
+		$reservation = array();
+		$reservation['Reservation']['description'] = $this->request
+			->data['Reservation']['description'];
+		$reservation['Reservation']['nusp'] = $user['nusp'];
+
+		$reservation['Reservation']['is_activated'] = false;
+		if ($user['occupation'] != 'student'
+				&& $room['Room']['room_type'] == 'normal')
+			$reservation['Reservation']['is_activated'] = true;
+
+		$reservation['Reservation']['room_id'] = $room['Room']['id'];
+
+		$untilDate = $this->request->data['Reservation']['until'];
+		if ($untilDate != null || $untilDate != '')
+			$untilDate = DateTime::createFromFormat('d/m/Y', $untilDate);
+
+		$returnValues = $this->addDateRepetitions($this->request->data['Reservation']['repetitions'], $dates, $beginTimes, $endTimes, $untilDate);
+		
+		$beginDatetimes = $returnValues['datetimeBegin'];
+		$endDatetimes = $returnValues['datetimeEnd'];
+
+// 		for ($i = 0; $i < count($beginDatetimes); $i++) {
+// 			if (!$this->Room
+// 					->isAvailable($room['Room']['id'], $beginDatetimes[$i],
+// 							$endDatetimes[$i])) {
+// 				$this
+// 				->showErrorMessage(
+// 						__(
+// 								'Sala não disponível. Selecione outra sala.'));
+// 				$this
+// 				->redirect(
+// 						array('controller' => 'Reservations',
+// 								'action' => 'chooseDate'));
+// 			}
+// 		}
+
+		for ($i = 0; $i < count($beginDatetimes); $i++) {
+			$reservation['Reservation']['start_time'] = $this->formatDate($beginDatetimes[$i]);
+			$reservation['Reservation']['end_time'] = $this->formatDate($endDatetimes[$i]);
+			
+			$this->Reservation->Create();
+			if ($this->Reservation->save($reservation)) {
+				$this
+				->showSuccessMessage(
+						__('Reserva realizada com sucesso'));
+			} else {
+				$this->showErrorMessage(__('Erro ao reservar sala'));
+				break;
+			}
+		}
+
+		$this
+			->redirect(
+				array('controller' => 'Rooms',
+						'action' => 'viewRoom', $room['Room']['id']));
+	}
+	
+	private function formatDate($datetime) {
+		return $datetime->format('Y-m-d G:i');
+	}
+	
+	private function addDateRepetitions($repetition, $date, $beginTimes, $endTimes, $untilDate) {
+		$datetimeBegin = array();
+		$datetimeEnd = array();
+		$intersectionTime = array();
+
+		$addDate = '';
+		switch ($repetition) {
+			case 'daily':
+				$addDate = '+1 day';
+				break;
+			case 'weekly':
+				$addDate = '+7 day';
+				break;
+			case 'monthly':
+				$addDate = '+1 month';
+				break;
+		}
+		
+		$datetimeBegins = array();
+		$datetimeEnds = array();
+		
+		for ($i = 0; $i < count($date); $i++) {
+			$dateIterator = DateTime::createFromFormat('d/m/Y', $date[$i]);
+		
+			if ($repetition == 'none')
+				$untilDate = $dateIterator;
+		
+			while ($dateIterator <= $untilDate) {
+				$datetimeBegin = DateTime::createFromFormat('d/m/Y G:i',
+						$dateIterator->format('d/m/Y') . ' ' . $beginTimes[$i]);
+				$datetimeEnd = DateTime::createFromFormat('d/m/Y G:i',
+						$dateIterator->format('d/m/Y') . ' ' . $endTimes[$i]);
+
+				$datetimeBegins[] = $datetimeBegin;
+				$datetimeEnds[] = $datetimeEnd;
+		
+				$intersectionTime[] = array(
+						'Reservation.end_time >=' => $datetimeBegin
+						->format('Y-m-d G:i:s'),
+						'Reservation.start_time <=' => $datetimeEnd
+						->format('Y-m-d G:i:s'),
+						'Reservation.is_activated' => true);
+		
+				if ($repetition == 'none')
+					break;
+		
+				$dateIterator = strtotime($addDate,
+						$dateIterator->getTimestamp());
+				$dateIterator = date('d/m/Y', $dateIterator);
+				$dateIterator = DateTime::createFromFormat('d/m/Y',
+						$dateIterator);
+			}
+		}
+		
+		$returnValues = array();
+
+		$returnValues['datetimeBegin'] = $datetimeBegins;
+		$returnValues['datetimeEnd'] = $datetimeEnds;
+		$returnValues['intersectionTime'] = $intersectionTime;
+		
+		return $returnValues;
 	}
 
 	public function loadAvailableRooms() {
@@ -177,56 +254,13 @@ class ReservationsController extends AppController {
 		$this->Room->order = 'Room.capacity ASC';
 		$allRooms = $this->Room->find('all');
 
-		$datetimeBegin = array();
-		$datetimeEnd = array();
-		$intersectionTime = array();
+ 		$returnValues = $this->addDateRepetitions($repetition, $date, $beginTimes, $endTimes, $untilDate);
 
-		$addDate = '';
-		switch ($repetition) {
-		case 'daily':
-			$addDate = '+1 day';
-			break;
-		case 'weekly':
-			$addDate = '+7 day';
-			break;
-		case 'monthly':
-			$addDate = '+1 month';
-			break;
-		}
-
-		for ($i = 0; $i < count($date); $i++) {
-			$dateIterator = DateTime::createFromFormat('d/m/Y', $date[$i]);
-
-			if ($repetition == 'none')
-				$untilDate = $dateIterator;
-
-			while ($dateIterator <= $untilDate) {
-				$datetimeBegin = DateTime::createFromFormat('d/m/Y G:i',
-						$dateIterator->format('d/m/Y') . ' ' . $beginTimes[$i]);
-				$datetimeEnd = DateTime::createFromFormat('d/m/Y G:i',
-						$dateIterator->format('d/m/Y') . ' ' . $endTimes[$i]);
-
-				$intersectionTime[] = array(
-						'Reservation.end_time >=' => $datetimeBegin
-								->format('Y-m-d G:i:s'),
-						'Reservation.start_time <=' => $datetimeEnd
-								->format('Y-m-d G:i:s'),
-						'Reservation.is_activated' => true);
-
-				if ($repetition == 'none')
-					break;
-
-				$dateIterator = strtotime($addDate,
-						$dateIterator->getTimestamp());
-				$dateIterator = date('d/m/Y', $dateIterator);
-				$dateIterator = DateTime::createFromFormat('d/m/Y',
-						$dateIterator);
-			}
-		}
+		$intersectionTime = $returnValues['intersectionTime'];
 
 		$reservations = $this->Reservation
-				->find('all',
-						array('conditions' => array('or' => $intersectionTime)));
+			->find('all',
+				array('conditions' => array('or' => $intersectionTime)));
 
 		foreach ($allRooms as $i => $room) {
 			if ($room['Room']['capacity'] < $capacity) {
@@ -293,11 +327,11 @@ class ReservationsController extends AppController {
 			if ($this->request->data['action'] == 'Aceita') {
 				foreach ($this->request->data['Reservation'] as $id => $reservation)
 					if ($reservation['isChecked'])
-						$this->activateReservation($id, $message);
+					$this->activateReservation($id, $message);
 			} else if ($this->request->data['action'] == 'Rejeita') {
 				foreach ($this->request->data['Reservation'] as $id => $reservation)
 					if ($reservation['isChecked'])
-						$this->rejectReservation($id, $message);
+					$this->rejectReservation($id, $message);
 			}
 
 			$this->showSuccessMessage($message);
@@ -305,7 +339,7 @@ class ReservationsController extends AppController {
 
 		$options['fields'] = array(
 				'Reservation.id, Reservation.start_time, Reservation.end_time,
-			Reservation.nusp, Reservation.description, Room.name');
+				Reservation.nusp, Reservation.description, Room.name');
 		$options['conditions'] = array('Reservation.is_activated' => false);
 		$options['order'] = array('Reservation.start_time');
 		$inactiveReservations = $this->Reservation->find('all', $options);

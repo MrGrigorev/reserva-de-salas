@@ -7,6 +7,8 @@ function goToCreateReservation(idRoom) {
 	$("#ReservationDates").val(date)
 	$("#ReservationBeginTimes").val(begin_time);
 	$("#ReservationEndTimes").val(end_time);
+	$("#ReservationRepetitions").val($("input[name='data[Date][repetitions]']:checked").val());
+	$("#ReservationUntil").val($("#DateUntil").val());
 	$("#ReservationCreateReservationForm").submit();
 }
 
