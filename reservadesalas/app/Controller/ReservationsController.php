@@ -200,9 +200,9 @@ class ReservationsController extends AppController {
 				$untilDate = $dateIterator;
 		
 			while ($dateIterator <= $untilDate) {
-				$datetimeBegin = DateTime::createFromFormat('d/m/Y G:i',
+				$datetimeBegin = DateTime::createFromFormat('d/m/Y H:i',
 						$dateIterator->format('d/m/Y') . ' ' . $beginTimes[$i]);
-				$datetimeEnd = DateTime::createFromFormat('d/m/Y G:i',
+				$datetimeEnd = DateTime::createFromFormat('d/m/Y H:i',
 						$dateIterator->format('d/m/Y') . ' ' . $endTimes[$i]);
 
 				$datetimeBegins[] = $datetimeBegin;
@@ -210,9 +210,9 @@ class ReservationsController extends AppController {
 		
 				$intersectionTime[] = array(
 						'Reservation.end_time >=' => $datetimeBegin
-						->format('Y-m-d G:i:s'),
+						->format('Y-m-d H:i:s'),
 						'Reservation.start_time <=' => $datetimeEnd
-						->format('Y-m-d G:i:s'),
+						->format('Y-m-d H:i:s'),
 						'Reservation.is_activated' => true);
 		
 				if ($repetition == 'none')
