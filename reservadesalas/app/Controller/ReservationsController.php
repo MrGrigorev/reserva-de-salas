@@ -113,13 +113,15 @@ class ReservationsController extends AppController {
 		$reservation['Reservation']['description'] = $this->request
 			->data['Reservation']['description'];
 		$reservation['Reservation']['nusp'] = $user['nusp'];
+		$reservation['Reservation']['room_id'] = $room['Room']['id'];
 
 		$reservation['Reservation']['is_activated'] = false;
 		if ($user['occupation'] != 'student'
 				&& $room['Room']['room_type'] == 'normal')
 			$reservation['Reservation']['is_activated'] = true;
+		
+		$reservation['Resources'] = $this->request->data['Resources'];
 
-		$reservation['Reservation']['room_id'] = $room['Room']['id'];
 
 		$untilDate = $this->request->data['Reservation']['until'];
 		if ($untilDate != null || $untilDate != '')

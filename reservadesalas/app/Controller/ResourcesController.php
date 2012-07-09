@@ -165,66 +165,107 @@ class ResourcesController extends AppController {
 
 		$this->RequestHandler->respondAs('json');
 		$this->autoRender = false;
-			
+
 		$dates = split(',', $param->dates);
 		$beginTimes = split(',', $param->beginTimes);
 		$endTimes = split(',', $param->endTimes);
+		$repetitions = $param->repetitions;
+		$untilDate = $param->untilDate;
 
-		$beginDatetimes = array();
-		$endDatetimes = array();
-		for ($i = 0; $i < count($dates); $i++) {
-			$beginDatetimes[] = $dates[$i] . ' ' . $beginTimes[$i];
-			$endDatetimes[] = $dates[$i] . ' ' . $endTimes[$i];
+		$resources = $this->Resource->find('all', array('conditions' => array('Resource.room_id' => null)));
+
+		$returnValues = $this->addDateRepetitions($repetitions, $dates, $beginTimes, $endTimes, $untilDate);
+
+		$beginDatetimes = $returnValues['datetimeBegin'];
+		$endDatetimes = $returnValues['datetimeEnd'];
+
+		foreach ($resources as $i => $resource) {
+			foreach ($resource['Reservations'] as $reservation) {
+				for ($j = 0; $j < count($beginDatetimes); $j++) {
+					$beginDatetime = $beginDatetimes[$j]->format('Y-m-d H:i');
+					$endDatetime = $endDatetimes[$j]->format('Y-m-d H:i');
+
+					if ($this->isSameTime($beginDatetime, $endDatetime, $reservation['start_time'], $reservation['end_time'])) {
+						unset($resources[$i]);
+
+						break;
+					}
+				}
+			}
 		}
 
-		$options['joins'] = array(
-				array('table' => 'reservations_resources',
-						'alias' => 'ReservationsResource', 'type' => 'LEFT',
-						'conditions' => array(
-								'ReservationsResource.resource_id = Resource.id')),
-				array('table' => 'reservations', 'alias' => 'Reservations',
-						'type' => 'LEFT',
-						'conditions' => array(
-								'Reservations.id = ReservationsResource.reservation_id',
-								'Reservations.is_activated = 1')));
-
-		$aux = array();
-		// 		for ($i = 0; $i < count($dates); $i++) {
-		// 			$startDatetime = DateTime::createFromFormat('d/m/Y G:i',
-		// 					$beginDatetimes[$i]);
-		// 			$startDatetime = $date->format('Y-m-d G:i');
-			
-		// 			$endTimetime = DateTime::createFromFormat('d/m/Y G:i',
-		// 					$endDatetimes[$i]);
-		// 			$endDatetime = $date->format('Y-m-d G:i');
-			
-		// 			$aux[] = array(
-		// 					'or' => array('Resource.room_id !=' => null,
-		// 							'and' => array(
-		// 									'Reservations.start_time < ' => $endDatetime,
-		// 									'Reservations.end_time > ' => $startDatetime)));
-		// 		}
-
-		// 		$options['conditions'] = array(
-		// 				'and' => $aux);
-
-		// 		$options['fields'] = array('DISTINCT (Resource.id)');
-
-		// 		$unavailableResources = $this->Resource->find('all', $options);
-
-		// 		$notIn = array();
-		// 		foreach ($unavailableResources as $unavailableResource) {
-		// 			$notIn[] = $unavailableResource['Resource']['id'];
-		// 		}
-
-		// 		$availableOptions['conditions'] = array(
-		// 				'NOT' => array('Resource.id' => $notIn));
-		// 		$availableOptions['fields'] = array('Resource.id', 'Resource.name',
-		// 				'Resource.serial_number');
-
-		// 		$availableResources = $this->Resource->find('all', $availableOptions);
-
-		// 		echo json_encode($availableResources);
+		echo json_encode($resources);
 		exit();
+	}
+
+	private function isSameTime($startDatetime1, $endDatetime1, $startDatetime2, $endDatetime2) {
+		if ($startDatetime1 >= $startDatetime2 && $startDatetime1 < $endDatetime2)
+			return true;
+
+		if ($endDatetime1 > $startDatetime2 && $endDatetime1 <= $endDatetime2)
+			return true;
+
+		if ($startDatetime2 >= $startDatetime1 && $startDatetime2 < $endDatetime1)
+			return true;
+
+		if ($endDatetime2 > $startDatetime1 && $endDatetime2 <= $endDatetime1)
+			return true;
+
+		return false;
+	}
+
+	private function addDateRepetitions($repetition, $date, $beginTimes, $endTimes, $untilDate) {
+		$datetimeBegin = array();
+		$datetimeEnd = array();
+
+		$addDate = '';
+		switch ($repetition) {
+			case 'daily':
+				$addDate = '+1 day';
+				break;
+			case 'weekly':
+				$addDate = '+7 day';
+				break;
+			case 'monthly':
+				$addDate = '+1 month';
+				break;
+		}
+
+		$datetimeBegins = array();
+		$datetimeEnds = array();
+
+		for ($i = 0; $i < count($date); $i++) {
+			$dateIterator = DateTime::createFromFormat('d/m/Y', $date[$i]);
+			$untilDate = DateTime::createFromFormat('d/m/Y', $untilDate);
+
+			if ($repetition == 'none')
+				$untilDate = $dateIterator;
+
+			while ($dateIterator <= $untilDate) {
+				$datetimeBegin = DateTime::createFromFormat('d/m/Y G:i',
+						$dateIterator->format('d/m/Y') . ' ' . $beginTimes[$i]);
+				$datetimeEnd = DateTime::createFromFormat('d/m/Y G:i',
+						$dateIterator->format('d/m/Y') . ' ' . $endTimes[$i]);
+
+				$datetimeBegins[] = $datetimeBegin;
+				$datetimeEnds[] = $datetimeEnd;
+
+				if ($repetition == 'none')
+					break;
+
+				$dateIterator = strtotime($addDate,
+						$dateIterator->getTimestamp());
+				$dateIterator = date('d/m/Y', $dateIterator);
+				$dateIterator = DateTime::createFromFormat('d/m/Y',
+						$dateIterator);
+			}
+		}
+
+		$returnValues = array();
+
+		$returnValues['datetimeBegin'] = $datetimeBegins;
+		$returnValues['datetimeEnd'] = $datetimeEnds;
+
+		return $returnValues;
 	}
 }

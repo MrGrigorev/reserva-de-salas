@@ -4,23 +4,22 @@ $(document).ready(function() {
 		var dates = $("#ReservationDates").val();
 		var beginTimes = $('#ReservationBeginTimes').val();
 		var endTimes = $('#ReservationEndTimes').val();
+		var repetitions = $('#ReservationRepetitions').val();
+		var untilDate = $('#ReservationUntil').val();
 		
-		var json = $.toJSON({'dates': dates, 'beginTimes': beginTimes, 'endTimes': endTimes});
+		var json = $.toJSON({'dates': dates, 'beginTimes': beginTimes, 'endTimes': endTimes, 'repetitions': repetitions, 'untilDate': untilDate});
 		$.ajax({
            type: 'POST',
            dataType: 'json',
            url: '/reservadesalas/Resources/getAvailableResources',
            data: {data: json},
            success: function(data) {
-        	   alert(data);
-        	   return false;
-        	   
                $('#availableResources').html("");
                var resources = $("#resources").find('table');
                var table = $("<table id='roomsTable'></table>");
                var header = $("<tr><td class='header'>Nome</td><td class='header'>Número de Patrimônio</td><td class='header'></td></tr>");
                table.append(header);
-               
+
                $.each(data, function(i, value) {
             	   var name = value['Resource']['name'];
             	   var serial_number = value['Resource']['serial_number'];
