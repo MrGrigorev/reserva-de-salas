@@ -1,4 +1,6 @@
 <?php
+	echo $this->Html->script('view_reservation');
+
 	echo "<h1>" . 'Reserva' . "</h1>";
 	
 	echo $date;
@@ -12,7 +14,7 @@
 	$roomLink = '';
 	if ($reservation['Room']['number']) {
 		$roomLink .= $reservation['Room']['number'];
-		
+
 		if ($reservation['Room']['name'])
 			$roomLink .= " - ";
 	}
@@ -42,8 +44,16 @@
 	}
 ?>
 
+<div id="dialog-confirm" style="display:none"></div>
+
 <br />
 <br />
 <?php
+	echo $this->Form->Create('Reservation', array('action' => 'delete', 'class' => 'submittableForm'));
+	echo $this->Form->Input('id', array('type' => 'hidden', 'value' => $reservation['Reservation']['id']));
+
+	echo $this->Form->Submit(__('Apagar Reserva'), array('class' => 'needConfirmation'));
+	echo $this->Form->end();
+
 	echo $this->element('back');
 ?>

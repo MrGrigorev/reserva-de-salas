@@ -363,5 +363,15 @@ class ReservationsController extends AppController {
 		$this->set('reservation', $reservation);
 		$this->set('date', $date);
 	}
+	
+	public function delete() {
+		$this->Reservation->id = $this->request->data['Reservation']['id'];
+		if ($this->Reservation->delete())
+			$this->showSuccessMessage('Reserva apagada com sucesso');
+		else
+			$this->showErrorMessage('Falha ao apagar reserva');
+		
+		$this->redirect(array('controller' => 'Rooms', 'action' => 'listRooms'));
+	}
 }
 ?>

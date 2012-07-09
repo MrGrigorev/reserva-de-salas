@@ -1,5 +1,5 @@
 <?php
-	echo $this->Html->script('list_activation_requests');  
+	echo $this->Html->script('list_activation_requests');
 ?>
 <h1><?php echo __('Lista de requisições de reserva'); ?></h1>
 
