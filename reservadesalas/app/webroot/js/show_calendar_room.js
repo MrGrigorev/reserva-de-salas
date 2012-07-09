@@ -18,7 +18,7 @@ $(document).ready(function() {
 				url: '/reservadesalas/Rooms/getRoomReservations',
 				data: {room_id: room_id, month: month, year: year},
 				success: function(data) {
-					for (i in data) {
+					for (i = 0; i < data.length; i++) {
 						start_date = new Date(data[i]['start_time']);
 						end_date = new Date(data[i]['end_time']);
 						events[i] = {
@@ -26,7 +26,7 @@ $(document).ready(function() {
 							start: start_date, 
 							end: end_date, 
 							allDay: false
-						};  
+						};
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown){

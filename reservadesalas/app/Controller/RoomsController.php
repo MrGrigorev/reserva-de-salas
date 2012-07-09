@@ -8,11 +8,11 @@ class RoomsController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		
+
 		if (!$this->isLogged()) {
 			$this->redirect(array('controller' => 'Users', 'action' => 'login'));
 		}
-		
+
 		$params = $this->params;
 		$restrictedActions = array('createRoom');
 		if (in_array($params['action'], $restrictedActions)) {
@@ -25,15 +25,15 @@ class RoomsController extends AppController {
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->Reservation = ClassRegistry::init('Reservation');
 	}
-	
+
 	public function createRoom() {
 		if ($this->request->is('post')) {
 			if ($this->Room->save($this->request->data)) {
 				$this->showSuccessMessage(__('Sala cadastrada com sucesso'));
 				$this
-						->redirect(
-								array('controller' => 'Users',
-										'action' => 'index'));
+				->redirect(
+						array('controller' => 'Users',
+								'action' => 'index'));
 			} else {
 				$this->showErrorMessage(__('Erro ao cadastrar sala'));
 			}
@@ -88,7 +88,7 @@ class RoomsController extends AppController {
 			if ($room['Room']['capacity'] < $filter) {
 				unset($rooms[$i]);
 			}
-			
+
 		}
 
 		return $rooms;
@@ -116,25 +116,25 @@ class RoomsController extends AppController {
 		foreach ($this->request->data['Room'] as $key => $filter) {
 			if ($key == 'capacity') {
 				$filteredRooms = $this
-						->arrayFilterCapacity($filteredRooms, $filter);
+				->arrayFilterCapacity($filteredRooms, $filter);
 
 				continue;
 			}
 
 			if ($key == 'name') {
 				$filteredRooms = $this
-						->arrayFilterNameOrNumber($filteredRooms, $filter);
+				->arrayFilterNameOrNumber($filteredRooms, $filter);
 
 				continue;
 			}
 
 			$filteredRooms = $this
-					->arrayFilter($filteredRooms, $key, $filter, 'Room');
+			->arrayFilter($filteredRooms, $key, $filter, 'Room');
 		}
 
 		$filteredRooms = $this
-				->arrayFilter($filteredRooms, 'id',
-						$this->request->data['Building']['id'], 'Building');
+		->arrayFilter($filteredRooms, 'id',
+				$this->request->data['Building']['id'], 'Building');
 
 		return $filteredRooms;
 	}
@@ -160,17 +160,17 @@ class RoomsController extends AppController {
 		if (!$room) {
 			$this->showErrorMessage(__('Sala inexistente'));
 			$this
-					->redirect(
-							array('controller' => 'Rooms',
-									'action' => 'listRooms'));
+			->redirect(
+					array('controller' => 'Rooms',
+							'action' => 'listRooms'));
 		}
 
 		$building = $this->Building->findById($room['Room']['building_id']);
 		$room['Room']['building'] = $building['Building']['name'];
 
 		$resources = $this->Resource
-				->find('all',
-						array('conditions' => array('room_id' => $roomId)));
+		->find('all',
+				array('conditions' => array('room_id' => $roomId)));
 
 		$room['Room']['resources'] = $resources;
 		$this->set('room', $room);
@@ -182,27 +182,31 @@ class RoomsController extends AppController {
 		$this->set('buildings', $this->Building->find('all'));
 	}
 	public function getRoomReservations() {
-		
 		$room_id = $this->request['data']['room_id'];
 		$month = $this->request['data']['month'];
 		$year = $this->request['data']['year'];
 
 		$this->autoRender = false;
 		$options['conditions'] = array ('Reservation.room_id' => $room_id,
-								'Reservation.is_activated' => true, 
-								'OR' => array('AND' => array('MONTH(Reservation.start_time)' => $month,
-								'YEAR(Reservation.start_time)' => $year), 'AND' => array('MONTH(Reservation.end_time)' => $month,
+				'Reservation.is_activated' => true,
+				'OR' => array('AND' => array('MONTH(Reservation.start_time)' => $month,
+						'YEAR(Reservation.start_time)' => $year), 'AND' => array('MONTH(Reservation.end_time)' => $month,
 								'YEAR(Reservation.end_time)' => $year) )
-								);
+		);
+
 		$options['fields'] = array ('Reservation.start_time, Reservation.end_time, Reservation.description, Reservation.nusp');
-		
+
 		$results = $this->Reservation->find('all', $options);
-		
+
 		$response = array();
 		foreach ($results as $result) {
 			$result['Reservation']['info'] = $result['Reservation']['nusp'] . " - " . substr($result['Reservation']['description'], 0, 20) . "...";
+			$result['Reservation']['start_time'] = str_replace(' ', 'T', $result['Reservation']['start_time']);
+			$result['Reservation']['end_time'] = str_replace(' ', 'T', $result['Reservation']['end_time']);
+			
 			$response[] = $result['Reservation'];
 		}
+
 		echo json_encode($response);
 		exit;
 	}
