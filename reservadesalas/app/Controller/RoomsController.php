@@ -194,7 +194,7 @@ class RoomsController extends AppController {
 								'YEAR(Reservation.end_time)' => $year) )
 		);
 
-		$options['fields'] = array ('Reservation.start_time, Reservation.end_time, Reservation.description, Reservation.nusp');
+		$options['fields'] = array ('Reservation.id', 'Reservation.start_time, Reservation.end_time, Reservation.description, Reservation.nusp');
 
 		$results = $this->Reservation->find('all', $options);
 

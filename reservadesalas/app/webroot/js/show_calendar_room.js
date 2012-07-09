@@ -22,6 +22,7 @@ $(document).ready(function() {
 						start_date = new Date(data[i]['start_time']);
 						end_date = new Date(data[i]['end_time']);
 						events[i] = {
+							url: '/reservadesalas/Reservations/viewReservation/' + data[i]['id'],
 							title: data[i]['info'], 
 							start: start_date, 
 							end: end_date, 
@@ -46,7 +47,6 @@ $(document).ready(function() {
 			editable: false,
 			events: events
 		});
-		
 		
 		$('.fc-button-next').click(function() {
 			var date = calendar.fullCalendar('getDate');
