@@ -18,9 +18,24 @@
 <h1>Reserva da sala <?php echo $this->Html->link($roomTitle, array('controller' => 'Rooms', 'action' => 'viewRoom', $room['Room']['id']), array('target' => '_blank')); ?></h1>
 
 <?php
-	foreach ($chosenDates as $date)
-		echo $date . "<br />";
-?>
+foreach ($chosenDates as $date)
+	echo $date . "<br />";
+	
+if ($repetitions != 'none') {
+	echo __('Repetindo') . ' ';	
+	
+	switch ($repetitions) {
+		case 'daily': echo __('diariamente');
+			break;
+		case 'weekly': echo __('semanalmente');
+			break;
+		case 'monthly': echo __('mensalmente');
+			break;
+	}
+	
+	echo ' ' . __('até') . ' ';
+	echo $untilDate;
+} ?>
 <br />
 <br />
 <?php
