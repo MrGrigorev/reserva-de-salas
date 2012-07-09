@@ -49,11 +49,13 @@
 <br />
 <br />
 <?php
-	echo $this->Form->Create('Reservation', array('action' => 'delete', 'class' => 'submittableForm'));
-	echo $this->Form->Input('id', array('type' => 'hidden', 'value' => $reservation['Reservation']['id']));
-
-	echo $this->Form->Submit(__('Apagar Reserva'), array('class' => 'needConfirmation'));
-	echo $this->Form->end();
+	if ($loggedUser['nusp'] == $reservation['Reservation']['nusp'] || $loggedUser['isAdmin'] == true) {
+		echo $this->Form->Create('Reservation', array('action' => 'delete', 'class' => 'submittableForm'));
+		echo $this->Form->Input('id', array('type' => 'hidden', 'value' => $reservation['Reservation']['id']));
+	
+		echo $this->Form->Submit(__('Apagar Reserva'), array('class' => 'needConfirmation'));
+		echo $this->Form->end();
+	}
 
 	echo $this->element('back');
 ?>

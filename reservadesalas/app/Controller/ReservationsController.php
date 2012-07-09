@@ -1,7 +1,6 @@
 <?php
 App::uses('Room', 'Model');
 App::uses('Resource', 'Model');
-App::uses('Reservation', 'Model');
 App::uses('ReservationsResource', 'Model');
 
 class ReservationsController extends AppController {
@@ -29,9 +28,16 @@ class ReservationsController extends AppController {
 			}
 		}
 
+		if ($params['action'] == 'delete') {
+			$reservation = $this->Reservation->findById($this->request->data['Reservation']['id'], array('fields' => 'Reservation.nusp'));
+			$user = $this->getLoggedUser();
+
+			if (!($this->isAdmin() || $reservation['Reservation']['nusp'] == $user['nusp']))
+				$this->redirect(array('controller' => 'Users', 'action' => 'index'));
+		}
+
 		$this->Room = ClassRegistry::init('Room');
 		$this->Resource = ClassRegistry::init('Resource');
-		$this->Reservation = ClassRegistry::init('Reservation');
 		$this->ReservationsResource = ClassRegistry::init(
 				'ReservationsResource');
 	}
