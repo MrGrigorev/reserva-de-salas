@@ -45,6 +45,9 @@ class User extends AppModel {
 					'confirmation' => array('rule' => 'comparePasswords',
 							'required' => 'create',
 							'message' => 'Senhas não correspondem.')),
+			'currentPassword' => array(
+					'not empty' => array('rule' => 'notEmpty',
+							'message' => "Não deve ser vazio.")),
 			'profile' => array(
 					'not empty' => array('rule' => 'notEmpty',
 							'message' => "Não deve ser vazio."),
@@ -86,7 +89,7 @@ class User extends AppModel {
 
 	function comparePasswords() {
 		return $this->data['User']['password']
-				== $this->data['User']['passwordConfirmation'];
+		== $this->data['User']['passwordConfirmation'];
 	}
 
 	public $actsAs = array(

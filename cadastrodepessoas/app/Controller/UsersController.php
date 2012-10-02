@@ -8,7 +8,7 @@ App::uses('ProfessorCategory', 'Model');
 
 class UsersController extends AppController {
 	public $name = 'Users';
-	
+
 	public $components = array('Email');
 
 	public function beforeFilter() {
@@ -56,18 +56,18 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('Email enviado para validação'));
 
 				$this
-						->saveProfile($this->request->data,
-								$this->request->data['User']['profile'],
-								$this->User->id);
+				->saveProfile($this->request->data,
+						$this->request->data['User']['profile'],
+						$this->User->id);
 
 				$user = $this->User->findById($this->User->id);
 
 				$this->Email->sendConfirmationEmail($user);
 
 				$this
-						->redirect(
-								array('controller' => 'Users',
-										'action' => 'login'));
+				->redirect(
+						array('controller' => 'Users',
+								'action' => 'login'));
 			} else {
 				$this->Session->setFlash(__('E#1: Erro ao cadastrar conta'));
 
@@ -82,50 +82,50 @@ class UsersController extends AppController {
 	public function login() {
 		if ($this->Auth->loggedIn())
 			$this
-					->redirect(
-							array('controller' => 'Users', 'action' => 'index'));
+			->redirect(
+					array('controller' => 'Users', 'action' => 'index'));
 
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				$user = $this->getLoggedUser();
 
 				switch ($user['activation_status']) {
-				case 'active':
-					$this->redirect($this->Auth->redirect());
-					break;
-				case 'waiting_validation':
-					$link = Router::url(
-							array('controller' => 'Users',
-									'action' => 'resendConfirmationEmail',
-									$user['id']));
+					case 'active':
+						$this->redirect($this->Auth->redirect());
+						break;
+					case 'waiting_validation':
+						$link = Router::url(
+						array('controller' => 'Users',
+						'action' => 'resendConfirmationEmail',
+						$user['id']));
 
-					$this->Session
-							->setFlash(
-									sprintf(
-											__(
-													'Seu e-mail não foi confirmado. <a href="%s">Clique aqui para reenviar o e-mail de confirmação</a>.'),
-											$link));
+						$this->Session
+						->setFlash(
+								sprintf(
+										__(
+												'Seu e-mail não foi confirmado. <a href="%s">Clique aqui para reenviar o e-mail de confirmação</a>.'),
+										$link));
 
-					$this->logout();
-					break;
-				case 'waiting_activation':
-					$this->Session
-							->setFlash(
-									__(
-											'Por favor aguarde ativação pelo administrador.'));
+						$this->logout();
+						break;
+					case 'waiting_activation':
+						$this->Session
+						->setFlash(
+						__(
+						'Por favor aguarde ativação pelo administrador.'));
 
-					$this->logout();
-					break;
+						$this->logout();
+						break;
 				}
 			} else {
 				$this->Session
-						->setFlash(__('Número USP e senha não conferem.'));
+				->setFlash(__('Número USP e senha não conferem.'));
 
 				unset($this->request->data['User']['password']);
 			}
 		}
 	}
-	
+
 	public function loginService() {
 		$nusp = null;
 		if (isset($this->request->data['nusp'])) {
@@ -136,10 +136,10 @@ class UsersController extends AppController {
 			$password = $this->request->data['password'];
 		}
 		$password = $this->Auth->password($password);
-		
+
 		$options['fields'] = array('User.nusp, User.name, User.activation_status, Student.id, Professor.id, Employee.id');
 		$options['conditions'] = array('User.nusp = ' => $nusp, 'User.password = ' => $password);
-		
+
 		$results = $this->User->find('all', $options);
 		if ($results) {
 			$user = $results[0];
@@ -150,16 +150,16 @@ class UsersController extends AppController {
 				}
 				else if ($user['Employee']['id'] != null) {
 					$occupation = "employee";
-					
+
 				}
 				else if ($user['Professor']['id'] != null) {
 					$occupation = "professor";
 				}
-				
+
 				$array = array(
-					'nusp' => $user['User']['nusp'],
-					'name' => $user['User']['name'],
-					'occupation' => $occupation
+						'nusp' => $user['User']['nusp'],
+						'name' => $user['User']['name'],
+						'occupation' => $occupation
 				);
 				echo json_encode($array);
 			}
@@ -170,7 +170,7 @@ class UsersController extends AppController {
 		}
 		else {
 			$errorMessage = "Usuário e senha não combinam";
-			echo json_encode(array('nusp' => -1, 'error' => $errorMessage));			
+			echo json_encode(array('nusp' => -1, 'error' => $errorMessage));
 		}
 		exit;
 	}
@@ -183,13 +183,13 @@ class UsersController extends AppController {
 				$this->Session->setFlash(__('Dados atualizados.'));
 
 				$this
-						->redirect(
-								array('controller' => 'Users',
-										'action' => 'index'));
+				->redirect(
+						array('controller' => 'Users',
+								'action' => 'index'));
 			} else {
 				$this->Session
-						->setFlash(
-								__('E#6: Não foi possível atualizar os dados.'));
+				->setFlash(
+						__('E#6: Não foi possível atualizar os dados.'));
 			}
 		}
 
@@ -215,8 +215,8 @@ class UsersController extends AppController {
 			$this->Session->setFlash(__('E#3: Link de confirmação inválido'));
 
 			$this
-					->redirect(
-							array('controller' => 'Users', 'action' => 'login'));
+			->redirect(
+					array('controller' => 'Users', 'action' => 'login'));
 		}
 
 		if ($user['User']['activation_status'] == 'waiting_validation') {
@@ -224,9 +224,9 @@ class UsersController extends AppController {
 			if ($this->User
 					->saveField('activation_status', 'waiting_activation')) {
 				$this->Session
-						->setFlash(
-								__(
-										'E-mail confirmado. Aguarde ativação pelo administrador.'));
+				->setFlash(
+						__(
+								'E-mail confirmado. Aguarde ativação pelo administrador.'));
 			} else {
 				$this->Session->setFlash(__('E#5: Erro ao validar e-mail.'));
 			}
@@ -253,20 +253,20 @@ class UsersController extends AppController {
 			if ($this->request->data['action'] == 'Ativa') {
 				foreach ($this->request->data['User'] as $id => $user)
 					if ($user['isChecked'])
-						$this->activateAccount($id);
+					$this->activateAccount($id);
 			} else if ($this->request->data['action'] == 'Rejeita') {
 				foreach ($this->request->data['User'] as $id => $user)
 					if ($user['isChecked'])
-						$this->rejectAccount($id);
+					$this->rejectAccount($id);
 			}
 		}
 
 		$users = $this->User->order = $order;
 		$users = $this->User
-				->find('all',
-						array(
-								'conditions' => array(
-										'activation_status' => 'waiting_activation')));
+		->find('all',
+				array(
+						'conditions' => array(
+								'activation_status' => 'waiting_activation')));
 
 		for ($i = 0; $i < count($users); $i++) {
 			$users[$i]['User']['profile'] = $this->User->profile($users[$i]);
@@ -282,23 +282,23 @@ class UsersController extends AppController {
 		$this->set('actualOrder', $order);
 		$this->set('profileOrder', $profileOrder);
 	}
-	
+
 	private function containsCaseInsensitive($value, $filter) {
 		$valueLowerCase = strtolower($value);
 		$filterLowerCase = strtolower($filter);
-		
+
 		$position = strpos($valueLowerCase, $filterLowerCase);
-		
+
 		if($position === false)
 			return false;
 			
 		return true;
 	}
-	
+
 	private function arrayFilter($users, $key, $filter) {
 		if($key != 'profile' && $key != 'activation_status') {
 			if ($filter == '')
-				return $users;			
+				return $users;
 		}
 		else if($filter == 'all')
 			return $users;
@@ -308,17 +308,17 @@ class UsersController extends AppController {
 				unset($users[$i]);
 			}
 		}
-		
+
 		return $users;
 	}
-	
+
 	private function filterUsers($users) {
 		$filteredUsers = $users;
-		
+
 		foreach ($this->request->data['User'] as $key => $filter) {
 			$filteredUsers = $this->arrayFilter($filteredUsers, $key, $filter);
 		}
-		
+
 		return $filteredUsers;
 	}
 
@@ -360,7 +360,7 @@ class UsersController extends AppController {
 
 		if ($user['User']['profile'] == 'Professor') {
 			$department = $this->Department
-					->findById($user['Professor']['department_id']);
+			->findById($user['Professor']['department_id']);
 			$user['User']['subProfile'] = $department['Department']['name'];
 		}
 
@@ -374,8 +374,8 @@ class UsersController extends AppController {
 	public function adminEdit($userId = null) {
 		if ($userId == null) {
 			$this
-					->redirect(
-							array('controller' => 'Users', 'action' => 'index'));
+			->redirect(
+					array('controller' => 'Users', 'action' => 'index'));
 		}
 
 		if ($this->request->is('post') || $this->request->is('put')) {
@@ -387,20 +387,20 @@ class UsersController extends AppController {
 					$this->deleteProfile($user);
 
 				$this
-						->saveProfile($this->request->data,
-								$this->request->data['User']['profile'],
-								$userId);
+				->saveProfile($this->request->data,
+						$this->request->data['User']['profile'],
+						$userId);
 
 				$this->Session->setFlash(__('Dados atualizados.'));
 
 				$this
-						->redirect(
-								array('controller' => 'Users',
-										'action' => 'viewProfile', $userId));
+				->redirect(
+						array('controller' => 'Users',
+								'action' => 'viewProfile', $userId));
 			} else {
 				$this->Session
-						->setFlash(
-								__('E#7: Não foi possível atualizar o usuário.'));
+				->setFlash(
+						__('E#7: Não foi possível atualizar o usuário.'));
 			}
 		}
 
@@ -442,7 +442,7 @@ class UsersController extends AppController {
 		$this->set('departments', $this->Department->find('all'));
 		$this->set('courses', $this->Course->find('all'));
 		$this->set('categories', $this->ProfessorCategory->find('all'));
-		
+
 	}
 
 	private function getProfile($user) {
@@ -457,17 +457,17 @@ class UsersController extends AppController {
 			$userId = $user['User']['id'];
 
 		switch ($profile) {
-		case 'Professor':
-			$this->Professor->saveProfile($userId, $user);
-			break;
-		case 'Student':
-			$this->Student->saveProfile($userId, $user);
-			break;
-		case 'Employee':
-			$this->Employee->saveProfile($userId, $user);
-			break;
-		default:
-			$this->Session->setFlash(__('E#2: Erro ao cadastrar perfil'));
+			case 'Professor':
+				$this->Professor->saveProfile($userId, $user);
+				break;
+			case 'Student':
+				$this->Student->saveProfile($userId, $user);
+				break;
+			case 'Employee':
+				$this->Employee->saveProfile($userId, $user);
+				break;
+			default:
+				$this->Session->setFlash(__('E#2: Erro ao cadastrar perfil'));
 		}
 	}
 
@@ -475,15 +475,39 @@ class UsersController extends AppController {
 		$profile = $this->User->profile($user);
 
 		switch ($profile) {
-		case 'Professor':
-			$this->Professor->delete($user['Professor']['id']);
-			break;
-		case 'Student':
-			$this->Student->delete($user['Student']['id']);
-			break;
-		case 'Employee':
-			$this->Employee->delete($user['Employee']['id']);
-			break;
+			case 'Professor':
+				$this->Professor->delete($user['Professor']['id']);
+				break;
+			case 'Student':
+				$this->Student->delete($user['Student']['id']);
+				break;
+			case 'Employee':
+				$this->Employee->delete($user['Employee']['id']);
+				break;
+		}
+	}
+
+	public function changePassword() {
+		if ($this->request->is('post')) {
+			$user = $this->Auth->user();
+			$user = $this->User->findById($user['id']);
+
+			$currentPassword = AuthComponent::password($this->request->data['User']['currentPassword']);
+
+			if ($currentPassword == $user['User']['password']) {
+				if ($this->request->data['User']['password'] == $this->request->data['User']['passwordConfirmation']) {
+					$this->User->id = $user['User']['id'];
+
+					if ($this->User->save($this->request->data)) {
+						$this->Session->setFlash(__('Senha alterada com sucesso'));
+						$this->redirect(array('controller' => 'Users', 'action' => 'index'));
+					}
+				} else {
+					$this->Session->setFlash(__('Nova senha e confirmação não conferem'));
+				}
+			} else {
+				$this->Session->setFlash(__('Senha atual não confere'));
+			}
 		}
 	}
 }

@@ -22,5 +22,10 @@
 				->link(__('Veja os usuários cadastrados'),
 						array('controller' => 'Users',
 								'action' => 'listUsers'));
+		echo "<br />";
+		echo $this->Html
+				->link(__('Trocar senha'),
+						array('controller' => 'Users',
+								'action' => 'changePassword'));
 	}
 ?>
