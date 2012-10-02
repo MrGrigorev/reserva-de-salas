@@ -59,7 +59,7 @@ $(document).ready(function() {
 	function validateReservationDateHour(date, begin_time, end_time, i) {		
 			var pieces_date = date.split('/');
 			var pieces_hour_begin = begin_time.split(':');
-			rdate = new Date(pieces_date[2], parseInt(pieces_date[1]) - 1, pieces_date[0], pieces_hour_begin[0], pieces_hour_begin[1]);
+			rdate = new Date(pieces_date[2], pieces_date[1], pieces_date[0], pieces_hour_begin[0], pieces_hour_begin[1]);
 			
 			tday = new Date().getDate();
 			tmonth = new Date().getMonth();
